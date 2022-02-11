@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import './global/styles/global.scss';
+
 import App from './App';
 
 ReactDOM.render(
@@ -10,3 +12,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
+ 
