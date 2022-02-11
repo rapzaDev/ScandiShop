@@ -9,7 +9,8 @@ import { SelectCategoryButton } from '../../components/SelectCategoryButton/Sele
 
 import {
     HeaderComponent,
-    CurrencyAndCart
+    CurrencyAndCart,
+    CartContainer,
 } from './styles';
 
 type HeaderProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
@@ -24,7 +25,7 @@ class Header extends PureComponent<HeaderProps> {
 
         return(
             <HeaderComponent>
-                
+
                 <div className="category-buttons">
                     <SelectCategoryButton isSelected={true}>WOMEN</SelectCategoryButton>
                     <SelectCategoryButton isSelected={false}>MEN</SelectCategoryButton>
@@ -41,9 +42,12 @@ class Header extends PureComponent<HeaderProps> {
                         <img src={arrowDownIcon} alt="Arrow Down Icon" />
                     </div>
 
-                    <div className="cart">
+                    <CartContainer className="cart">
                         <img src={cartIcon} alt="Cart Icon" />
-                    </div>
+                        <div className="product-quantity">
+                            <span>2</span>
+                        </div>
+                    </CartContainer>
                 </CurrencyAndCart>
 
             </HeaderComponent>
