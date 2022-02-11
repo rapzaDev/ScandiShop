@@ -19,12 +19,13 @@
     // ---------- FONTS ----------
     
     --price-regular-font: 500 1.12rem 'Raleway', sans-serif;
-    --button-font: 600 1rem 'Raleway', sans-serif;
+    --button-400-font: 400 1rem 'Raleway', sans-serif;
+    --button-600-font: 600 1rem 'Raleway', sans-serif;
     --pdp-text-content-font: 400 1rem 'Roboto', sans-serif;
     --product-size-font: 400 1rem 'Source Sans Pro', sans-serif;
 
 }
 
 body {
-    background-color: var(--c-white);   
+    background-color: var(--c-white);    
 }

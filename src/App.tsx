@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import { Home } from './pages/Home/Home';
 
-function App() {
-  return (
-    <h1>Starting the creation of ScandiShop</h1>
-  );
+class App extends PureComponent {
+  
+    render () {
+
+      return (
+        
+        <Home />
+        
+      );
+
+    }
+
 }
 
 export default App;
