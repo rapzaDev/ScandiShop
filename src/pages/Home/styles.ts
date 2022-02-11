@@ -16,6 +16,28 @@ export const HomePage = styled.div`
 
         justify-content: space-between;
 
+        .currency-and-cart {
+
+            display: flex;
+
+            .currency {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                
+                margin-right: 1.37rem;
+
+                img:first-child {
+                    font: var(--price-regular-font);
+                    
+                    margin-right: 0.6rem;
+                }
+
+            }
+
+        }
+
+
     }
 
     .category-buttons {
