@@ -32,17 +32,27 @@ export const CurrencyAndCart = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        
-        margin-right: 1.37rem;
-
-        img:first-child {
-            font: var(--price-regular-font);
-            
-            margin-right: 0.6rem;
-        }
-
     }
 
+`;
+
+export const CurrencyButton = styled.button`
+    margin-right: 1.37rem;
+
+    img:first-child {
+        font: var(--price-regular-font);
+        
+        margin-right: 0.6rem;
+    }
+
+    display: flex;
+
+    width: 0.375rem;
+
+    background: var(--c-white);
+
+    cursor: pointer;
+    border: 0;
 `;
 
 export const CartContainer = styled.div`
@@ -75,6 +85,42 @@ export const CartContainer = styled.div`
             
             font: var(--product-quantity-font);
             
+        }
+
+    }
+
+`;
+
+export const CurrencyOptions = styled.div`
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    right: 5%;
+    top: 9%;
+
+    width: 7.1rem;
+    height: 10.5rem;
+
+    padding: 1.25rem 1.5rem 1.25rem 1.25rem;
+
+    box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);
+
+    button {
+        display: flex;
+
+        border: 0;
+        background-color: var(--c-white);
+
+        cursor: pointer;
+
+        font: var(--price-regular-font);
+
+        & + button {
+            margin-top: 1.3rem;
         }
 
     }
