@@ -30,14 +30,14 @@ export const CurrencyAndCart = styled.div`
 
     .currency {
         display: flex;
-        align-items: center;
+        align-items: center; 
         justify-content: center;
     }
 
 `;
 
 export const CurrencyButton = styled.button`
-    margin-right: 1.37rem;
+    margin-right: 2.37rem;
 
     img:first-child {
         font: var(--price-regular-font);

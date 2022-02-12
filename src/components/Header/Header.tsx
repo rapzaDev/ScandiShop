@@ -6,7 +6,8 @@ import arrowDownIcon from '../../assets/images/down-arrow-icon.svg';
 import arrowUpIcon from '../../assets/images/up-arrow-icon.svg';
 import cartIcon from '../../assets/images/cart-icon.svg';
 
-import { SelectCategoryButton } from '../../components/SelectCategoryButton/SelectCategoryButton';
+import { SelectCategoryButton } from '../SelectCategoryButton/SelectCategoryButton';
+import { MyBag } from '../MyBag/MyBag';
 
 import {
     HeaderComponent,
@@ -87,6 +88,12 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
         );
     }
 
+    renderMyBag() {
+        return (
+            <MyBag />
+        );
+    }
+
     render() {
 
         return(
@@ -110,6 +117,8 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
                 </HeaderComponent>
 
                 { this.state.currencyEnabled && this.renderCurrencyOptions() }
+
+                { this.renderMyBag() }
             </>
         );
 
