@@ -1,14 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Home } from './pages/Home/Home';
+
+import { Router } from './routes';
+
+import { MyBagContextProvider } from './contexts/MyBagContext';
 
 class App extends PureComponent {
   
     render () {
 
       return (
-        
-        <Home />
-        
+        <MyBagContextProvider>
+            <Router />
+        </MyBagContextProvider>
       );
 
     }

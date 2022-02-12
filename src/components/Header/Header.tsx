@@ -1,5 +1,7 @@
 import React, { DetailedHTMLProps, HTMLAttributes, PureComponent } from 'react';
 
+import { useMyBag } from '../../hooks/useMyBag';
+
 import scandishopLogo from '../../assets/images/scandishop-logo.svg'; 
 import moneyIcon from '../../assets/images/money-icon.svg'; 
 import arrowDownIcon from '../../assets/images/down-arrow-icon.svg';
@@ -68,6 +70,7 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
     }
 
     renderCart() {
+
         return(
             <CartContainer className="cart">
                 <img src={cartIcon} alt="Cart Icon" />
@@ -94,7 +97,7 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
         );
     }
 
-    render() {
+    render() {               
 
         return(
             <>
