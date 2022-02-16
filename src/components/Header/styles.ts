@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 export const HeaderComponent = styled.header`
-
     display: flex;
     justify-content: space-between;
     
@@ -58,8 +57,22 @@ export const CurrencyButton = styled.button`
 export const CartContainer = styled.div`
     position: relative;
 
-    img {
+    button {
+        display: flex;
 
+        background-color: var(--c-white);
+
+        border: 0;
+
+        cursor: pointer;
+    }
+
+    img {
+        transition: transform 0.2s linear;
+
+        &:hover {
+            transform: scale(1.2);
+        }
     }
 
     .product-quantity {

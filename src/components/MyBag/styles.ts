@@ -1,19 +1,21 @@
 import styled from 'styled-components';
 
-export const MyBagContainer = styled.div`
+import { MyBagProps } from './MyBag';
+
+export const MyBagContainer = styled.div<MyBagProps>`
     display: flex;
     flex-direction: column;
 
-    position: absolute;
-    right: 5%;
-    top: 13%;
+    background: var(--c-white);
+
+    z-index: 1;
+
+    visibility: ${ ({isVisible}) => isVisible ? 'visible' : 'hidden' };
 
     width: 20rem;
     height: 33.75rem;
 
     padding: 0.5rem 1rem 1.25rem 0.5rem;
-
-    border: 1px solid #000; // tirar quando acabar estilização
 
     .bag-description {
         font: var(--price-regular-font);

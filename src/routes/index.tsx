@@ -6,6 +6,9 @@ import {
     Route
  } from 'react-router-dom';
 
+import { store } from '../store';
+import { Provider as ReduxProvider} from 'react-redux';
+
  import { Home } from '../pages/Home/Home';
 
 class Router extends PureComponent {
@@ -14,9 +17,11 @@ class Router extends PureComponent {
 
         return (
             <BrowserRouter>
-                <Routes>
-                    <Route index element={ <Home /> } />
-                </Routes>
+                <ReduxProvider store={store}>
+                    <Routes>
+                        <Route index element={ <Home /> } />
+                    </Routes>
+                </ReduxProvider>
             </BrowserRouter>
         );
 

@@ -1,18 +1,12 @@
 import React, { PureComponent } from 'react';
 
-import { Router } from './routes';
-
-import { MyBagContextProvider } from './contexts/MyBagContext';
+import { Router as Routes} from './routes';
 
 class App extends PureComponent {
   
     render () {
 
-      return (
-        <MyBagContextProvider>
-            <Router />
-        </MyBagContextProvider>
-      );
+      return <Routes />;
 
     }
 

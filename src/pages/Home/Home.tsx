@@ -1,12 +1,55 @@
 import React, { PureComponent } from 'react';
 
-import { Header } from '../../components/Header/Header';
+import { getState, subscribe } from '../../store';
+
+import { Header }  from '../../components/Header/Header';
+import { MyBag } from '../../components/MyBag/MyBag';
 
 import {
     HomePage,
+    Main,
+    ShadowContainer
 } from './styles';
 
-class Home extends PureComponent {
+
+type HomeState = {
+    bagVisible: boolean;
+    unsubscribe: any;
+}
+
+class Home extends PureComponent<{}, HomeState> {
+
+    state: HomeState = {
+        bagVisible: false,
+        unsubscribe: undefined
+    }
+ 
+    componentDidMount() {
+        const unsubscribe = subscribe( () => {
+            const { value } = getState().myBag;
+
+            this.setState(() => ({
+                bagVisible: value
+            }))
+        });
+
+        this.setState(() => ({
+            unsubscribe: unsubscribe
+        }))
+    }
+
+    componentWillUnmount() {
+        this.state.unsubscribe();
+    }
+
+
+    renderMyBag() {
+
+        return (
+            <MyBag isVisible={ this.state.bagVisible } />
+        );
+    }
+
 
     render() {
 
@@ -16,9 +59,17 @@ class Home extends PureComponent {
                 
                 <Header />
 
-                <main>
-                    
-                </main>
+                <ShadowContainer 
+                    className="shadow-container"
+                    active={this.state.bagVisible}
+                >
+                    { this.renderMyBag() }
+
+
+                    <Main>
+                            
+                    </Main>
+                </ShadowContainer>
 
             </HomePage>
 

@@ -9,14 +9,25 @@ import {
     ProductInfo
 } from './styles';
 
+export type MyBagProps = {
+    isVisible: boolean;
+}
 
+class MyBag extends PureComponent<MyBagProps> {
 
-class MyBag extends PureComponent {
+    constructor(props: MyBagProps) {
+        super(props);
+    }
 
     render() {
 
+        const { isVisible } = this.props;
+
         return (
-            <MyBagContainer className="my-bag">
+            <MyBagContainer 
+                className="my-bag"
+                isVisible={isVisible}
+            >
                 
                 <div className="bag-description">
                     <strong>My Bag, </strong>

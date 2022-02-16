@@ -1,6 +1,6 @@
-import React, { DetailedHTMLProps, HTMLAttributes, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
-import { useMyBag } from '../../hooks/useMyBag';
+import { myBagContext } from '../../contexts/MyBagContext';
 
 import scandishopLogo from '../../assets/images/scandishop-logo.svg'; 
 import moneyIcon from '../../assets/images/money-icon.svg'; 
@@ -19,26 +19,32 @@ import {
     CurrencyOptions,
 } from './styles';
 
-type HeaderProps = DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>;
-
 type HeaderState = {
     currencyEnabled: boolean;
+    bagVisible: boolean;
 }
 
-class Header extends PureComponent<HeaderProps, HeaderState> {
-
-    constructor(props: HeaderProps) {
-        super(props);
-    }
+class Header extends PureComponent<{}, HeaderState> {
 
     state: HeaderState = {
-        currencyEnabled: false
+        currencyEnabled: false,
+        bagVisible: false,
     }
 
     handleCurrencyButton() {
         this.setState( (state) => ({
             currencyEnabled: !state.currencyEnabled
         }));
+    }
+
+    handleChangeMyBagState() {
+
+        const value = myBagContext.getMyBagState();
+
+        this.setState( () => ({
+            bagVisible: value
+        }));
+
     }
 
     renderCategoryButtons() {
@@ -70,10 +76,12 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
     }
 
     renderCart() {
-
+        
         return(
             <CartContainer className="cart">
-                <img src={cartIcon} alt="Cart Icon" />
+                <button  onClick={() => this.handleChangeMyBagState() }>
+                    <img src={cartIcon} alt="Cart Icon" />
+                </button>
                 <div className="product-quantity">
                     <span>2</span>
                 </div>
@@ -91,15 +99,10 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
         );
     }
 
-    renderMyBag() {
-        return (
-            <MyBag />
-        );
-    }
-
     render() {               
 
         return(
+
             <>
                 <HeaderComponent>
 
@@ -120,13 +123,12 @@ class Header extends PureComponent<HeaderProps, HeaderState> {
                 </HeaderComponent>
 
                 { this.state.currencyEnabled && this.renderCurrencyOptions() }
-
-                { this.renderMyBag() }
             </>
         );
 
     }
 
 };
+
 
 export { Header };
