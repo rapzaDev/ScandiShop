@@ -9,7 +9,6 @@ import arrowUpIcon from '../../assets/images/up-arrow-icon.svg';
 import cartIcon from '../../assets/images/cart-icon.svg';
 
 import { SelectCategoryButton } from '../SelectCategoryButton/SelectCategoryButton';
-import { MyBag } from '../MyBag/MyBag';
 
 import {
     HeaderComponent,
@@ -21,14 +20,43 @@ import {
 
 type HeaderState = {
     currencyEnabled: boolean;
-    bagVisible: boolean;
+    womenButton: boolean;
+    menButton: boolean;
+    kidsButton: boolean;
 }
 
 class Header extends PureComponent<{}, HeaderState> {
 
     state: HeaderState = {
         currencyEnabled: false,
-        bagVisible: false,
+        womenButton: true,
+        menButton: false,
+        kidsButton: false
+    }
+
+
+    handleClickCategoryWomanButton() {
+        this.setState(() => ({
+            womenButton: true,
+            menButton: false,
+            kidsButton: false
+        }))
+    }
+
+    handleClickCategoryMenButton() {
+        this.setState(() => ({
+            womenButton: false,
+            menButton: true,
+            kidsButton: false
+        }))
+    }
+
+    handleClickCategoryKidsButton() {
+        this.setState(() => ({
+            womenButton: false,
+            menButton: false,
+            kidsButton: true
+        }))
     }
 
     handleCurrencyButton() {
@@ -37,22 +65,32 @@ class Header extends PureComponent<{}, HeaderState> {
         }));
     }
 
-    handleChangeMyBagState() {
-
-        const value = myBagContext.getMyBagState();
-
-        this.setState( () => ({
-            bagVisible: value
-        }));
-
+    handleClickCartButton() {
+        myBagContext.changeMyBagState();
     }
+    
 
     renderCategoryButtons() {
         return (
             <div className="category-buttons">
-                <SelectCategoryButton isSelected={true}>WOMEN</SelectCategoryButton>
-                <SelectCategoryButton isSelected={false}>MEN</SelectCategoryButton>
-                <SelectCategoryButton isSelected={false}>KIDS</SelectCategoryButton>
+                <SelectCategoryButton 
+                    onClick={() => this.handleClickCategoryWomanButton()}
+                    isSelected={this.state.womenButton}
+                >
+                    WOMEN
+                </SelectCategoryButton>
+                <SelectCategoryButton 
+                    onClick={() => this.handleClickCategoryMenButton()}
+                    isSelected={this.state.menButton}
+                >
+                    MEN
+                </SelectCategoryButton>
+                <SelectCategoryButton 
+                    onClick={() => this.handleClickCategoryKidsButton()}
+                    isSelected={this.state.kidsButton}
+                >
+                    KIDS
+                </SelectCategoryButton>
             </div>
         );
     }
@@ -79,7 +117,7 @@ class Header extends PureComponent<{}, HeaderState> {
         
         return(
             <CartContainer className="cart">
-                <button  onClick={() => this.handleChangeMyBagState() }>
+                <button  onClick={() => this.handleClickCartButton() }>
                     <img src={cartIcon} alt="Cart Icon" />
                 </button>
                 <div className="product-quantity">

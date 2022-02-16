@@ -22,7 +22,7 @@ class SelectCategoryButton extends PureComponent
         const { ...rest } = this.props;
 
         return (
-            <Button {...rest} >
+            <Button className="category-button" {...rest} >
                 {this.props.children}
             </Button>
         );

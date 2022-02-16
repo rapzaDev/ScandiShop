@@ -1,6 +1,13 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 import { SelectCategoryButtonProps } from './SelectCategoryButton';
+
+const fadeLeft = keyframes`
+    0% {
+        transform: translateX(-1rem);
+        opacity: 0;
+    }
+`
 
 export const Button = styled.button<SelectCategoryButtonProps>`
     display: flex;
@@ -12,6 +19,7 @@ export const Button = styled.button<SelectCategoryButtonProps>`
     
     cursor: pointer;
     border: 0;
+
 
     ${ ({ isSelected }) => isSelected 
         ? css`
@@ -29,6 +37,9 @@ export const Button = styled.button<SelectCategoryButtonProps>`
                 width: 6rem;
 
                 background-color: var(--c-primary);
+
+                animation:${fadeLeft} .2s linear .2s backwards ;
+
             }
         ` 
         : css`

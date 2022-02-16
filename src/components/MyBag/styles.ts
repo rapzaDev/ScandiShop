@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 import { MyBagProps } from './MyBag';
 
@@ -7,8 +7,6 @@ export const MyBagContainer = styled.div<MyBagProps>`
     flex-direction: column;
 
     background: var(--c-white);
-
-    z-index: 1;
 
     visibility: ${ ({isVisible}) => isVisible ? 'visible' : 'hidden' };
 

@@ -14,21 +14,12 @@ const MyBagSlice = createSlice({
 
 const { reducer, actions } = MyBagSlice;
 
-interface MyBagContextType {
-    myBagContextState: boolean;
-}
-
 class MyBagContext {
-
-    state:MyBagContextType = {
-        myBagContextState: false,
-        
-    }
 
     private static INSTANCE: MyBagContext;
 
     constructor() {
-        this.getMyBagState = this.getMyBagState.bind(this);
+        this.changeMyBagState = this.changeMyBagState.bind(this);
     }
 
     public static getInstance() {
@@ -39,14 +30,10 @@ class MyBagContext {
         return MyBagContext.INSTANCE;
     }
 
-    getMyBagState() {
+    changeMyBagState() {
         dispatch( actions.handleChangeMyBagState() );
         
         const { value } = getState().myBag;
-
-        this.state.myBagContextState = value;
-
-        console.log('getMyBagState MyBagContext.ts:', this.state.myBagContextState);
 
         return value;
     }
@@ -54,9 +41,6 @@ class MyBagContext {
 }
 
 export const myBagContext = MyBagContext.getInstance();
-
-// export const myBagContext = new MyBagContext();
-// export const myBagContext = <MyBagContext />;
 
 export default reducer;
 
