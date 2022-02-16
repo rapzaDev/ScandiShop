@@ -6,6 +6,7 @@ import cartIcon from '../../assets/images/white-cart-icon.svg';
 
 import { Header }  from '../../components/Header/Header';
 import { MyBag } from '../../components/MyBag/MyBag';
+import { CurrencyOptions } from '../../components/CurrencyOptions/CurrencyOptions';
 
 import {
     HomePage,
@@ -20,6 +21,7 @@ type HomeState = {
     bagVisible: boolean;
     unsubscribe: any; 
     outOfStock: boolean;
+    currencyEnabled: boolean;
 }
 
 class Home extends PureComponent<{}, HomeState> {
@@ -28,15 +30,24 @@ class Home extends PureComponent<{}, HomeState> {
         bagVisible: false,
         unsubscribe: undefined,
         outOfStock: false,
+        currencyEnabled: false
     }
  
     componentDidMount() {
         const unsubscribe = subscribe( () => {
-            const { value } = getState().myBag;
+            const bagState = getState().myBag;
+            const currencyOptionsState  = getState().currencyOptions;
 
             this.setState(() => ({
-                bagVisible: value
+                bagVisible: bagState.value,
+                currencyEnabled: currencyOptionsState.value
             }))
+
+
+            // this.setState(() => ({
+            //     currencyEnabled: currencyOptionsState.value
+            // }))
+
         });
 
         this.setState(() => ({
@@ -55,6 +66,11 @@ class Home extends PureComponent<{}, HomeState> {
             return <MyBag isVisible={ this.state.bagVisible } />
         else return <></>
 
+    }
+
+    renderCurrencyOptions() {
+        if ( this.state.currencyEnabled ) 
+            return <CurrencyOptions />
     }
 
     renderCategoryProducts() {
@@ -182,6 +198,9 @@ class Home extends PureComponent<{}, HomeState> {
                     className="shadow-container"
                     active={this.state.bagVisible}
                 >
+                    
+                    { this.renderCurrencyOptions() }
+
                     { this.renderMyBag() }
 
                     <Main>

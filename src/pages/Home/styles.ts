@@ -26,7 +26,9 @@ const fadeUp = keyframes`
 
 export const ShadowContainer = styled.div<ShadowContainerProps>`
     position: relative;
-    z-index: 2;
+    z-index: 1;
+
+    margin-top: 5rem; ///// PARA O HEADER FIXED
 
     width: 100%;
     height: 89.6875rem;
@@ -36,20 +38,21 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     background-color: ${ ({active}) => active ? 'rgba(57, 55, 72, 0.22)' : 'unset'};
 
     .my-bag {
-        position: absolute;
+        position: fixed;
         z-index: 1;
 
         right: 5%;
-        top: 0;
+        top: 5rem;
 
-        animation:${fadeUp} .3s linear .3s backwards ;
-        
+        animation:${fadeUp} .3s linear .3s backwards ;   
     }
+
 
 `;
 
 export const Main = styled.main`
     display: flex;
+    position: relative;
 
     height: 100%;
 

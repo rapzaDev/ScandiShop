@@ -1,6 +1,9 @@
 import React, { PureComponent } from 'react';
 
+import { getState, subscribe } from '../../store';
+
 import { myBagContext } from '../../contexts/MyBagContext';
+import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
 
 import scandishopLogo from '../../assets/images/scandishop-logo.svg'; 
 import moneyIcon from '../../assets/images/money-icon.svg'; 
@@ -20,6 +23,7 @@ import {
 
 type HeaderState = {
     currencyEnabled: boolean;
+    unsubscribe: any; 
     womenButton: boolean;
     menButton: boolean;
     kidsButton: boolean;
@@ -29,10 +33,31 @@ class Header extends PureComponent<{}, HeaderState> {
 
     state: HeaderState = {
         currencyEnabled: false,
+        unsubscribe: undefined,
         womenButton: true,
         menButton: false,
         kidsButton: false
     }
+
+
+    componentDidMount() {
+        const unsubscribe = subscribe( () => {
+            const { value } = getState().currencyOptions;
+
+            this.setState(() => ({
+                currencyEnabled: value
+            }))
+        });
+
+        this.setState(() => ({
+            unsubscribe: unsubscribe
+        }))
+    }
+
+    componentWillUnmount() {
+        this.state.unsubscribe();
+    }
+
 
 
     handleClickCategoryWomanButton() {
@@ -60,9 +85,7 @@ class Header extends PureComponent<{}, HeaderState> {
     }
 
     handleCurrencyButton() {
-        this.setState( (state) => ({
-            currencyEnabled: !state.currencyEnabled
-        }));
+        currencyOptionsContext.changeMyCurrencyOptionsState();
     }
 
     handleClickCartButton() {
@@ -127,16 +150,6 @@ class Header extends PureComponent<{}, HeaderState> {
         );
     }
 
-    renderCurrencyOptions() {
-        return(
-            <CurrencyOptions>
-                <button>$ USD</button>
-                <button>€ EUR</button>
-                <button>¥ JPY</button>
-            </CurrencyOptions>
-        );
-    }
-
     render() {               
 
         return(
@@ -159,8 +172,6 @@ class Header extends PureComponent<{}, HeaderState> {
                     </CurrencyAndCart>
 
                 </HeaderComponent>
-
-                { this.state.currencyEnabled && this.renderCurrencyOptions() }
             </>
         );
 
