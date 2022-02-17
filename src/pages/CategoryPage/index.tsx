@@ -9,7 +9,7 @@ import { MyBag } from '../../components/MyBag/MyBag';
 import { CurrencyOptions } from '../../components/CurrencyOptions/CurrencyOptions';
 
 import {
-    HomePage,
+    CategoryPageContainer,
     ShadowContainer,
     Main,
     ProductInfo,
@@ -17,16 +17,16 @@ import {
 } from './styles';
 
 
-type HomeState = {
+type CategoryPageState = {
     bagVisible: boolean;
     unsubscribe: any; 
     outOfStock: boolean;
     currencyEnabled: boolean;
 }
 
-class Home extends PureComponent<{}, HomeState> {
+class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
-    state: HomeState = {
+    state: CategoryPageState = {
         bagVisible: false,
         unsubscribe: undefined,
         outOfStock: false,
@@ -43,16 +43,12 @@ class Home extends PureComponent<{}, HomeState> {
                 currencyEnabled: currencyOptionsState.value
             }))
 
-
-            // this.setState(() => ({
-            //     currencyEnabled: currencyOptionsState.value
-            // }))
-
         });
 
         this.setState(() => ({
             unsubscribe: unsubscribe
         }))
+
     }
 
     componentWillUnmount() {
@@ -190,15 +186,16 @@ class Home extends PureComponent<{}, HomeState> {
 
         return (
 
-            <HomePage id="home-page">
+            <CategoryPageContainer id="home-page">
                 
                 <Header />
 
                 <ShadowContainer 
                     className="shadow-container"
                     active={this.state.bagVisible}
+                    currencyOptionsVisible={this.state.currencyEnabled}
                 >
-                    
+
                     { this.renderCurrencyOptions() }
 
                     { this.renderMyBag() }
@@ -217,7 +214,7 @@ class Home extends PureComponent<{}, HomeState> {
                     </Main>
                 </ShadowContainer>
 
-            </HomePage>
+            </CategoryPageContainer>
 
         );
 
@@ -225,4 +222,4 @@ class Home extends PureComponent<{}, HomeState> {
 
 };
 
-export { Home };
+export { CategoryPage };

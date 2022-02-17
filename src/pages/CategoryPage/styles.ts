@@ -2,6 +2,7 @@ import styled, { keyframes } from 'styled-components';
 
 type ShadowContainerProps = {
     active: boolean;
+    currencyOptionsVisible: boolean;
 }
 
 type ProductInfoProps = {
@@ -9,7 +10,7 @@ type ProductInfoProps = {
 }
 
 
-export const HomePage = styled.div`
+export const CategoryPageContainer = styled.div`
     display: flex;
 
     flex-direction: column;
@@ -28,7 +29,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
     position: relative;
     z-index: 1;
 
-    margin-top: 5rem; ///// PARA O HEADER FIXED
+    margin-top: 5rem;
 
     width: 100%;
     height: 89.6875rem;
@@ -43,8 +44,12 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
 
         right: 5%;
         top: 5rem;
-
+        
         animation:${fadeUp} .3s linear .3s backwards ;   
+    }
+
+    .currency-options {
+        animation:${fadeUp} .3s linear .3s backwards ; 
     }
 
 
@@ -90,6 +95,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
     display: flex;
     position: relative;
+
     flex-direction: column;
 
     padding: 1rem;
@@ -132,6 +138,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
         .product-cart-button {
             position: absolute;
+
             bottom: 16%;
             right: 9%;
 

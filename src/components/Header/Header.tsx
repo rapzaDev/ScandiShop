@@ -18,7 +18,6 @@ import {
     CurrencyAndCart,
     CurrencyButton,
     CartContainer,
-    CurrencyOptions,
 } from './styles';
 
 type HeaderState = {
@@ -51,14 +50,12 @@ class Header extends PureComponent<{}, HeaderState> {
 
         this.setState(() => ({
             unsubscribe: unsubscribe
-        }))
+        }));
     }
 
     componentWillUnmount() {
         this.state.unsubscribe();
     }
-
-
 
     handleClickCategoryWomanButton() {
         this.setState(() => ({
@@ -89,7 +86,7 @@ class Header extends PureComponent<{}, HeaderState> {
     }
 
     handleClickCartButton() {
-        myBagContext.changeMyBagState();
+       myBagContext.changeMyBagState();
     }
     
 
