@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 
 import { getState, subscribe } from '../../store';
+import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
+import { myBagContext } from '../../contexts/MyBagContext';
 
 import cartIcon from '../../assets/images/white-cart-icon.svg';
 
@@ -26,6 +28,11 @@ type CategoryPageState = {
 
 class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
+    constructor(props: {}) {
+        super(props);
+        this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
+    }
+
     state: CategoryPageState = {
         bagVisible: false,
         unsubscribe: undefined,
@@ -49,6 +56,18 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
             unsubscribe: unsubscribe
         }))
 
+    }
+
+    handleClickOnScreen() {
+        if ( this.state.currencyEnabled ) 
+            currencyOptionsContext.changeMyCurrencyOptionsState();
+
+        if ( this.state.bagVisible ) 
+            myBagContext.changeMyBagState(); 
+    }
+
+    componentDidUpdate() {
+        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen);
     }
 
     componentWillUnmount() {
@@ -186,7 +205,7 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
         return (
 
-            <CategoryPageContainer id="home-page">
+            <CategoryPageContainer id="category-page">
                 
                 <Header />
 
