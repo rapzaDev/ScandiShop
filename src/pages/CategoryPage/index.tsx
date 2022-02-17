@@ -7,12 +7,12 @@ import { myBagContext } from '../../contexts/MyBagContext';
 import cartIcon from '../../assets/images/white-cart-icon.svg';
 
 import { Header }  from '../../components/Header/Header';
+import { ShadowWrapper } from '../../components/ShadowWrapper';
 import { MyBag } from '../../components/MyBag/MyBag';
 import { CurrencyOptions } from '../../components/CurrencyOptions/CurrencyOptions';
 
 import {
     CategoryPageContainer,
-    ShadowContainer,
     Main,
     ProductInfo,
     ProductInfoCartButton
@@ -209,11 +209,7 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 
                 <Header />
 
-                <ShadowContainer 
-                    className="shadow-container"
-                    active={this.state.bagVisible}
-                    currencyOptionsVisible={this.state.currencyEnabled}
-                >
+                <ShadowWrapper active={this.state.bagVisible}>
 
                     { this.renderCurrencyOptions() }
 
@@ -231,7 +227,8 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                         </div>
 
                     </Main>
-                </ShadowContainer>
+                    
+                </ShadowWrapper>
 
             </CategoryPageContainer>
 

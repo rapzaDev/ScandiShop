@@ -2,13 +2,28 @@ import styled, { keyframes } from 'styled-components';
 
 import { MyBagProps } from './MyBag';
 
+const fadeUp = keyframes`
+    0% {
+        transform: translateY(-10rem);
+        opacity: 0;
+    }
+`
+
 export const MyBagContainer = styled.div<MyBagProps>`
     display: flex;
     flex-direction: column;
 
+    position: fixed;
+    z-index: 1;
+
+    right: 5%;
+    top: 5rem;
+
     background: var(--c-white);
 
     visibility: ${ ({isVisible}) => isVisible ? 'visible' : 'hidden' };
+
+    animation:${fadeUp} .3s linear .3s backwards ;   
 
     width: 20rem;
     height: 33.75rem;

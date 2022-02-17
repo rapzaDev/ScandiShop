@@ -1,9 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-type ShadowContainerProps = {
-    active: boolean;
-    currencyOptionsVisible: boolean;
-}
+import styled from 'styled-components';
 
 type ProductInfoProps = {
     outOfStock: boolean;
@@ -18,46 +13,11 @@ export const CategoryPageContainer = styled.div`
 
 `;
 
-const fadeUp = keyframes`
-    0% {
-        transform: translateY(-10rem);
-        opacity: 0;
-    }
-`
-
-export const ShadowContainer = styled.div<ShadowContainerProps>`
-    position: relative;
-    z-index: 1;
-
-    margin-top: 5rem;
-
-    width: 100%;
-    height: 89.6875rem;
-
-    transition: background-color 0.3s linear;
-
-    background-color: ${ ({active}) => active ? 'rgba(57, 55, 72, 0.22)' : 'unset'};
-
-    .my-bag {
-        position: fixed;
-        z-index: 1;
-
-        right: 5%;
-        top: 5rem;
-        
-        animation:${fadeUp} .3s linear .3s backwards ;   
-    }
-
-    .currency-options {
-        animation:${fadeUp} .3s linear .3s backwards ; 
-    }
-
-
-`;
-
 export const Main = styled.main`
     display: flex;
     position: relative;
+
+    margin-top: 5rem;
 
     height: 100%;
 
@@ -87,7 +47,6 @@ export const Main = styled.main`
         }
 
     }
-
 
 `;
 

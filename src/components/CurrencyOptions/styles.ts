@@ -1,4 +1,11 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fadeUp = keyframes`
+    0% {
+        transform: translateY(-10rem);
+        opacity: 0;
+    }
+`
 
 export const Container = styled.div`
     display: flex;
@@ -7,6 +14,8 @@ export const Container = styled.div`
     flex-direction: column;
 
     background-color: var(--c-white);
+
+    animation:${fadeUp} .3s linear .3s backwards ;   
 
     align-items: center;
     justify-content: center;
