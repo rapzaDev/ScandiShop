@@ -9,9 +9,10 @@ const fadeUp = keyframes`
 
 export const Container = styled.div`
     display: flex;
-    position: fixed;
-    z-index: 1;
     flex-direction: column;
+
+    position: fixed;
+    z-index: 2;
 
     background-color: var(--c-white);
 

@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { DefaultButtonProps } from './DefaultButton';
+import { DefaultButtonProps } from './';
 
 export const Button = styled.button<DefaultButtonProps>`
 

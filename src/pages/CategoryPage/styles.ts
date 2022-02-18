@@ -19,8 +19,6 @@ export const Main = styled.main`
 
     margin-top: 5rem;
 
-    height: 100%;
-
     padding: 5rem 6.25rem 11.9375rem;
 
     .category-container {

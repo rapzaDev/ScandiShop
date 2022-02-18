@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { DefaultButton } from '../DefaultButton/DefaultButton';
+import { DefaultButton } from '../DefaultButton';
 
 import {
     MyBagContainer,

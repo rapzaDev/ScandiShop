@@ -5,22 +5,23 @@ import {
 } from './styles';
 
 type ShadowWrapperProps = {
-    children: React.ReactNode;
     active: boolean;
 }
 
 class ShadowWrapper extends PureComponent<ShadowWrapperProps> {
+
+    constructor(props:ShadowWrapperProps) {
+        super(props);
+    }
 
     render() {
 
         return (
 
             <ShadowContainer 
-                className="shadow-container"
+                id="shadow-container"
                 active={this.props.active}
-            >
-                {this.props.children}
-            </ShadowContainer>
+            />
 
         );
 

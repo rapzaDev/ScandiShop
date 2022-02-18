@@ -6,10 +6,10 @@ import { myBagContext } from '../../contexts/MyBagContext';
 
 import cartIcon from '../../assets/images/white-cart-icon.svg';
 
-import { Header }  from '../../components/Header/Header';
+import { Header }  from '../../components/Header';
 import { ShadowWrapper } from '../../components/ShadowWrapper';
-import { MyBag } from '../../components/MyBag/MyBag';
-import { CurrencyOptions } from '../../components/CurrencyOptions/CurrencyOptions';
+import { MyBag } from '../../components/MyBag';
+import { CurrencyOptions } from '../../components/CurrencyOptions';
 
 import {
     CategoryPageContainer,
@@ -209,27 +209,25 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 
                 <Header />
 
-                <ShadowWrapper active={this.state.bagVisible}>
+                <ShadowWrapper active={this.state.bagVisible}/>
+                
+                { this.renderCurrencyOptions() }
 
-                    { this.renderCurrencyOptions() }
+                { this.renderMyBag() }
 
-                    { this.renderMyBag() }
+                <Main>
 
-                    <Main>
+                    <div className="category-container">
+                        <h2>Women Category</h2>
 
-                        <div className="category-container">
-                            <h2>Women Category</h2>
-
-                            <div className="category-content">
-                                { this.renderCategoryProducts() }
-                            </div>
-
+                        <div className="category-content">
+                            { this.renderCategoryProducts() }
                         </div>
 
-                    </Main>
-                    
-                </ShadowWrapper>
+                    </div>
 
+                </Main>
+                    
             </CategoryPageContainer>
 
         );

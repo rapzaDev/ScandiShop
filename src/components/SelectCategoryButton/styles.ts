@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'styled-components';
 
-import { SelectCategoryButtonProps } from './SelectCategoryButton';
+import { SelectCategoryButtonProps } from './';
 
 const fadeLeft = keyframes`
     0% {

@@ -11,7 +11,7 @@ import arrowDownIcon from '../../assets/images/down-arrow-icon.svg';
 import arrowUpIcon from '../../assets/images/up-arrow-icon.svg';
 import cartIcon from '../../assets/images/cart-icon.svg';
 
-import { SelectCategoryButton } from '../SelectCategoryButton/SelectCategoryButton';
+import { SelectCategoryButton } from '../SelectCategoryButton';
 
 import {
     HeaderComponent,

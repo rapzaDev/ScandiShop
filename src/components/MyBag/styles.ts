@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 
-import { MyBagProps } from './MyBag';
+import { MyBagProps } from './';
 
 const fadeUp = keyframes`
     0% {
@@ -14,7 +14,7 @@ export const MyBagContainer = styled.div<MyBagProps>`
     flex-direction: column;
 
     position: fixed;
-    z-index: 1;
+    z-index: 2;
 
     right: 5%;
     top: 5rem;
