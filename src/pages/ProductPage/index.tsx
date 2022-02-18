@@ -57,6 +57,9 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
     }
  
     componentDidMount() {
+
+        window.scrollTo(0, 0);
+
         const unsubscribe = subscribe( () => {
             const bagState = getState().myBag;
             const currencyOptionsState  = getState().currencyOptions;
@@ -70,7 +73,7 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
         this.setState(() => ({
             unsubscribe: unsubscribe
-        }))
+        }));
 
     }
 

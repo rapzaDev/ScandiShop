@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import { getState, subscribe } from '../../store';
 import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
@@ -24,6 +25,7 @@ type CategoryPageState = {
     unsubscribe: any; 
     outOfStock: boolean;
     currencyEnabled: boolean;
+    redirectProductPage: boolean;
 }
 
 class CategoryPage extends PureComponent<{}, CategoryPageState> {
@@ -37,10 +39,13 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
         bagVisible: false,
         unsubscribe: undefined,
         outOfStock: false,
-        currencyEnabled: false
+        currencyEnabled: false,
+        redirectProductPage: false,
     }
  
     componentDidMount() {
+        window.scrollTo(0, 0);
+
         const unsubscribe = subscribe( () => {
             const bagState = getState().myBag;
             const currencyOptionsState  = getState().currencyOptions;
@@ -58,6 +63,15 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
     }
 
+    componentDidUpdate() {
+        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen);
+    }
+
+    componentWillUnmount() {
+        this.state.unsubscribe();
+    }
+
+
     handleClickOnScreen() {
         if ( this.state.currencyEnabled ) 
             currencyOptionsContext.changeMyCurrencyOptionsState();
@@ -66,12 +80,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
             myBagContext.changeMyBagState(); 
     }
 
-    componentDidUpdate() {
-        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen);
-    }
-
-    componentWillUnmount() {
-        this.state.unsubscribe();
+    handleClickProductInfoCartButton() {
+        this.setState((state) => ({
+            redirectProductPage: !state.redirectProductPage
+        }))
     }
 
 
@@ -98,7 +110,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 >
 
                         <div className="product-image">
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>
                         </div> {/**later i'll replace it with a image */}
@@ -114,7 +129,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 >
 
                         <div className="product-image">
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>
                         </div> {/**later i'll replace it with a image */}
@@ -130,7 +148,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                     
                         <div className="product-image">
                             <span>OUT OF STOCK</span>  
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>  
                         </div> {/**later i'll replace it with a image */}
@@ -148,7 +169,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 >
 
                         <div className="product-image">
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>
                         </div> {/**later i'll replace it with a image */}
@@ -166,7 +190,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 >
 
                         <div className="product-image">
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>
                         </div> {/**later i'll replace it with a image */}
@@ -184,7 +211,10 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                 >
 
                         <div className="product-image">
-                            <ProductInfoCartButton className="product-cart-button">
+                            <ProductInfoCartButton 
+                                className="product-cart-button"
+                                onClick={() => this.handleClickProductInfoCartButton()}
+                            >
                                 <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                             </ProductInfoCartButton>
                         </div> {/**later i'll replace it with a image */}
@@ -195,6 +225,8 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
                         <span className="product-price">$50.00</span>
 
                 </ProductInfo>
+            
+                { this.state.redirectProductPage && <Navigate to='/product'/>}
             </>
         )
 
