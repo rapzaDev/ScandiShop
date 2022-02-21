@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
+import { Navigate } from 'react-router-dom';
 
 import { DefaultButton } from '../DefaultButton';
+import { SizeButton } from '../SizeButton';
 
 import {
     MyBagContainer,
@@ -9,14 +11,121 @@ import {
     ProductInfo
 } from './styles';
 
+type MyBagState = {
+    redirectCartPage: boolean;
+}
+
 export type MyBagProps = {
     isVisible: boolean;
 }
 
-class MyBag extends PureComponent<MyBagProps> {
+class MyBag extends PureComponent<MyBagProps, MyBagState> {
 
     constructor(props: MyBagProps) {
         super(props);
+    }
+
+    state: MyBagState = {
+        redirectCartPage: false
+    }
+
+
+    handleClickViewBagButton() {
+
+        console.log('clicked')
+        this.setState((state) => ({
+            redirectCartPage: !state.redirectCartPage
+        }));
+    }
+
+    renderMyBagProducts() {
+
+        return (
+            <>
+                <ProductWrapper className="product-wrapper">
+                    <ProductContainer className="product-container">
+                        <ProductInfo className="product-info">
+                            <p>Apollo Running Short</p>
+                            <span>$50.00</span>
+
+                            <div className="product-size">
+                                <SizeButton
+                                    origin="MyBag"
+                                    unavailable={false}
+                                    active={true}
+                                    onClick={() => {}}
+                                >
+                                    <span>S</span>
+                                </SizeButton>
+                                <SizeButton
+                                    origin="MyBag"
+                                    unavailable={false}
+                                    active={false}
+                                    onClick={() => {}}
+                                >
+                                    <span>M</span>
+                                </SizeButton>
+                            </div>
+
+                        </ProductInfo>
+
+                        <div className="select-quantity">
+                            <div className="option-sign">+</div>
+                                <span>1</span>
+                            <div className="option-sign">-</div>
+                        </div>                    
+                    </ProductContainer>
+
+                    <aside>
+                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
+                    </aside>
+
+                </ProductWrapper>  
+            
+            
+                <ProductWrapper className="product-wrapper">
+                    <ProductContainer className="product-container">
+                        <ProductInfo className="product-info">
+                            <p>Jupiter Wayfarer</p>
+                            <span>$75.00</span>
+
+                            <div className="product-size">
+                                <SizeButton
+                                    origin="MyBag"
+                                    unavailable={false}
+                                    active={true}
+                                    onClick={() => {}}
+                                >
+                                    <span>S</span>
+                                </SizeButton>
+                                <SizeButton
+                                    origin="MyBag"
+                                    unavailable={false}
+                                    active={false}
+                                    onClick={() => {}}
+                                >
+                                    <span>M</span>
+                                </SizeButton>
+                            </div>
+
+                        </ProductInfo>
+
+                        <div className="select-quantity">
+                            <div className="option-sign">+</div>
+                                <span>2</span>
+                            <div className="option-sign">-</div>
+                        </div>                    
+                    </ProductContainer>
+
+                    <aside>
+                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
+                    </aside>
+
+                </ProductWrapper>
+            </>
+
+        );
+
     }
 
     render() {
@@ -34,65 +143,7 @@ class MyBag extends PureComponent<MyBagProps> {
                     <span>2 items</span>
                 </div>
 
-                <ProductWrapper className="product-wrapper">
-                    <ProductContainer className="product-container">
-                        <ProductInfo className="product-info">
-                            <p>Apollo Running Short</p>
-                            <span>$50.00</span>
-
-                            <div className="product-size">
-                                <div className="size">
-                                    <span>S</span>
-                                </div>
-                                <div className="size">
-                                    <span>M</span>
-                                </div>
-                            </div>
-
-                        </ProductInfo>
-
-                        <div className="select-quantity">
-                            <div className="option-sign">+</div>
-                                <span>1</span>
-                            <div className="option-sign">-</div>
-                        </div>                    
-                    </ProductContainer>
-
-                    <aside>
-                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
-                    </aside>
-
-                </ProductWrapper>
-
-                <ProductWrapper className="product-wrapper">
-                    <ProductContainer className="product-container">
-                        <ProductInfo className="product-info">
-                            <p>Jupiter Wayfarer</p>
-                            <span>$75.00</span>
-
-                            <div className="product-size">
-                                <div className="size">
-                                    <span>S</span>
-                                </div>
-                                <div className="size">
-                                    <span>M</span>
-                                </div>
-                            </div>
-
-                        </ProductInfo>
-
-                        <div className="select-quantity">
-                            <div className="option-sign">+</div>
-                                <span>2</span>
-                            <div className="option-sign">-</div>
-                        </div>                    
-                    </ProductContainer>
-
-                    <aside>
-                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
-                    </aside>
-
-                </ProductWrapper>
+                { this.renderMyBagProducts() }
 
                 <div className="total-price">
                     <span>Total</span>
@@ -103,6 +154,7 @@ class MyBag extends PureComponent<MyBagProps> {
                     <DefaultButton 
                         className="default-button"
                         color="default"
+                        onClick={() => this.handleClickViewBagButton()}
                     >
                         VIEW BAG
                     </DefaultButton>
@@ -113,6 +165,9 @@ class MyBag extends PureComponent<MyBagProps> {
                         CHECK OUT
                     </DefaultButton>
                 </div>
+
+
+                { this.state.redirectCartPage && <Navigate to='/cart'/>}
 
             </MyBagContainer>
         ) ;

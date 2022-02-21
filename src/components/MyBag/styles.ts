@@ -170,22 +170,11 @@ export const ProductInfo = styled.div`
 
         align-items: center;
 
-        .size {
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            width: 1.5rem;
-            height: 1.5rem;
-
-            border: 1px solid var(--c-black);
-
-            font: var(--product-size-font);
-
-            & + div {
-                margin-left: 0.5rem;
-            }
+        #size-button {
+            
+            & + button {
+                margin-left: 0.5625rem;
+            } 
 
         }
 
