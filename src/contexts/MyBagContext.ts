@@ -4,11 +4,17 @@ import { dispatch, getState } from '../store';
 
 const MyBagSlice = createSlice({
     name: "bagVisible",
-    initialState: { value: false },
+    initialState: { value: false, bagActive: false },
     reducers: {
         handleChangeMyBagState: (state) => {
             state.value = !state.value
-        }
+        },
+        deactivateMyBagComponent: ( state ) => {
+            state.bagActive = false
+        },
+        activateMyBagComponent: ( state ) => {
+            state.bagActive = true
+        },
     }
 });
 
@@ -20,6 +26,8 @@ class MyBagContext {
 
     constructor() {
         this.changeMyBagState = this.changeMyBagState.bind(this);
+        this.deactivateMyBagComponent = this.deactivateMyBagComponent.bind(this);
+        this.activateMyBagComponent = this.activateMyBagComponent.bind(this);
     }
 
     public static getInstance() {
@@ -37,6 +45,15 @@ class MyBagContext {
 
         return value;
     }
+
+    deactivateMyBagComponent() {
+        dispatch( actions.deactivateMyBagComponent() );
+    }
+
+    activateMyBagComponent() {
+        dispatch( actions.activateMyBagComponent() );
+    }
+
     
 }
 

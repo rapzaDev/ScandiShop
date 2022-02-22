@@ -32,8 +32,10 @@ type SizesType = {
 
 type ProductPageState = {
     bagVisible: boolean;
+    bagIsActive: boolean;
     unsubscribe: any; 
     currencyEnabled: boolean;
+    currencyOptionsActive: boolean;
     size: SizesType;
 }
 
@@ -46,8 +48,10 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
     state: ProductPageState = {
         bagVisible: false,
+        bagIsActive: false,
         unsubscribe: undefined,
         currencyEnabled: false,
+        currencyOptionsActive: false,
         size: {
             XS:false,
             S:true,
@@ -60,13 +64,17 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
         window.scrollTo(0, 0);
 
+        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
+
         const unsubscribe = subscribe( () => {
             const bagState = getState().myBag;
             const currencyOptionsState  = getState().currencyOptions;
 
             this.setState(() => ({
                 bagVisible: bagState.value,
-                currencyEnabled: currencyOptionsState.value
+                bagIsActive: bagState.bagActive,
+                currencyEnabled: currencyOptionsState.value,
+                currencyOptionsActive: currencyOptionsState.currencyOptionsActive
             }))
 
         });
@@ -76,11 +84,6 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
         }));
 
     }
-
-    
-    componentDidUpdate() {
-        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
-    }
     
     componentWillUnmount() {
         this.state.unsubscribe();
@@ -88,11 +91,19 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
     
 
     handleClickOnScreen() {
-        if ( this.state.currencyEnabled ) 
+        const { bagVisible, bagIsActive, currencyEnabled, currencyOptionsActive } = this.state;
+
+        const verificationControl = {
+            myBag: bagVisible && ( bagIsActive === false ),
+            currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
+        }
+
+        if ( verificationControl.currencyOptions ) 
             currencyOptionsContext.changeMyCurrencyOptionsState();
 
-        if ( this.state.bagVisible ) 
+        if ( verificationControl.myBag ) 
             myBagContext.changeMyBagState(); 
+            
     }
 
     handleClickSizeXS() {

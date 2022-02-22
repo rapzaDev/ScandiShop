@@ -22,9 +22,11 @@ import {
 
 type CategoryPageState = {
     bagVisible: boolean;
+    bagIsActive: boolean;
     unsubscribe: any; 
     outOfStock: boolean;
     currencyEnabled: boolean;
+    currencyOptionsActive: boolean;
     redirectProductPage: boolean;
 }
 
@@ -37,14 +39,18 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
     state: CategoryPageState = {
         bagVisible: false,
+        bagIsActive: false,
         unsubscribe: undefined,
         outOfStock: false,
         currencyEnabled: false,
+        currencyOptionsActive: false,
         redirectProductPage: false,
     }
  
     componentDidMount() {
         window.scrollTo(0, 0);
+
+        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
 
         const unsubscribe = subscribe( () => {
             const bagState = getState().myBag;
@@ -52,7 +58,9 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
             this.setState(() => ({
                 bagVisible: bagState.value,
-                currencyEnabled: currencyOptionsState.value
+                bagIsActive: bagState.bagActive,
+                currencyEnabled: currencyOptionsState.value,
+                currencyOptionsActive: currencyOptionsState.currencyOptionsActive
             }))
 
         });
@@ -63,9 +71,6 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
     }
 
-    componentDidUpdate() {
-        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen);
-    }
 
     componentWillUnmount() {
         this.state.unsubscribe();
@@ -73,10 +78,18 @@ class CategoryPage extends PureComponent<{}, CategoryPageState> {
 
 
     handleClickOnScreen() {
-        if ( this.state.currencyEnabled ) 
+
+        const { bagVisible, bagIsActive, currencyEnabled, currencyOptionsActive } = this.state;
+
+        const verificationControl = {
+            myBag: bagVisible && ( bagIsActive === false ),
+            currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
+        }
+
+        if ( verificationControl.currencyOptions ) 
             currencyOptionsContext.changeMyCurrencyOptionsState();
 
-        if ( this.state.bagVisible ) 
+        if ( verificationControl.myBag ) 
             myBagContext.changeMyBagState(); 
     }
 

@@ -34,8 +34,10 @@ type SizesType = {
 
 type CartPageState = {
     bagVisible: boolean;
+    bagIsActive: boolean;
     unsubscribe: any; 
     currencyEnabled: boolean;
+    currencyOptionsActive: boolean;
     size: SizesType;
 }
 
@@ -48,8 +50,10 @@ class CartPage extends PureComponent<{}, CartPageState> {
 
     state: CartPageState = {
         bagVisible: false,
+        bagIsActive: false,
         unsubscribe: undefined,
         currencyEnabled: false,
+        currencyOptionsActive: false,
         size: {
             XS:false,
             S:true,
@@ -62,13 +66,17 @@ class CartPage extends PureComponent<{}, CartPageState> {
 
         window.scrollTo(0, 0);
 
+        document.getElementById('cart-page')?.addEventListener('click', this.handleClickOnScreen);
+
         const unsubscribe = subscribe( () => {
             const bagState = getState().myBag;
             const currencyOptionsState  = getState().currencyOptions;
 
             this.setState(() => ({
                 bagVisible: bagState.value,
-                currencyEnabled: currencyOptionsState.value
+                bagIsActive: bagState.bagActive,
+                currencyEnabled: currencyOptionsState.value,
+                currencyOptionsActive: currencyOptionsState.currencyOptionsActive
             }))
 
         });
@@ -78,11 +86,6 @@ class CartPage extends PureComponent<{}, CartPageState> {
         }));
 
     }
-
-    
-    componentDidUpdate() {
-        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
-    }
     
     componentWillUnmount() {
         this.state.unsubscribe();
@@ -90,11 +93,19 @@ class CartPage extends PureComponent<{}, CartPageState> {
     
 
     handleClickOnScreen() {
-        if ( this.state.currencyEnabled ) 
+        const { bagVisible, bagIsActive, currencyEnabled, currencyOptionsActive } = this.state;
+
+        const verificationControl = {
+            myBag: bagVisible && ( bagIsActive === false ),
+            currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
+        }
+
+        if ( verificationControl.currencyOptions ) 
             currencyOptionsContext.changeMyCurrencyOptionsState();
 
-        if ( this.state.bagVisible ) 
+        if ( verificationControl.myBag ) 
             myBagContext.changeMyBagState(); 
+  
     }
 
     handleClickSizeXS() {
@@ -185,7 +196,7 @@ class CartPage extends PureComponent<{}, CartPageState> {
         return (
             
 
-            <CartPageContainer id="product-page">
+            <CartPageContainer id="cart-page">
                 
                 <Header />
 

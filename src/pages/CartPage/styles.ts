@@ -53,6 +53,8 @@ export const CartProductWrapper = styled.div`
 
 export const CartProductContainer = styled.div`
     display: flex;
+    position: sticky;
+
     align-items: center;
     justify-content: space-between;
 

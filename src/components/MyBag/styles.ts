@@ -31,6 +31,9 @@ export const MyBagContainer = styled.div<MyBagProps>`
     padding: 0.5rem 1rem 1.25rem 0.5rem;
 
     .bag-description {
+
+        position: relative;
+
         font: var(--price-regular-font);
         font-size: 1rem;
 

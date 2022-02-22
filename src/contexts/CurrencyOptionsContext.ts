@@ -4,11 +4,17 @@ import { dispatch, getState } from '../store';
 
 const CurrencyOptionsSlice = createSlice({
     name: "currencyEnabled",
-    initialState: { value: false },
+    initialState: { value: false, currencyOptionsActive: false },
     reducers: {
         handleChangeMyCurrencyOptionsState: (state) => {
             state.value = !state.value
-        }
+        },
+        deactivateCurrencyOptionsComponent: ( state ) => {
+            state.currencyOptionsActive = false
+        },
+        activateCurrencyOptionsComponent: ( state ) => {
+            state.currencyOptionsActive = true
+        },
     }
 });
 
@@ -20,6 +26,8 @@ class CurrencyOptionsContext {
 
     constructor() {
         this.changeMyCurrencyOptionsState = this.changeMyCurrencyOptionsState.bind(this);
+        this.deactivateCurrencyOptionsComponent = this.deactivateCurrencyOptionsComponent.bind(this);
+        this.activateCurrencyOptionsComponent = this.activateCurrencyOptionsComponent.bind(this);
     }
 
     public static getInstance() {
@@ -36,6 +44,14 @@ class CurrencyOptionsContext {
         const { value } = getState().currencyOptions;
 
         return value;
+    }
+
+    deactivateCurrencyOptionsComponent(  ) {
+        dispatch( actions.deactivateCurrencyOptionsComponent() );
+    }
+
+    activateCurrencyOptionsComponent(  ) {
+        dispatch( actions.activateCurrencyOptionsComponent() );
     }
     
 }
