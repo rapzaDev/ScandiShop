@@ -29,4 +29,4 @@ class ShadowWrapper extends PureComponent<ShadowWrapperProps> {
 
 };
 
-export { ShadowWrapper };
+export default ShadowWrapper;

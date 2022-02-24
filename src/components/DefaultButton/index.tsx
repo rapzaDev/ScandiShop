@@ -26,4 +26,4 @@ class DefaultButton extends PureComponent<DefaultButtonProps> {
 
 };
 
-export { DefaultButton };
+export default DefaultButton;

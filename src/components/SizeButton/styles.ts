@@ -11,7 +11,8 @@ export const Button = styled.button<SizeButtonState>`
 
     border: 1px solid #000;
 
-    background-color: var(--c-white);
+    /* background-color: var(--c-white); */
+    background-color: transparent;
 
     cursor: pointer;
 
@@ -32,7 +33,10 @@ export const Button = styled.button<SizeButtonState>`
             ( (active && origin === 'ProductPage') || (active && origin === 'CartPage') ) && css`
 
                 background-color: var(--c-black);
-                color: var(--c-white);
+
+                span {
+                    color: var(--c-white);
+                }
 
         `}
 

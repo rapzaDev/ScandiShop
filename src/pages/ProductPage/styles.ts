@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { SizeButton } from '../../components/SizeButton';
+import SizeButton from '../../components/SizeButton';
 
 
 export const ProductPageContainer = styled.div`

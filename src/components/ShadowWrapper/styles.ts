@@ -9,12 +9,12 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
 
     position: ${ ({ active }) => active ? 'fixed' : 'relative'};
 
-    flex-direction: column;
-
-    z-index: 1; 
-
     height: 100vh;
     width: 100%;
+
+    flex-direction: column;
+
+    z-index: -1; 
 
     transition: background-color 0.3s linear;
 

@@ -6,12 +6,9 @@ import {
     Route
  } from 'react-router-dom';
 
-import { store } from '../store';
-import { Provider as ReduxProvider} from 'react-redux';
-
-import { CategoryPage } from '../pages/CategoryPage';
-import { ProductPage } from '../pages/ProductPage';
-import { CartPage } from '../pages/CartPage';
+import CategoryPage  from '../pages/CategoryPage';
+import ProductPage from '../pages/ProductPage';
+import CartPage from '../pages/CartPage';
 
 class Router extends PureComponent {
 
@@ -19,13 +16,11 @@ class Router extends PureComponent {
 
         return (
             <BrowserRouter>
-                <ReduxProvider store={store}>
-                    <Routes>
-                        <Route index element={ <CategoryPage /> } />
-                        <Route path="/product" element={ <ProductPage /> } />
-                        <Route path="/cart" element={ <CartPage /> } />
-                    </Routes>
-                </ReduxProvider>
+                <Routes>
+                    <Route index element={ <CategoryPage  /> } />
+                    <Route path="/product" element={ <ProductPage /> } />
+                    <Route path="/cart" element={ <CartPage /> } />
+                </Routes>
             </BrowserRouter>
         );
 

@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import { Navigate } from 'react-router-dom';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { myBagContext } from '../../contexts/MyBagContext';
+import { RootState } from '../../services/redux/store';
+import MyBagContext from '../../services/redux/contexts/MyBag';
 
-import { DefaultButton } from '../DefaultButton';
-import { SizeButton } from '../SizeButton';
+import DefaultButton from '../DefaultButton';
+import SizeButton from '../SizeButton';
 
 import {
     MyBagContainer,
@@ -17,13 +19,13 @@ type MyBagState = {
     redirectCartPage: boolean;
 }
 
-export type MyBagProps = {
+export type MyBagProps =  {
     isVisible: boolean;
 }
 
-class MyBag extends PureComponent<MyBagProps, MyBagState> {
+class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
-    constructor(props: MyBagProps) {
+    constructor(props: PropsFromRedux) {
         super(props);
     }
 
@@ -39,11 +41,15 @@ class MyBag extends PureComponent<MyBagProps, MyBagState> {
     
 
     pointerLeaveOfMyBagComponent() {
-        myBagContext.deactivateMyBagComponent();
+        const { deactivateMyBagComponent } = this.props;
+
+        deactivateMyBagComponent();
     }
 
     pointerEnterOfMyBagComponent() {
-        myBagContext.activateMyBagComponent();
+        const { activateMyBagComponent } = this.props;
+
+        activateMyBagComponent();
     }
 
 
@@ -152,13 +158,13 @@ class MyBag extends PureComponent<MyBagProps, MyBagState> {
 
     render() {
 
-        const { isVisible } = this.props;
+        const { bagVisible } = this.props;
 
         return (
             <>
                 <MyBagContainer 
                     id="my-bag"
-                    isVisible={isVisible}
+                    isVisible={bagVisible}
                 >
                     
                     <div className="bag-description">
@@ -200,4 +206,26 @@ class MyBag extends PureComponent<MyBagProps, MyBagState> {
 
 };
 
-export { MyBag };
+// -------------------------------- REDUX CONFIG -------------------------------- //
+
+const { 
+    activateMyBagComponent,
+    deactivateMyBagComponent
+} = MyBagContext.actions;
+
+const mapState = ( state: RootState )  => ({
+    bagVisible: state.myBag.value,
+})
+
+const mapDispatch = {
+    activateMyBagComponent,
+    deactivateMyBagComponent,
+}
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(MyBag);
+
+// -------------------------------- REDUX CONFIG -------------------------------- //

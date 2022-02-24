@@ -8,10 +8,7 @@ export interface SelectCategoryButtonProps extends ButtonHTMLAttributes<HTMLButt
     isSelected?: boolean;
 };
 
-class SelectCategoryButton extends PureComponent
-<
-    SelectCategoryButtonProps
-> {
+class SelectCategoryButton extends PureComponent<SelectCategoryButtonProps> {
 
     constructor(props: SelectCategoryButtonProps) {
         super(props);
@@ -30,4 +27,4 @@ class SelectCategoryButton extends PureComponent
     }
 };
 
-export { SelectCategoryButton };
+export default SelectCategoryButton;

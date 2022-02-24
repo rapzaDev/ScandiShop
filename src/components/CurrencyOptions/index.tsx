@@ -1,12 +1,18 @@
 import React, { PureComponent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
+import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+import { RootState } from '../../services/redux/store';
 
 import { 
     Container
  } from './styles';
 
-class CurrencyOptions extends PureComponent {
+class CurrencyOptions extends PureComponent<PropsFromRedux> {
+
+    constructor(props:PropsFromRedux) {
+        super(props);
+    }
 
     componentDidMount() {
         document.getElementById('currency-options')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
@@ -16,11 +22,15 @@ class CurrencyOptions extends PureComponent {
 
 
     pointerLeaveOfMyBagComponent() {
-        currencyOptionsContext.deactivateCurrencyOptionsComponent();
+        const { deactivateCurrencyOptionsComponent } = this.props;
+
+        deactivateCurrencyOptionsComponent();
     }
 
     pointerEnterOfMyBagComponent() {
-        currencyOptionsContext.activateCurrencyOptionsComponent();
+        const { activateCurrencyOptionsComponent } = this.props;
+
+        activateCurrencyOptionsComponent();
     }
 
 
@@ -42,4 +52,24 @@ class CurrencyOptions extends PureComponent {
 
 };
 
-export { CurrencyOptions };
+// -------------------------------- REDUX CONFIG -------------------------------- //
+
+const {
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent
+} = CurrencyOptionsContext.actions;
+
+const mapState = ( state: RootState )  => ({});
+
+const mapDispatch = {
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent,
+}
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(CurrencyOptions);
+
+// -------------------------------- REDUX CONFIG -------------------------------- //

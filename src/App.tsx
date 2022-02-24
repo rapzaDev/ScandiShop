@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 
-import { Router as Routes} from './routes';
+import ScandiShop from './providers/Scandishop';
 
 class App extends PureComponent {
-  
+
     render () {
 
-      return <Routes />;
+      return < ScandiShop/>;
 
     }
 

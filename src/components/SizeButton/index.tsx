@@ -50,4 +50,4 @@ class SizeButton extends PureComponent<SizeButtonProps, SizeButtonState> {
 
 };
 
-export { SizeButton };
+export default SizeButton;

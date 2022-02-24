@@ -1,17 +1,18 @@
 import React, { PureComponent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { getState, subscribe } from '../../store';
-import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
-import { myBagContext } from '../../contexts/MyBagContext';
+import { RootState } from '../../services/redux/store';
+import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+import MyBagContext from '../../services/redux/contexts/MyBag';
 
 import arrowLeft from '../../assets/images/arrow-left.svg';
 import arrowRight from '../../assets/images/arrow-right.svg';
 
-import { Header }  from '../../components/Header';
-import { SizeButton } from '../../components/SizeButton';
-import { MyBag } from '../../components/MyBag';
-import { CurrencyOptions } from '../../components/CurrencyOptions';
-import { ShadowWrapper } from '../../components/ShadowWrapper';
+import Header  from '../../components/Header';
+import SizeButton from '../../components/SizeButton';
+import MyBag from '../../components/MyBag';
+import CurrencyOptions from '../../components/CurrencyOptions';
+import ShadowWrapper from '../../components/ShadowWrapper';
 
 import {
     CartPageContainer,
@@ -33,27 +34,17 @@ type SizesType = {
 }
 
 type CartPageState = {
-    bagVisible: boolean;
-    bagIsActive: boolean;
-    unsubscribe: any; 
-    currencyEnabled: boolean;
-    currencyOptionsActive: boolean;
     size: SizesType;
 }
 
-class CartPage extends PureComponent<{}, CartPageState> {
+class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
 
-    constructor(props: {}) {
+    constructor(props: PropsFromRedux) {
         super(props);
         this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
     }
 
     state: CartPageState = {
-        bagVisible: false,
-        bagIsActive: false,
-        unsubscribe: undefined,
-        currencyEnabled: false,
-        currencyOptionsActive: false,
         size: {
             XS:false,
             S:true,
@@ -67,44 +58,28 @@ class CartPage extends PureComponent<{}, CartPageState> {
         window.scrollTo(0, 0);
 
         document.getElementById('cart-page')?.addEventListener('click', this.handleClickOnScreen);
-
-        const unsubscribe = subscribe( () => {
-            const bagState = getState().myBag;
-            const currencyOptionsState  = getState().currencyOptions;
-
-            this.setState(() => ({
-                bagVisible: bagState.value,
-                bagIsActive: bagState.bagActive,
-                currencyEnabled: currencyOptionsState.value,
-                currencyOptionsActive: currencyOptionsState.currencyOptionsActive
-            }))
-
-        });
-
-        this.setState(() => ({
-            unsubscribe: unsubscribe
-        }));
-
-    }
-    
-    componentWillUnmount() {
-        this.state.unsubscribe();
-    }
-    
+    }    
 
     handleClickOnScreen() {
-        const { bagVisible, bagIsActive, currencyEnabled, currencyOptionsActive } = this.state;
+        const { 
+            bagVisible, 
+            bagActive, 
+            currencyEnabled,
+            currencyOptionsActive,
+            handleChangeMyCurrencyOptionsState, 
+            handleChangeMyBagState,
+        } = this.props;
 
         const verificationControl = {
-            myBag: bagVisible && ( bagIsActive === false ),
             currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
+            myBag: bagVisible && ( bagActive === false ),
         }
 
         if ( verificationControl.currencyOptions ) 
-            currencyOptionsContext.changeMyCurrencyOptionsState();
+            handleChangeMyCurrencyOptionsState();
 
         if ( verificationControl.myBag ) 
-            myBagContext.changeMyBagState(); 
+            handleChangeMyBagState();
   
     }
 
@@ -180,14 +155,17 @@ class CartPage extends PureComponent<{}, CartPageState> {
 
     renderMyBag() {
 
-        if ( this.state.bagVisible)
-            return <MyBag isVisible={ this.state.bagVisible } />
-        else return <></>
+        const { bagVisible } = this.props;
+
+        if ( bagVisible)
+            return <MyBag />
 
     }
 
     renderCurrencyOptions() {
-        if ( this.state.currencyEnabled ) 
+        const { currencyEnabled } = this.props;
+
+        if ( currencyEnabled ) 
             return <CurrencyOptions />
     }
 
@@ -204,7 +182,7 @@ class CartPage extends PureComponent<{}, CartPageState> {
 
                     { this.renderMyBag() }
 
-                <ShadowWrapper active={this.state.bagVisible}/>
+                <ShadowWrapper active={this.props.bagVisible}/>
                     
                     <Main>
 
@@ -325,4 +303,42 @@ class CartPage extends PureComponent<{}, CartPageState> {
 
 };
 
-export { CartPage };
+// -------------------------------- REDUX CONFIG -------------------------------- //
+
+const { 
+    handleChangeMyBagState,
+    activateMyBagComponent,
+    deactivateMyBagComponent
+} = MyBagContext.actions;
+
+const {
+    handleChangeMyCurrencyOptionsState,
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent
+} = CurrencyOptionsContext.actions;
+
+
+const mapState = ( state: RootState )  => ({  
+    bagVisible: state.myBag.value,
+    bagActive: state.myBag.bagActive,
+    currencyEnabled: state.currencyOptions.value,
+    currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
+})
+
+const mapDispatch = {
+    handleChangeMyBagState,
+    activateMyBagComponent,
+    deactivateMyBagComponent,
+    handleChangeMyCurrencyOptionsState,
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent,
+}
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(CartPage);
+
+// -------------------------------- REDUX CONFIG -------------------------------- //
+

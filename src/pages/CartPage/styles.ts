@@ -1,8 +1,5 @@
 import styled from 'styled-components';
 
-import { SizeButton } from '../../components/SizeButton';
-
-
 export const CartPageContainer = styled.div`
     display: flex;
     position: relative;

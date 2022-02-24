@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
-import { getState, subscribe } from '../../store';
-import { currencyOptionsContext } from '../../contexts/CurrencyOptionsContext';
-import { myBagContext } from '../../contexts/MyBagContext';
+import { RootState } from '../../services/redux/store';
+import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+import MyBagContext from '../../services/redux/contexts/MyBag';
 
 
-import { Header }  from '../../components/Header';
-import { DefaultButton } from '../../components/DefaultButton';
-import { MyBag } from '../../components/MyBag';
-import { CurrencyOptions } from '../../components/CurrencyOptions';
+import Header from '../../components/Header';
+import DefaultButton from '../../components/DefaultButton';
+import MyBag from '../../components/MyBag';
+import CurrencyOptions from '../../components/CurrencyOptions';
 
-import { ShadowWrapper } from '../../components/ShadowWrapper';
+import ShadowWrapper from '../../components/ShadowWrapper';
 
 import {
     ProductPageContainer,
@@ -31,27 +32,17 @@ type SizesType = {
 }
 
 type ProductPageState = {
-    bagVisible: boolean;
-    bagIsActive: boolean;
-    unsubscribe: any; 
-    currencyEnabled: boolean;
-    currencyOptionsActive: boolean;
     size: SizesType;
 }
 
-class ProductPage extends PureComponent<{}, ProductPageState> {
+class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
-    constructor(props: {}) {
+    constructor(props: PropsFromRedux) {
         super(props);
         this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
     }
 
     state: ProductPageState = {
-        bagVisible: false,
-        bagIsActive: false,
-        unsubscribe: undefined,
-        currencyEnabled: false,
-        currencyOptionsActive: false,
         size: {
             XS:false,
             S:true,
@@ -66,43 +57,29 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
         document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
 
-        const unsubscribe = subscribe( () => {
-            const bagState = getState().myBag;
-            const currencyOptionsState  = getState().currencyOptions;
-
-            this.setState(() => ({
-                bagVisible: bagState.value,
-                bagIsActive: bagState.bagActive,
-                currencyEnabled: currencyOptionsState.value,
-                currencyOptionsActive: currencyOptionsState.currencyOptionsActive
-            }))
-
-        });
-
-        this.setState(() => ({
-            unsubscribe: unsubscribe
-        }));
-
-    }
-    
-    componentWillUnmount() {
-        this.state.unsubscribe();
     }
     
 
     handleClickOnScreen() {
-        const { bagVisible, bagIsActive, currencyEnabled, currencyOptionsActive } = this.state;
+        const { 
+            bagVisible, 
+            bagActive, 
+            currencyEnabled, 
+            currencyOptionsActive,
+            handleChangeMyCurrencyOptionsState,
+            handleChangeMyBagState
+         } = this.props;
 
         const verificationControl = {
-            myBag: bagVisible && ( bagIsActive === false ),
             currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
+            myBag: bagVisible && ( bagActive === false ),
         }
 
         if ( verificationControl.currencyOptions ) 
-            currencyOptionsContext.changeMyCurrencyOptionsState();
+            handleChangeMyCurrencyOptionsState();
 
         if ( verificationControl.myBag ) 
-            myBagContext.changeMyBagState(); 
+            handleChangeMyBagState();
             
     }
 
@@ -178,14 +155,17 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
     renderMyBag() {
 
-        if ( this.state.bagVisible)
-            return <MyBag isVisible={ this.state.bagVisible } />
-        else return <></>
+        const {  bagVisible } = this.props;
+
+        if ( bagVisible)
+            return <MyBag />
 
     }
 
     renderCurrencyOptions() {
-        if ( this.state.currencyEnabled ) 
+        const {  currencyEnabled } = this.props;
+
+        if ( currencyEnabled ) 
             return <CurrencyOptions />
     }
 
@@ -257,7 +237,7 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
                     { this.renderMyBag() }
 
-                <ShadowWrapper active={this.state.bagVisible}/>
+                <ShadowWrapper active={this.props.bagVisible}/>
                     
                     <Main>
 
@@ -286,7 +266,11 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
                                     <span>$50.00</span>
                                 </div>
 
-                                <DefaultButton className="add-cart-button" color="green">
+                                <DefaultButton 
+                                    className="add-cart-button" 
+                                    color="green"
+                                    style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
+                                >
                                     <span>ADD TO CART</span>
                                 </DefaultButton>
 
@@ -310,4 +294,43 @@ class ProductPage extends PureComponent<{}, ProductPageState> {
 
 };
 
-export { ProductPage };
+
+// -------------------------------- REDUX CONFIG -------------------------------- //
+
+const { 
+    handleChangeMyBagState,
+    activateMyBagComponent,
+    deactivateMyBagComponent
+} = MyBagContext.actions;
+
+const {
+    handleChangeMyCurrencyOptionsState,
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent
+} = CurrencyOptionsContext.actions;
+
+
+const mapState = ( state: RootState )  => ({  
+    bagVisible: state.myBag.value,
+    bagActive: state.myBag.bagActive,
+    currencyEnabled: state.currencyOptions.value,
+    currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
+})
+
+const mapDispatch = {
+    handleChangeMyBagState,
+    activateMyBagComponent,
+    deactivateMyBagComponent,
+    handleChangeMyCurrencyOptionsState,
+    activateCurrencyOptionsComponent,
+    deactivateCurrencyOptionsComponent,
+}
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+export default connector(ProductPage);
+
+// -------------------------------- REDUX CONFIG -------------------------------- //
+
