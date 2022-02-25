@@ -27,6 +27,8 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     constructor(props: PropsFromRedux) {
         super(props);
+        this.pointerLeaveOfMyBagComponent = this.pointerLeaveOfMyBagComponent.bind(this);
+        this.pointerEnterOfMyBagComponent = this.pointerEnterOfMyBagComponent.bind(this);
     }
 
     state: MyBagState = {
@@ -38,7 +40,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         document.getElementById('my-bag')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
     }
-    
+
 
     pointerLeaveOfMyBagComponent() {
         const { deactivateMyBagComponent } = this.props;
@@ -54,6 +56,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
 
     handleClickViewBagButton() {
+
         const windowLocation = window.location.pathname;
 
         if ( windowLocation === '/cart') window.location.reload();
@@ -210,7 +213,8 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
 const { 
     activateMyBagComponent,
-    deactivateMyBagComponent
+    deactivateMyBagComponent,
+    handleChangeMyBagState
 } = MyBagContext.actions;
 
 const mapState = ( state: RootState )  => ({
@@ -220,6 +224,7 @@ const mapState = ( state: RootState )  => ({
 const mapDispatch = {
     activateMyBagComponent,
     deactivateMyBagComponent,
+    handleChangeMyBagState
 }
 
 const connector = connect(mapState, mapDispatch);

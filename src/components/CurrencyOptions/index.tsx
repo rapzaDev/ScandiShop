@@ -12,6 +12,8 @@ class CurrencyOptions extends PureComponent<PropsFromRedux> {
 
     constructor(props:PropsFromRedux) {
         super(props);
+        this.pointerLeaveOfMyBagComponent = this.pointerLeaveOfMyBagComponent.bind(this);
+        this.pointerEnterOfMyBagComponent = this.pointerEnterOfMyBagComponent.bind(this);
     }
 
     componentDidMount() {

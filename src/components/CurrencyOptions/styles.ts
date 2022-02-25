@@ -23,7 +23,7 @@ export const Container = styled.div`
 
 
     right: 5%;
-    top: 9%;
+    top: 4.5rem;
 
     width: 7.1rem;
     height: 10.5rem;

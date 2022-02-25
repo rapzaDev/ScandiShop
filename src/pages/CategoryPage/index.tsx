@@ -43,10 +43,22 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
         document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
 
+        const { 
+            bagVisible, 
+            handleChangeMyBagState ,
+            currencyEnabled,
+            handleChangeMyCurrencyOptionsState
+        } = this.props;
+
+        // Cheking if MyBag component was rendered before page rendering
+            if ( bagVisible ) handleChangeMyBagState();
+
+        // Cheking if CurrencyOptions component was rendered before page rendering
+            if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
+
     }
 
     handleClickOnScreen() {
-
         const { 
             bagVisible, 
             bagActive, 

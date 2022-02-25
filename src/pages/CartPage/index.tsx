@@ -58,6 +58,20 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
         window.scrollTo(0, 0);
 
         document.getElementById('cart-page')?.addEventListener('click', this.handleClickOnScreen);
+
+        const { 
+            bagVisible, 
+            handleChangeMyBagState ,
+            currencyEnabled,
+            handleChangeMyCurrencyOptionsState
+        } = this.props;
+
+        // Cheking if MyBag component was rendered before page rendering
+            if ( bagVisible ) handleChangeMyBagState();
+
+        // Cheking if CurrencyOptions component was rendered before page rendering
+            if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
+            
     }    
 
     handleClickOnScreen() {
