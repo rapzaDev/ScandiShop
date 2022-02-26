@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 import { client } from '../../../apollo/client';
 
-type GetCategoryNamesData = {
+type GetCategoryNamesType = {
     name: string;
 }
 
@@ -18,7 +18,7 @@ async function getCategoryNames() {
 
     const { data } = GET_CATEGORY_NAMES;
 
-    const parsedData = ( Object.entries<GetCategoryNamesData[]>(data)[0][1] )
+    const parsedData = ( Object.entries<GetCategoryNamesType[]>(data)[0][1] )
         .map(object => object.name);
 
     return parsedData;

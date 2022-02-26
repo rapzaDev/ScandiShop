@@ -23,11 +23,10 @@ import {
 } from './styles';
 import { connect, ConnectedProps } from 'react-redux';
 
-
 type HeaderState = {
-    womenButton: boolean;
-    menButton: boolean;
-    kidsButton: boolean;
+    all: boolean;
+    clothes: boolean;
+    tech: boolean;
     categoryNames: string[];
 }
 
@@ -39,48 +38,57 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     }
 
     state: HeaderState = {
-        womenButton: true,
-        menButton: false,
-        kidsButton: false,
-        categoryNames: []
+        all: true,
+        clothes: false,
+        tech: false,
+        categoryNames: [],
     }
-
-    categoryNames: string[] = [];
-
 
     async componentDidMount() {
         
-        const data = await getCategoryNames();
-
-        this.categoryNames = data;
-
-        console.log("data:", this.categoryNames);
+        const categoryNamesData = await getCategoryNames();
+        
+        this.setState(() => ({
+            categoryNames: categoryNamesData
+        }));
 
     }
 
 
-    handleClickCategoryWomanButton() {
-        this.setState(() => ({
-            womenButton: true,
-            menButton: false,
-            kidsButton: false
-        }))
-    }
+    handleClickCategoryButton( e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) {
 
-    handleClickCategoryMenButton() {
-        this.setState(() => ({
-            womenButton: false,
-            menButton: true,
-            kidsButton: false
-        }))
-    }
+        const { value } = e.currentTarget;
+        
+        switch (value) {
+            case 'all':
+                this.setState(() => ({
+                    all: true,
+                    clothes: false,
+                    tech: false
+                }));    
 
-    handleClickCategoryKidsButton() {
-        this.setState(() => ({
-            womenButton: false,
-            menButton: false,
-            kidsButton: true
-        }))
+                break;
+            case 'clothes':
+                this.setState(() => ({
+                    all: false,
+                    clothes: true,
+                    tech: false
+                }));    
+
+                break;
+            case 'tech':
+                this.setState(() => ({
+                    all: false,
+                    clothes: false,
+                    tech: true
+                }));    
+
+                break;
+        
+            default:
+                break;
+        }
+
     }
 
     handleCurrencyButton() {
@@ -96,27 +104,31 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
 
     renderCategoryButtons() {
 
+        const { categoryNames } = this.state;
+
         return (
+
             <div className="category-buttons">
-                <SelectCategoryButton 
-                    onClick={() => this.handleClickCategoryWomanButton()}
-                    isSelected={this.state.womenButton}
-                >
-                    WOMEN
-                </SelectCategoryButton>
-                <SelectCategoryButton 
-                    onClick={() => this.handleClickCategoryMenButton()}
-                    isSelected={this.state.menButton}
-                >
-                    MEN
-                </SelectCategoryButton>
-                <SelectCategoryButton 
-                    onClick={() => this.handleClickCategoryKidsButton()}
-                    isSelected={this.state.kidsButton}
-                >
-                    KIDS
-                </SelectCategoryButton>
+                
+                { 
+                    categoryNames.map( categoryName => (
+                        <SelectCategoryButton 
+                            key={categoryName}
+                            onClick={(e) => this.handleClickCategoryButton(e)}
+                            value={categoryName}
+                            isSelected={
+                                categoryName === 'all' && this.state.all || 
+                                categoryName === 'clothes' && this.state.clothes || 
+                                categoryName === 'tech' && this.state.tech 
+                            }
+                        >
+                            { categoryName }
+                        </SelectCategoryButton>
+                    ))
+                }
+
             </div>
+
         );
     }
 

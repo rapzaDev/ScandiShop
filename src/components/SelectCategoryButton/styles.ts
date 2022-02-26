@@ -20,6 +20,8 @@ export const Button = styled.button<SelectCategoryButtonProps>`
     cursor: pointer;
     border: 0;
 
+    text-transform: uppercase;
+
 
     ${ ({ isSelected }) => isSelected 
         ? css`
