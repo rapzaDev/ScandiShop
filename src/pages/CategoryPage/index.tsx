@@ -6,6 +6,8 @@ import { RootState } from '../../services/redux/store';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
+import { getAllProducts, ProductsDataType } from '../../services/graphql/pages/CategoryPage/Queries';
+
 import cartIcon from '../../assets/images/white-cart-icon.svg';
 
 import Header from '../../components/Header';
@@ -24,6 +26,9 @@ import {
 type CategoryPageState = { 
     outOfStock: boolean;
     redirectProductPage: boolean;
+    allProducts: ProductsDataType[];
+    clothesProducts: ProductsDataType[];
+    techProducts: ProductsDataType[];
 }
 
 class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
@@ -36,9 +41,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     state: CategoryPageState = {
         outOfStock: false,
         redirectProductPage: false,
+        allProducts: [],
+        clothesProducts: [],
+        techProducts: [],
     }
  
-    componentDidMount() {
+    async componentDidMount() {
         window.scrollTo(0, 0);
 
         document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
@@ -55,6 +63,18 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
         // Cheking if CurrencyOptions component was rendered before page rendering
             if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
+
+
+        // --------- GraphQL ALL PRODUCTS DATA ---------
+            const productsData = await getAllProducts();
+
+            console.log(productsData[1]);
+
+            this.setState(() => ({
+                allProducts: productsData[0],
+                clothesProducts: productsData[1],
+                techProducts: productsData[2],
+            }));
 
     }
 
@@ -148,6 +168,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         <span className="product-price">$50.00</span>
 
                 </ProductInfo>
+
 
                 <ProductInfo className="product-info" outOfStock={true}>
                     
