@@ -4,6 +4,7 @@ import { RootState } from '../../services/redux/store';
 
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+import CategoriesContext from '../../services/redux/contexts/Categories';
 
 import { getCategoryNames } from '../../services/graphql/components/Header/Queries';
 
@@ -24,9 +25,9 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 
 type HeaderState = {
-    all: boolean;
-    clothes: boolean;
-    tech: boolean;
+    // all: boolean;
+    // clothes: boolean;
+    // tech: boolean;
     categoryNames: string[];
 }
 
@@ -38,9 +39,9 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     }
 
     state: HeaderState = {
-        all: true,
-        clothes: false,
-        tech: false,
+        // all: true,
+        // clothes: false,
+        // tech: false,
         categoryNames: [],
     }
 
@@ -57,32 +58,20 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
 
     handleClickCategoryButton( e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) {
 
+        const { setAllCategory, setClothesCategory, setTechCategory } = this.props;
         const { value } = e.currentTarget;
         
         switch (value) {
             case 'all':
-                this.setState(() => ({
-                    all: true,
-                    clothes: false,
-                    tech: false
-                }));    
-
+                setAllCategory();
                 break;
+
             case 'clothes':
-                this.setState(() => ({
-                    all: false,
-                    clothes: true,
-                    tech: false
-                }));    
-
+                setClothesCategory();
                 break;
-            case 'tech':
-                this.setState(() => ({
-                    all: false,
-                    clothes: false,
-                    tech: true
-                }));    
 
+            case 'tech':
+                setTechCategory();
                 break;
         
             default:
@@ -105,6 +94,7 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     renderCategoryButtons() {
 
         const { categoryNames } = this.state;
+        const { allCategory, clothesCategory, techCategory } = this.props;
 
         return (
 
@@ -117,9 +107,9 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
                             onClick={(e) => this.handleClickCategoryButton(e)}
                             value={categoryName}
                             isSelected={
-                                categoryName === 'all' && this.state.all || 
-                                categoryName === 'clothes' && this.state.clothes || 
-                                categoryName === 'tech' && this.state.tech 
+                                categoryName === 'all' && allCategory || 
+                                categoryName === 'clothes' && clothesCategory || 
+                                categoryName === 'tech' && techCategory 
                             }
                         >
                             { categoryName } 
@@ -201,14 +191,26 @@ const { handleChangeMyBagState } = MyBagContext.actions;
 
 const { handleChangeMyCurrencyOptionsState } = CurrencyOptionsContext.actions;
 
+const { 
+    setAllCategory, 
+    setClothesCategory, 
+    setTechCategory
+} = CategoriesContext.actions;
+
 
 const mapState = ( state: RootState )  => ({  
     currencyEnabled: state.currencyOptions.value,
+    allCategory: state.categories.all,
+    clothesCategory: state.categories.clothes,
+    techCategory: state.categories.tech
 })
 
 const mapDispatch = {
     handleChangeMyBagState,
     handleChangeMyCurrencyOptionsState,
+    setAllCategory, 
+    setClothesCategory, 
+    setTechCategory
 }
 
 const connector = connect(mapState, mapDispatch);
