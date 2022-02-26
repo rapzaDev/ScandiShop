@@ -4,11 +4,22 @@ import { connect, ConnectedProps } from 'react-redux';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import { RootState } from '../../services/redux/store';
 
+import { getCurrencies } from '../../services/graphql/components/CurrencyOptions/Queries';
+
 import { 
     Container
  } from './styles';
 
-class CurrencyOptions extends PureComponent<PropsFromRedux> {
+type CurrencieDataType = {
+    symbol: string;
+    label: string;
+}
+
+type CurrencyOptionsState = {
+    currencies: CurrencieDataType[];
+}
+
+class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState> {
 
     constructor(props:PropsFromRedux) {
         super(props);
@@ -16,10 +27,22 @@ class CurrencyOptions extends PureComponent<PropsFromRedux> {
         this.pointerEnterOfMyBagComponent = this.pointerEnterOfMyBagComponent.bind(this);
     }
 
-    componentDidMount() {
+    state: CurrencyOptionsState = {
+        currencies: [],
+    }
+
+    async componentDidMount() {
         document.getElementById('currency-options')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
         document.getElementById('currency-options')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
+
+
+        const currenciesData = await getCurrencies();
+
+        this.setState(() => ({
+            currencies: currenciesData
+        }))
+
     }
 
 
@@ -40,12 +63,20 @@ class CurrencyOptions extends PureComponent<PropsFromRedux> {
 
     render() {
 
+        const { currencies } = this.state;
+
         return (
 
             <Container id="currency-options">
-                <button>$ USD</button>
-                <button>€ EUR</button>
-                <button>¥ JPY</button>
+                { 
+                    currencies.map( currency => (
+                        <button
+                            key={currency.symbol}
+                        >
+                            {currency.symbol} {currency.label}
+                        </button>
+                    ))  
+                }
             </Container>
 
         );

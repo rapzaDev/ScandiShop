@@ -122,8 +122,8 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
                                 categoryName === 'tech' && this.state.tech 
                             }
                         >
-                            { categoryName }
-                        </SelectCategoryButton>
+                            { categoryName } 
+                         </SelectCategoryButton>
                     ))
                 }
 

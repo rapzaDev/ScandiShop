@@ -25,4 +25,5 @@ async function getCategoryNames() {
 
 };
 
+
 export { getCategoryNames };
