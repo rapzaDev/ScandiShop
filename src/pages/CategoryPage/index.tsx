@@ -68,7 +68,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         // --------- GraphQL ALL PRODUCTS DATA ---------
             const productsData = await getAllProducts();
 
-            console.log(productsData[1]);
+            console.log(productsData[2]);
 
             this.setState(() => ({
                 allProducts: productsData[0],
@@ -125,139 +125,119 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
     renderCategoryProducts() {
 
-        return (
-            <>                           
-                <ProductInfo 
-                    className="product-info" 
-                    outOfStock={this.state.outOfStock} 
-                >
+        const { allCategory, clothesCategory, techCategory } = this.props;
 
-                        <div className="product-image">
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                                style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>
-                        </div> {/**later i'll replace it with a image */}
+        const { allProducts, clothesProducts, techProducts } = this.state;
+
+        const  selectedCategory = ( allCategory && 'all') || ( clothesCategory && 'clothes') || ( techCategory && 'tech');
+
+        switch (selectedCategory) {
+            case 'all':
+
+                let allPrices = (  allProducts[0] && allProducts[0].prices );
+                let teste = (  allProducts[0] && Object.entries(allProducts[0].prices) );
+
+                return (
+                    allProducts.map( product => (
+                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
                         
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
+                            <div className="product-image">
 
-                </ProductInfo>
+                                { !product.inStock && <span>OUT OF STOCK</span> }  
 
-                <ProductInfo 
-                    className="product-info" 
-                    outOfStock={this.state.outOfStock} 
-                >
+                                <ProductInfoCartButton 
+                                    className="product-cart-button"
+                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                >
+                                    <img src={cartIcon} alt="ProductInfoCartButton cart button" />
+                                </ProductInfoCartButton>  
 
-                        <div className="product-image">
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                                style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>
-                        </div> {/**later i'll replace it with a image */}
-
-                        
-
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
-
-                </ProductInfo>
-
-
-                <ProductInfo className="product-info" outOfStock={true}>
-                    
-                        <div className="product-image">
-                            <span>OUT OF STOCK</span>  
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>  
-                        </div> {/**later i'll replace it with a image */}
-
-                        
-
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
-                    
-                </ProductInfo>
-
-                <ProductInfo 
-                    className="product-info" 
-                    outOfStock={this.state.outOfStock} 
-                >
-
-                        <div className="product-image">
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                                style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>
-                        </div> {/**later i'll replace it with a image */}
-
-                        
-
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
-
-                </ProductInfo>
-
-                <ProductInfo 
-                    className="product-info" 
-                    outOfStock={this.state.outOfStock} 
-                >
-
-                        <div className="product-image">
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                                style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>
-                        </div> {/**later i'll replace it with a image */}
-
-                        
-
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
-
-                </ProductInfo>
-
-                <ProductInfo 
-                    className="product-info" 
-                    outOfStock={this.state.outOfStock} 
-                >
-
-                        <div className="product-image">
-                            <ProductInfoCartButton 
-                                className="product-cart-button"
-                                onClick={() => this.handleClickProductInfoCartButton()}
-                                style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
-                            >
-                                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-                            </ProductInfoCartButton>
-                        </div> {/**later i'll replace it with a image */}
-
-                        
-                        
-                        <span className="product-title">Apollo Running Short</span>
-                        <span className="product-price">$50.00</span>
-
-                </ProductInfo>
+                            </div> {/**later i'll replace it with a image */}
             
-                { this.state.redirectProductPage && <Navigate to='/product'/>}
-            </>
-        )
+                            
+            
+                            <span className="product-title">{product.name}</span>
+                            <span className="product-price">
+                                {teste[0][0]}
+                                {allPrices[0].currency.label}
+                                {allPrices[0].amount}
+                            </span>
+                    
+                        </ProductInfo>
+                    ))
+                );
+
+            case 'clothes':
+            
+                const clothesPrices = (  clothesProducts[0] && clothesProducts[0].prices );
+
+                return (
+                    clothesProducts.map( product => (
+                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
+                        
+                            <div className="product-image">
+
+                                { !product.inStock && <span>OUT OF STOCK</span> }  
+
+                                <ProductInfoCartButton 
+                                    className="product-cart-button"
+                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                >
+                                    <img src={cartIcon} alt="ProductInfoCartButton cart button" />
+                                </ProductInfoCartButton>  
+
+                            </div> {/**later i'll replace it with a image */}
+            
+                            
+            
+                            <span className="product-title">{product.name}</span>
+                            <span className="product-price">
+                                {clothesPrices[0].currency.symbol}
+                                {clothesPrices[0].currency.label}
+                                {clothesPrices[0].amount}
+                            </span>
+                    
+                        </ProductInfo>
+                    ))
+                );
+
+            case 'tech':
+
+                const techPrices = (  techProducts[0] && techProducts[0].prices );
+            
+                return (
+                    techProducts.map( product => (
+                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
+                        
+                            <div className="product-image">
+
+                                { !product.inStock && <span>OUT OF STOCK</span> }  
+
+                                <ProductInfoCartButton 
+                                    className="product-cart-button"
+                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                >
+                                    <img src={cartIcon} alt="ProductInfoCartButton cart button" />
+                                </ProductInfoCartButton>  
+
+                            </div> {/**later i'll replace it with a image */}
+            
+                            
+            
+                            <span className="product-title">{product.name}</span>
+                            <span className="product-price">
+                                {techPrices[0].currency.symbol}
+                                {techPrices[0].currency.label}
+                                {techPrices[0].amount}
+                            </span>
+                    
+                        </ProductInfo>
+                    ))
+                );
+        
+            default:
+                break;
+        }
 
     }
 
@@ -289,6 +269,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                 </Main>
                     
+
+                { this.state.redirectProductPage && <Navigate to='/product'/>}
+
             </CategoryPageContainer>
 
         );
@@ -318,6 +301,9 @@ const mapState = ( state: RootState )  => ({
     bagActive: state.myBag.bagActive,
     currencyEnabled: state.currencyOptions.value,
     currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
+    allCategory: state.categories.all,
+    clothesCategory: state.categories.clothes,
+    techCategory: state.categories.tech
 })
 
 const mapDispatch = {

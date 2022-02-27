@@ -25,9 +25,6 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 
 type HeaderState = {
-    // all: boolean;
-    // clothes: boolean;
-    // tech: boolean;
     categoryNames: string[];
 }
 
@@ -39,9 +36,6 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     }
 
     state: HeaderState = {
-        // all: true,
-        // clothes: false,
-        // tech: false,
         categoryNames: [],
     }
 
