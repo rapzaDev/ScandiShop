@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import { RootState } from '../../services/redux/store';
+
+import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+import CurrenciesContext from '../../services/redux/contexts/Currencies';
 
 import { getCurrencies } from '../../services/graphql/components/CurrencyOptions/Queries';
 
@@ -45,7 +47,6 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
 
     }
 
-
     pointerLeaveOfMyBagComponent() {
         const { deactivateCurrencyOptionsComponent } = this.props;
 
@@ -59,6 +60,44 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
     }
 
 
+    handleOnClick( e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+
+        const currency = e.currentTarget.value;
+
+        const { 
+            setUSDCurrency,
+            setGBPCurrency,
+            setAUDCurrency,
+            setJPYCurrency,
+            setRUBCurrency
+        } = this.props;
+
+        switch (currency) {
+            case 'USD':
+                setUSDCurrency();
+                break;
+
+            case 'GBP':
+                setGBPCurrency();
+                break;
+
+            case 'AUD':
+                setAUDCurrency();
+                break;
+
+            case 'JPY':
+                setJPYCurrency();
+                break;
+
+            case 'RUB':
+                setRUBCurrency();
+                break;
+
+            default:
+                break;
+        }
+
+    }
 
 
     render() {
@@ -72,6 +111,8 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
                     currencies.map( currency => (
                         <button
                             key={currency.symbol}
+                            value={currency.label}
+                            onClick={(e) => this.handleOnClick(e)}
                         >
                             {currency.symbol} {currency.label}
                         </button>
@@ -92,11 +133,24 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
+const {
+    setUSDCurrency,
+    setGBPCurrency,
+    setAUDCurrency,
+    setJPYCurrency,
+    setRUBCurrency
+} = CurrenciesContext.actions;
+
 const mapState = ( state: RootState )  => ({});
 
 const mapDispatch = {
     activateCurrencyOptionsComponent,
     deactivateCurrencyOptionsComponent,
+    setUSDCurrency,
+    setGBPCurrency,
+    setAUDCurrency,
+    setJPYCurrency,
+    setRUBCurrency
 }
 
 const connector = connect(mapState, mapDispatch);
