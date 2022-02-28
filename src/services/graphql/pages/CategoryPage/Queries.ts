@@ -14,6 +14,18 @@ type PriceType = {
     }
 }
 
+type AttributeType = {
+    id: string;
+    value: string;
+}
+
+type AttributeSetType = {
+    id: string;
+    name: string;
+    type?: string;
+    items?: AttributeType[];
+}
+
 export type ProductsDataType = {
     id: string;
     name: string;
@@ -21,6 +33,7 @@ export type ProductsDataType = {
     inStock: boolean;
     gallery: Array<string>;
     prices: PriceType[];
+    attributes?: AttributeSetType[];
 }
 
 async function getAllProducts() {
@@ -33,6 +46,7 @@ async function getAllProducts() {
                         name
                         inStock
                         brand
+                        gallery
                         prices {
                             amount
                             currency {
@@ -40,7 +54,15 @@ async function getAllProducts() {
                                 label
                             }
                         }
-                        gallery
+                        attributes {
+                            id
+                            name
+                            type
+                            items {
+                                id 
+                                value
+                            }
+                        }
                     }
                 }
             } 
@@ -68,10 +90,19 @@ async function getAllProducts() {
                                 symbol: price.currency.symbol,
                                 label: price.currency.label,
                             }
-                        }))
+                        })),
+                attributes: product.attributes?.filter(
+                    attributeSet => ( attributeSet.type === 'swatch' &&
+                        {
+                            id: attributeSet.id,
+                            name: attributeSet.name,
+                            items: attributeSet.items
+                        }  
+                    )
+                )
             })
         )
-    )
+    );
 
 
     return productsData;

@@ -26,7 +26,6 @@ export const Container = styled.div`
     top: 4.5rem;
 
     width: 7.1rem;
-    /* height: 10.5rem; */
     height: fit-content;
 
     padding: 1.25rem 1.5rem 1.25rem 1.25rem;

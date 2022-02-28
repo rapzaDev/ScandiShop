@@ -58,7 +58,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
     padding: 1rem;
 
     width: 23.125rem;
-    height: 27.75rem;
+    height: fit-content;
 
     opacity: ${ ({outOfStock}) => outOfStock ? 0.5 : 'unset'};
 
@@ -77,6 +77,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
     .product-image {
         display: flex;
+        position: relative;
 
         align-items: center;
         justify-content: center;
@@ -86,18 +87,29 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
         margin-bottom: 1.5rem;
 
-        background-color: var(--opacity-size-color);
+        .image {
+            z-index: -1;
 
-        span {
+            height: fit-content;
+            width: fit-content;
+            
+            height: 20.625rem;
+            max-width: 22.25rem;
+        }
+
+        .outOfStock {
             font: 400 1.5rem 'Raleway', sans-serif;
             color: var(--c-text);
+
+            position: absolute;
+
         }
 
         .product-cart-button {
             position: absolute;
 
-            bottom: 16%;
-            right: 9%;
+            bottom: -1.625rem;
+            right: 0.9375rem;
 
             visibility: hidden;
         }
@@ -105,15 +117,61 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
     }
 
+    .product-names {
+        display: flex;
+        align-items: center;
+
+        width: 100%;
+
+        margin-bottom: 0.5rem;
+    }
 
     .product-title {
-        width: 100%;
+        width: fit-content;
 
         font: var(--raleway-300-font);
         font-size: 1.125rem;
-
-        margin-bottom: 0.4rem;
     }
+
+    .product-brand {
+        width: fit-content;
+        height: fit-content;
+
+        margin-left: 0.2rem;
+
+        font: var(--raleway-300-font);
+        font-size: 1.125rem;
+    }
+
+
+    .product-colors {
+        display: flex;
+        justify-content: center;
+        
+        height: 1.2rem;
+        width: 100%;
+
+        margin-bottom: 0.3rem;
+
+        cursor: pointer;
+
+        .product-color {
+            width: 1.2rem;
+            height: 100%;
+            border: 1px solid #393748;
+
+            &:hover {
+                transform: scale(1.2);
+            }
+
+            & + div {
+                margin-left: 0.7rem;
+            }
+
+        }
+
+    }
+
 
     .product-price {
         font: var(--price-regular-font);

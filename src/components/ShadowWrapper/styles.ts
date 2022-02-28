@@ -14,7 +14,7 @@ export const ShadowContainer = styled.div<ShadowContainerProps>`
 
     flex-direction: column;
 
-    z-index: -1; 
+    z-index: 0; 
 
     transition: background-color 0.3s linear;
 

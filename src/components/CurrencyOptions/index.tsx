@@ -38,7 +38,6 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
 
         document.getElementById('currency-options')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
 
-
         const currenciesData = await getCurrencies();
 
         this.setState(() => ({
@@ -75,26 +74,26 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
         switch (currency) {
             case 'USD':
                 setUSDCurrency();
-                break;
+                return;
 
             case 'GBP':
                 setGBPCurrency();
-                break;
+                return;
 
             case 'AUD':
                 setAUDCurrency();
-                break;
+                return;
 
             case 'JPY':
                 setJPYCurrency();
-                break;
+                return;
 
             case 'RUB':
                 setRUBCurrency();
-                break;
+                return;
 
             default:
-                break;
+                return;
         }
 
     }

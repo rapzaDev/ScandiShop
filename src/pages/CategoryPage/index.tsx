@@ -75,7 +75,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                 clothesProducts: productsData[1],
                 techProducts: productsData[2],
             }));
-
     }
 
     handleClickOnScreen() {
@@ -123,19 +122,46 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             return <CurrencyOptions />
     }
 
+    renderProductColors( product: ProductsDataType ) {
+        
+        return (
+            product.attributes?.[0].items?.map( item => 
+                <div 
+                    className="product-color"
+                    style={{
+                        backgroundColor:`${item.value}`
+                    }}
+                /> 
+            )
+        )
+
+    }
+
     renderCategoryProducts() {
 
+        // CATEGORIES STATES
         const { allCategory, clothesCategory, techCategory } = this.props;
 
+        // CURRENCIES STATES
+        const { USD, GBP, AUD, JPY, RUB } = this.props; 
+
+        // PRODUCTS CONTENT ARRAYS
         const { allProducts, clothesProducts, techProducts } = this.state;
+
 
         const  selectedCategory = ( allCategory && 'all') || ( clothesCategory && 'clothes') || ( techCategory && 'tech');
 
+        const priceIndex = (  
+            ( USD && 0 ) ||
+            ( GBP && 1 ) ||
+            ( AUD && 2 ) ||
+            ( JPY && 3 ) ||
+            ( RUB && 4 ) ||
+            0
+        );
+
         switch (selectedCategory) {
             case 'all':
-
-                let allPrices = (  allProducts[0] && allProducts[0].prices );
-                let teste = (  allProducts[0] && Object.entries(allProducts[0].prices) );
 
                 return (
                     allProducts.map( product => (
@@ -143,7 +169,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                { !product.inStock && <span>OUT OF STOCK</span> }  
+                                <img className="image" src={product.gallery[0]} alt="" />
+
+                                { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }  
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
@@ -152,15 +180,21 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
 
-                            </div> {/**later i'll replace it with a image */}
+                            </div> 
             
-                            
-            
-                            <span className="product-title">{product.name}</span>
+                            <div className="product-colors">
+                                { product.attributes?.[0] && this.renderProductColors(product)}
+                            </div>
+
+                            <div className="product-names">
+                                <span className="product-title">{product.name} -</span>
+                                <span className="product-brand">{product.brand}</span>
+                            </div>
+
                             <span className="product-price">
-                                {teste[0][0]}
-                                {allPrices[0].currency.label}
-                                {allPrices[0].amount}
+                                {product.prices[priceIndex].currency.symbol} 
+                                {product.prices[priceIndex].currency.label}
+                                {' ' + product.prices[priceIndex].amount}
                             </span>
                     
                         </ProductInfo>
@@ -168,8 +202,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                 );
 
             case 'clothes':
-            
-                const clothesPrices = (  clothesProducts[0] && clothesProducts[0].prices );
 
                 return (
                     clothesProducts.map( product => (
@@ -177,7 +209,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                { !product.inStock && <span>OUT OF STOCK</span> }  
+                                <img className="image" src={product.gallery[0]} alt="" />
+                            
+                                { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
@@ -186,15 +220,13 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
 
-                            </div> {/**later i'll replace it with a image */}
-            
-                            
+                            </div> 
             
                             <span className="product-title">{product.name}</span>
                             <span className="product-price">
-                                {clothesPrices[0].currency.symbol}
-                                {clothesPrices[0].currency.label}
-                                {clothesPrices[0].amount}
+                                {product.prices[priceIndex].currency.symbol} 
+                                {product.prices[priceIndex].currency.label}
+                                {' ' + product.prices[priceIndex].amount}
                             </span>
                     
                         </ProductInfo>
@@ -202,8 +234,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                 );
 
             case 'tech':
-
-                const techPrices = (  techProducts[0] && techProducts[0].prices );
             
                 return (
                     techProducts.map( product => (
@@ -211,7 +241,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                { !product.inStock && <span>OUT OF STOCK</span> }  
+                                <img className="image" src={product.gallery[0]} alt="" />
+
+                                { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> } 
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
@@ -220,15 +252,13 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
 
-                            </div> {/**later i'll replace it with a image */}
-            
-                            
+                            </div> 
             
                             <span className="product-title">{product.name}</span>
                             <span className="product-price">
-                                {techPrices[0].currency.symbol}
-                                {techPrices[0].currency.label}
-                                {techPrices[0].amount}
+                                {product.prices[priceIndex].currency.symbol} 
+                                {product.prices[priceIndex].currency.label}
+                                {' ' + product.prices[priceIndex].amount}
                             </span>
                     
                         </ProductInfo>
@@ -243,6 +273,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
 
     render() {
+
+        // CATEGORIES STATES
+        const { allCategory, clothesCategory, techCategory } = this.props;
 
         return (
 
@@ -259,7 +292,11 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                 <Main>
 
                     <div className="category-container">
-                        <h2>Women Category</h2>
+                        <h2>{(
+                            ( allCategory && 'All' ) ||
+                            ( clothesCategory && 'Clothes' ) ||
+                            ( techCategory && 'Tech' ) 
+                        )}</h2>
 
                         <div className="category-content">
                             { this.renderCategoryProducts() }
@@ -297,13 +334,22 @@ const {
 
 
 const mapState = ( state: RootState )  => ({  
+//  MY BAG COMPONENT STATES
     bagVisible: state.myBag.value,
     bagActive: state.myBag.bagActive,
+//  CURRENCY OPTIONS COMPONENT STATES 
     currencyEnabled: state.currencyOptions.value,
     currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
+//  CATEGORIES STATES
     allCategory: state.categories.all,
     clothesCategory: state.categories.clothes,
-    techCategory: state.categories.tech
+    techCategory: state.categories.tech,
+//  CURRENCIES STATES
+    USD: state.currencies.USD, 
+    GBP: state.currencies.GBP,
+    AUD: state.currencies.AUD,
+    JPY: state.currencies.JPY,
+    RUB: state.currencies.RUB,
 })
 
 const mapDispatch = {
