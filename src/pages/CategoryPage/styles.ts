@@ -151,14 +151,13 @@ export const ProductInfo = styled.div<ProductInfoProps>`
         height: 1.2rem;
         width: 100%;
 
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.5rem;
 
         cursor: pointer;
 
         .product-color {
             width: 1.2rem;
             height: 100%;
-            border: 1px solid #393748;
 
             &:hover {
                 transform: scale(1.2);

@@ -124,12 +124,17 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
     renderProductColors( product: ProductsDataType ) {
         
+        const { bagVisible } = this.props;
+
         return (
             product.attributes?.[0].items?.map( item => 
-                <div 
+                <div
+                    key={item.id} 
                     className="product-color"
                     style={{
-                        backgroundColor:`${item.value}`
+                        backgroundColor:`${item.value}`,
+                        border: `${item.value === '#FFFFFF' && '1px solid #A6A6A6'}`,
+                        opacity: `${bagVisible ? '0.5' : '1'}`,
                     }}
                 /> 
             )
@@ -222,7 +227,15 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                             </div> 
             
-                            <span className="product-title">{product.name}</span>
+                            <div className="product-colors">
+                                { product.attributes?.[0] && this.renderProductColors(product)}
+                            </div>
+
+                            <div className="product-names">
+                                <span className="product-title">{product.name} -</span>
+                                <span className="product-brand">{product.brand}</span>
+                            </div>
+                            
                             <span className="product-price">
                                 {product.prices[priceIndex].currency.symbol} 
                                 {product.prices[priceIndex].currency.label}
@@ -254,7 +267,15 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                             </div> 
             
-                            <span className="product-title">{product.name}</span>
+                            <div className="product-colors">
+                                { product.attributes?.[0] && this.renderProductColors(product)}
+                            </div>
+
+                            <div className="product-names">
+                                <span className="product-title">{product.name} -</span>
+                                <span className="product-brand">{product.brand}</span>
+                            </div>
+
                             <span className="product-price">
                                 {product.prices[priceIndex].currency.symbol} 
                                 {product.prices[priceIndex].currency.label}
