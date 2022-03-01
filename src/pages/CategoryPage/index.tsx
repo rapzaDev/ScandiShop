@@ -2,19 +2,26 @@ import React, { PureComponent } from 'react';
 import { Navigate } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 
+//REDUX
 import { RootState } from '../../services/redux/store';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
+import ProductContext from '../../services/redux/contexts/Product';
 
-import { getAllProducts, ProductsDataType } from '../../services/graphql/pages/CategoryPage/Queries';
+//GRAPHQL
+import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
+import { ProductDataType } from '../../services/graphql/types/';
 
+//ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
 
+//COMPONENTS
 import Header from '../../components/Header';
 import ShadowWrapper from '../../components/ShadowWrapper';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
 
+//STYLES
 import {
     CategoryPageContainer,
     Main,
@@ -26,9 +33,9 @@ import {
 type CategoryPageState = { 
     outOfStock: boolean;
     redirectProductPage: boolean;
-    allProducts: ProductsDataType[];
-    clothesProducts: ProductsDataType[];
-    techProducts: ProductsDataType[];
+    allProducts: ProductDataType[];
+    clothesProducts: ProductDataType[];
+    techProducts: ProductDataType[];
 }
 
 class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
@@ -100,7 +107,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
     }
 
-    handleClickProductInfoCartButton() {
+    handleClickProductInfoCartButton(selectedproduct: ProductDataType) {
+
+        const { getSelectedProductData } = this.props;
+
+        getSelectedProductData(selectedproduct);
+
         this.setState((state) => ({
             redirectProductPage: !state.redirectProductPage
         }))
@@ -122,12 +134,14 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             return <CurrencyOptions />
     }
 
-    renderProductColors( product: ProductsDataType ) {
+    renderProductColors( product: ProductDataType ) {
         
         const { bagVisible } = this.props;
 
+        const [ swatchAttibutes ] = product.attributes.filter( attribute => attribute.type === 'swatch' && attribute );
+
         return (
-            product.attributes?.[0].items?.map( item => 
+            swatchAttibutes?.items.map( item => 
                 <div
                     key={item.id} 
                     className="product-color"
@@ -154,8 +168,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         const { allProducts, clothesProducts, techProducts } = this.state;
 
 
-        const  selectedCategory = ( allCategory && 'all') || ( clothesCategory && 'clothes') || ( techCategory && 'tech');
-
         const priceIndex = (  
             ( USD && 0 ) ||
             ( GBP && 1 ) ||
@@ -164,7 +176,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             ( RUB && 4 ) ||
             0
         );
-
+        
+        const  selectedCategory = ( allCategory && 'all') || ( clothesCategory && 'clothes') || ( techCategory && 'tech');
+            
         switch (selectedCategory) {
             case 'all':
 
@@ -174,13 +188,14 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                <img className="image" src={product.gallery[0]} alt="" />
+                                <img className="image" src={product.gallery[0]} alt={`${product.name} image 0`} />
 
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }  
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    Opaque={this.props.bagVisible}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -220,7 +235,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    Opaque={this.props.bagVisible}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -260,7 +276,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                                 <ProductInfoCartButton 
                                     className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton()}
+                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    Opaque={this.props.bagVisible}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -353,6 +370,8 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
+const { getSelectedProductData } = ProductContext.actions;
+
 
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATES
@@ -374,12 +393,16 @@ const mapState = ( state: RootState )  => ({
 })
 
 const mapDispatch = {
+//  MY BAG COMPONENT FUNCTIONS
     handleChangeMyBagState,
     activateMyBagComponent,
     deactivateMyBagComponent,
+//  CURRENCY OPTIONS COMPONENT FUNCTIONS
     handleChangeMyCurrencyOptionsState,
     activateCurrencyOptionsComponent,
     deactivateCurrencyOptionsComponent,
+//  PRODUCT FUNCTION
+    getSelectedProductData
 }
 
 const connector = connect(mapState, mapDispatch);

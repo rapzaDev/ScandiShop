@@ -1,7 +1,11 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 type ProductInfoProps = {
     outOfStock: boolean;
+}
+
+type ProductInfoCartButtonProps = {
+    Opaque: boolean;
 }
 
 
@@ -153,9 +157,9 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
         margin-bottom: 0.5rem;
 
-        cursor: pointer;
-
         .product-color {
+            cursor: pointer;
+
             width: 1.2rem;
             height: 100%;
 
@@ -179,7 +183,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
 `;
 
-export const ProductInfoCartButton = styled.button`
+export const ProductInfoCartButton = styled.button<ProductInfoCartButtonProps>`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -194,12 +198,13 @@ export const ProductInfoCartButton = styled.button`
 
     background-color: var(--c-primary);
 
-    transition: filter 0.2s linear;
+    transition: transform 0.1s linear;
 
     &:hover {
-        filter: brightness(0.9);
+        transform: scale(1.1);
     }
 
+    ${ ({ Opaque }) => Opaque && css`filter: brightness(0.9)` };
 
 `;
 

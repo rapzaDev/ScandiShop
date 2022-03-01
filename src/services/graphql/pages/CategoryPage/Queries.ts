@@ -1,40 +1,12 @@
 import { gql } from '@apollo/client';
 import { client } from '../../../apollo/client';
 
-
-type ParsedDataType = {
-    [key:string]: Array<any>;
-}
-
-type PriceType = {
-    amount: number;
-    currency: {
-        symbol: string;
-        label: string;
-    }
-}
-
-type AttributeType = {
-    id: string;
-    value: string;
-}
-
-type AttributeSetType = {
-    id: string;
-    name: string;
-    type?: string;
-    items?: AttributeType[];
-}
-
-export type ProductsDataType = {
-    id: string;
-    name: string;
-    brand: string;
-    inStock: boolean;
-    gallery: Array<string>;
-    prices: PriceType[];
-    attributes?: AttributeSetType[];
-}
+import {
+    ParsedDataType,
+    PriceType,
+    AttributeSetType,
+    ProductDataType
+} from '../../types';
 
 async function getAllProducts() {
     const GET_ALL_PRODUCTS = await client.query({
@@ -74,10 +46,10 @@ async function getAllProducts() {
     const parsedData =  Object.entries<ParsedDataType[]>(data)[0][1]
         .map( ( target => Object.entries(target)[1][1] ) );
 
-    let productsData = parsedData as ProductsDataType[][];
+    let productsData = parsedData as ProductDataType[][];
 
-    productsData = productsData.map<ProductsDataType[]>(
-        target => target.map<ProductsDataType>(
+    productsData = productsData.map<ProductDataType[]>(
+        target => target.map<ProductDataType>(
             product => ({
                 id: product.id,
                 name: product.name,
@@ -91,15 +63,15 @@ async function getAllProducts() {
                                 label: price.currency.label,
                             }
                         })),
-                attributes: product.attributes?.filter(
-                    attributeSet => ( attributeSet.type === 'swatch' &&
-                        {
+                attributes: product.attributes.map<AttributeSetType>(
+                    attributeSet => 
+                        ({
                             id: attributeSet.id,
                             name: attributeSet.name,
+                            type: attributeSet.type,
                             items: attributeSet.items
-                        }  
+                        })  
                     )
-                )
             })
         )
     );
