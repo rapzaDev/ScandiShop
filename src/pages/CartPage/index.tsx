@@ -9,7 +9,7 @@ import arrowLeft from '../../assets/images/arrow-left.svg';
 import arrowRight from '../../assets/images/arrow-right.svg';
 
 import Header  from '../../components/Header';
-import SizeButton from '../../components/SizeButton';
+import OptionButton from '../../components/OptionButton';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
 import ShadowWrapper from '../../components/ShadowWrapper';
@@ -215,23 +215,23 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
                                         <span>$50.00</span>
 
                                         <CartProductSizes className="cart-product-sizes">
-                                            <SizeButton
+                                            <OptionButton
                                                 origin="CartPage"
-                                                unavailable={false}
                                                 active={false}
                                                 onClick={() => {}}
+                                                value='S'
                                             >
                                                 <span>S</span>
-                                            </SizeButton>
+                                            </OptionButton>
 
-                                            <SizeButton
+                                            <OptionButton
                                                 origin="CartPage"
-                                                unavailable={false}
                                                 active={true}
                                                 onClick={() => {}}
+                                                value='M'
                                             >
                                                 <span>M</span>
-                                            </SizeButton>
+                                            </OptionButton>
                                         </CartProductSizes>
 
                                     </CartProductInfo>
@@ -266,23 +266,23 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
                                         <span>$75.00</span>
 
                                         <CartProductSizes className="cart-product-sizes">
-                                            <SizeButton
+                                            <OptionButton
                                                 origin="CartPage"
-                                                unavailable={false}
                                                 active={false}
                                                 onClick={() => {}}
+                                                value='S'
                                             >
                                                 <span>S</span>
-                                            </SizeButton>
+                                            </OptionButton>
 
-                                            <SizeButton
+                                            <OptionButton
                                                 origin="CartPage"
-                                                unavailable={false}
                                                 active={true}
                                                 onClick={() => {}}
+                                                value='M'
                                             >
                                                 <span>M</span>
-                                            </SizeButton>
+                                            </OptionButton>
                                         </CartProductSizes>
 
                                     </CartProductInfo>

@@ -6,7 +6,7 @@ import { RootState } from '../../services/redux/store';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
 import DefaultButton from '../DefaultButton';
-import SizeButton from '../SizeButton';
+import OptionButton from '../OptionButton';
 
 import {
     MyBagContainer,
@@ -80,22 +80,22 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                             <span>$50.00</span>
 
                             <div className="product-size">
-                                <SizeButton
+                                <OptionButton
                                     origin="MyBag"
-                                    unavailable={false}
                                     active={true}
                                     onClick={() => {}}
+                                    value='S'
                                 >
                                     <span>S</span>
-                                </SizeButton>
-                                <SizeButton
+                                </OptionButton>
+                                <OptionButton
                                     origin="MyBag"
-                                    unavailable={false}
                                     active={false}
                                     onClick={() => {}}
+                                    value='M'
                                 >
                                     <span>M</span>
-                                </SizeButton>
+                                </OptionButton>
                             </div>
 
                         </ProductInfo>
@@ -121,22 +121,22 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                             <span>$75.00</span>
 
                             <div className="product-size">
-                                <SizeButton
+                                <OptionButton
                                     origin="MyBag"
-                                    unavailable={false}
                                     active={true}
                                     onClick={() => {}}
+                                    value='S'
                                 >
                                     <span>S</span>
-                                </SizeButton>
-                                <SizeButton
+                                </OptionButton>
+                                <OptionButton
                                     origin="MyBag"
-                                    unavailable={false}
                                     active={false}
                                     onClick={() => {}}
+                                    value='M'
                                 >
                                     <span>M</span>
-                                </SizeButton>
+                                </OptionButton>
                             </div>
 
                         </ProductInfo>

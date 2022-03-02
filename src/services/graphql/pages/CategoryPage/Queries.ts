@@ -4,6 +4,7 @@ import { client } from '../../../apollo/client';
 import {
     ParsedDataType,
     PriceType,
+    AttributeType,
     AttributeSetType,
     ProductDataType
 } from '../../types';
@@ -18,6 +19,7 @@ async function getAllProducts() {
                         name
                         inStock
                         brand
+                        description
                         gallery
                         prices {
                             amount
@@ -56,6 +58,7 @@ async function getAllProducts() {
                 brand: product.brand,
                 inStock: product.inStock,
                 gallery: product.gallery,
+                description: product.description,
                 prices: product.prices.map<PriceType>( price => ({ 
                             amount: price.amount,
                             currency: {
@@ -69,7 +72,7 @@ async function getAllProducts() {
                             id: attributeSet.id,
                             name: attributeSet.name,
                             type: attributeSet.type,
-                            items: attributeSet.items
+                            items: attributeSet.items.map<AttributeType>( item => ({ id: item.id, value: item.value }))
                         })  
                     )
             })

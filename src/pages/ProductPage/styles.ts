@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
-import SizeButton from '../../components/SizeButton';
+import downArrow from '../../assets/images/down-arrow-icon.svg';
+
+import OptionButton from '../../components/OptionButton';
 
 
 export const ProductPageContainer = styled.div`
@@ -19,7 +21,7 @@ export const Main = styled.main`
     margin-top: 5rem;
 
     height: 100vh;
-    width: 100%;
+    width: fit-content;
 
     padding: 5rem 13.6875rem 4.5rem 6.25rem;
 
@@ -44,12 +46,16 @@ export const SmallImage = styled.div`
 `;
 
 export const BigImage = styled.div`
-    width: 38.125rem;
-    height: 100%;
+    max-width: 38.125rem;
+    max-height: 31.9375rem;
 
     margin-right: 6.25rem;
 
-    background-color: #A6A6A6;
+    > img {
+        height: 100%;
+        width: 100%;
+    }
+
 `;
 
 export const ProductContainer = styled.div`
@@ -57,8 +63,9 @@ export const ProductContainer = styled.div`
     position: relative;
     
     width: 100%;
-    height: 32.0625rem;
+    height: fit-content;
 
+    border: 1px solid #000;
 
 `
 
@@ -70,8 +77,8 @@ export const ProductContent = styled.div`
     flex-direction:column;
 
     width: 18.25rem;
-    height: 100%;
-
+    height: fit-content;
+    max-height: 32.0625rem;
 
     .product-title {
         display: flex;
@@ -88,7 +95,6 @@ export const ProductContent = styled.div`
         }
 
     }
-
 
     .product-price {
 
@@ -157,7 +163,7 @@ export const ProductSize = styled.div`
         position: relative;
     }
 
-    #size-button {
+    #option-button {
 
         & + button {
             margin-left: 0.75rem;
@@ -166,7 +172,65 @@ export const ProductSize = styled.div`
 
 `
 
-export const Size = styled(SizeButton)`
+export const Size = styled(OptionButton)``;
+
+export const ProductAttributes = styled.div`
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    width: 100%;
+
+    .attribute-name {
+        font: var(--roboto-500-font);
+    }
+
+`;
+
+export const TextAttributes = styled.div`
+        display: flex;
+        width: 100%;
+        position: relative;
+
+        align-items: center;
+        justify-content: space-between;
+
+        padding-left: .3rem;
+
+        border: 1px solid #A6A6A6;
+
+        & + .text-attributes {
+            margin-top: 1.3rem;
+        }
+
+        &:first-child {
+            margin-top: 1.5rem;
+        }
+
+        &:last-child {
+            margin-bottom: 2.5rem;
+        }
+
+
+        .attributes-options {
+            display: flex;
+
+            height: fit-content;
+
+            button:first-child {
+                border-left: 2px solid;
+            }
+
+            button {
+                border-top: none;
+                border-bottom: none;
+                border-right: none;
+            }
+
+        }
+
+        
+        
 `;
 
 

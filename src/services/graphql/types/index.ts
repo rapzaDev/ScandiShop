@@ -27,6 +27,7 @@ export type ProductDataType = {
     name: string;
     brand: string;
     inStock: boolean;
+    description: string;
     gallery: Array<string>;
     prices: PriceType[];
     attributes: AttributeSetType[];

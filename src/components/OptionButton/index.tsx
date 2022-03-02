@@ -4,30 +4,28 @@ import {
     Button
 } from './styles';
 
-export type SizeButtonState = {
+export type OptionButtonState = {
     origin: 'MyBag' | 'ProductPage' | 'CartPage';
     active: boolean;
-    unavailable: boolean;
 }
 
-type SizeButtonProps = {
+type OptionButtonProps = {
     origin: 'MyBag' | 'ProductPage' | 'CartPage';
     active: boolean;
-    unavailable: boolean;
     onClick: () => void;
     children: React.ReactNode;
+    value: string;
 } 
 
-class SizeButton extends PureComponent<SizeButtonProps, SizeButtonState> {
+class OptionButton extends PureComponent<OptionButtonProps, OptionButtonState> {
 
-    constructor(props: SizeButtonProps) {
+    constructor(props: OptionButtonProps) {
         super(props);
     }
 
-    state:SizeButtonState = {
+    state:OptionButtonState = {
         origin: this.props.origin,
         active: false,
-        unavailable: this.props.unavailable,
     }
 
     render() {
@@ -35,11 +33,11 @@ class SizeButton extends PureComponent<SizeButtonProps, SizeButtonState> {
         return (
 
             <Button 
-                id="size-button"
+                id="option-button"
                 origin={this.props.origin}
                 active={this.props.active}
-                unavailable={this.props.unavailable}
                 onClick={() => this.props.onClick()}
+                value={this.props.value}
             >
                 { this.props.children }
             </Button>
@@ -50,4 +48,4 @@ class SizeButton extends PureComponent<SizeButtonProps, SizeButtonState> {
 
 };
 
-export default SizeButton;
+export default OptionButton;

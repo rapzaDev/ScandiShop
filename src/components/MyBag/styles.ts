@@ -173,7 +173,7 @@ export const ProductInfo = styled.div`
 
         align-items: center;
 
-        #size-button {
+        #option-button {
             
             & + button {
                 margin-left: 0.5625rem;

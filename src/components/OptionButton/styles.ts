@@ -1,8 +1,8 @@
 import styled, { css } from 'styled-components';
 
-import { SizeButtonState } from './';
+import { OptionButtonState } from './';
 
-export const Button = styled.button<SizeButtonState>`
+export const Button = styled.button<OptionButtonState>`
     display: flex;
     position: relative;
 
@@ -11,7 +11,6 @@ export const Button = styled.button<SizeButtonState>`
 
     border: 1px solid #000;
 
-    /* background-color: var(--c-white); */
     background-color: transparent;
 
     cursor: pointer;
@@ -33,10 +32,7 @@ export const Button = styled.button<SizeButtonState>`
             ( (active && origin === 'ProductPage') || (active && origin === 'CartPage') ) && css`
 
                 background-color: var(--c-black);
-
-                span {
-                    color: var(--c-white);
-                }
+                color: var(--c-white);
 
         `}
 
