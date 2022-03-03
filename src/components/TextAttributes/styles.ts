@@ -3,28 +3,27 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     display: flex;
-    width: 100%;
-    height: fit-content;
+    flex-direction: column;
 
     position: relative;
 
-    align-items: center;
-    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
 
-    padding-bottom: 0.3rem;
+    .attribute-name {
+        margin-bottom: 0.5rem;
 
-    border-bottom: 1px solid #A6A6A6;
+        font: var(--roboto-condensed-700-font);
 
-    & + .text-attributes {
-        margin-top: 1.3rem;
+        text-transform: uppercase;
     }
 
-    &:first-child {
-        margin-top: 2rem;
+    & + .text-attributes {
+        margin-top: 0.7rem;
     }
 
     &:last-child {
-        margin-bottom: 1.4rem;
+        margin-bottom: 2.5rem;
     }
 
 
@@ -38,11 +37,6 @@ export const Container = styled.div`
 
         button:last-child {
             margin-right: 0.4rem;
-        }
-
-        button {
-            height: 1.5rem;
-            width: 2.5rem;
         }
 
     }

@@ -20,11 +20,10 @@ export const Main = styled.main`
 
     margin-top: 5rem;
 
-    height: 100vh;
-    width: fit-content;
+    height: fit-content;
+    width: 100%;
 
     padding: 5rem 13.6875rem 4.5rem 6.25rem;
-
 
     aside {
         margin-right: 2.5rem;
@@ -46,14 +45,14 @@ export const SmallImage = styled.div`
 `;
 
 export const BigImage = styled.div`
-    max-width: 38.125rem;
-    max-height: 31.9375rem;
+    height: fit-content;
+    width: fit-content;
 
     margin-right: 6.25rem;
 
     > img {
-        height: 100%;
-        width: 100%;
+        height: 38.125rem;
+        width: 38.125rem;
     }
 
 `;
@@ -63,26 +62,24 @@ export const ProductContainer = styled.div`
     position: relative;
     
     width: 100%;
-    height: fit-content;
-
-    border: 1px solid #000;
-
+    height: 100%;
 `
 
 export const ProductContent = styled.div`
-    
+
     display: flex;
     position: relative;
 
     flex-direction:column;
 
-    width: 18.25rem;
+    width: fit-content;
     height: fit-content;
-    max-height: 32.0625rem;
 
     .product-title {
         display: flex;
         flex-direction: column;
+
+        margin-bottom: 2.6875rem;
         
         strong {
             font: var(--raleway-600-font);
@@ -105,14 +102,22 @@ export const ProductContent = styled.div`
 
         span:first-child {
             font: var(--roboto-condensed-700-font);
-            margin-bottom: 0.625rem;
             color: var(--c-text);
+            
+            margin-bottom: 0.625rem;
+
+            height: fit-content;
         }
 
         span {
+            display: flex;
+            align-items: center;
+
             font: var(--raleway-700-font);
             font-size: 1.5rem;
             color: var(--c-text);
+            
+            height: 2.875rem;
         }
         
     }
@@ -132,7 +137,7 @@ export const ProductContent = styled.div`
 
 
     .product-info {
-        height: 100%;
+        height: fit-content;
 
         p {
             font: var(--pdp-text-content-font);
@@ -180,11 +185,6 @@ export const ProductAttributes = styled.div`
 
     height: 100%;
     width: 100%;
-
-    .attribute-name {
-        font: var(--roboto-500-font);
-    }
-
 `;
 
 export const TextAttributes = styled.div`
