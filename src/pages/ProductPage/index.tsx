@@ -17,6 +17,7 @@ import CurrencyOptions from '../../components/CurrencyOptions';
 import ShadowWrapper from '../../components/ShadowWrapper';
 import TextAttributes from '../../components/TextAttributes';
 import ImagesContainer from '../../components/ImagesContainer';
+import ColorAttributes from '../../components/ColorAttributes';
 
 //STYLES
 import {
@@ -107,10 +108,12 @@ class ProductPage extends PureComponent<PropsFromRedux> {
 
         const textAttributes = productAttributes.filter( attribute => attribute.type === 'text' );
     
-        const colorAttributes = productAttributes.filter( attribute => attribute.type === 'swatch' );
+        const [ colorAttribute ] = productAttributes.filter( attribute => attribute.type === 'swatch' );
 
         return (
             <ProductAttributes className="product-attributes">
+
+                { colorAttribute && <ColorAttributes swatchAttibute={colorAttribute} origin='ProductPage' /> }
 
                 <TextAttributes textAttributes={textAttributes} origin="ProductPage"/>
 

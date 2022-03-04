@@ -131,51 +131,6 @@ export const ProductAttributes = styled.div`
     width: 100%;
 `;
 
-export const TextAttributes = styled.div`
-        display: flex;
-        width: 100%;
-        position: relative;
-
-        align-items: center;
-        justify-content: space-between;
-
-        padding-left: .3rem;
-
-        border: 1px solid #A6A6A6;
-
-        & + .text-attributes {
-            margin-top: 1.3rem;
-        }
-
-        &:first-child {
-            margin-top: 1.5rem;
-        }
-
-        &:last-child {
-            margin-bottom: 2.5rem;
-        }
-
-
-        .attributes-options {
-            display: flex;
-
-            height: fit-content;
-
-            button:first-child {
-                border-left: 2px solid;
-            }
-
-            button {
-                border-top: none;
-                border-bottom: none;
-                border-right: none;
-            }
-
-        }
-
-        
-        
-`;
 
 
 
