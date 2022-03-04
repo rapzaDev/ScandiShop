@@ -15,48 +15,24 @@ import DefaultButton from '../../components/DefaultButton';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
 import ShadowWrapper from '../../components/ShadowWrapper';
-import OptionButton from '../../components/OptionButton';
 import TextAttributes from '../../components/TextAttributes';
+import ImagesContainer from '../../components/ImagesContainer';
 
 //STYLES
 import {
     ProductPageContainer,
     Main,
-    SmallImage,
     ProductContainer,
-    BigImage,
     ProductContent,
-    ProductSize,
-    Size,
     ProductAttributes,
-    // TextAttributes
 } from './styles';
 
-type SizesType = {
-    XS: boolean;
-    S: boolean;
-    M: boolean;
-    L: boolean;
-}
 
-type ProductPageState = {
-    size: SizesType;
-}
-
-class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
+class ProductPage extends PureComponent<PropsFromRedux> {
 
     constructor(props: PropsFromRedux) {
         super(props);
         this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
-    }
-
-    state: ProductPageState = {
-        size: {
-            XS:false,
-            S:true,
-            M: false,
-            L: false
-        },
     }
  
     componentDidMount() {
@@ -110,75 +86,6 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             
     }
 
-    handleClickSizeXS() {
-
-        if ( !this.state.size.XS ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: !size.XS,
-                    S: false,
-                    M: false,
-                    L: false,
-                },
-            }));
-
-        }
-            
-    }
-
-    handleClickSizeS() {
-
-        if ( !this.state.size.S ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: !size.S,
-                    M: false,
-                    L: false,
-                },
-            }));
-            
-        }
-
-    }
-    
-    handleClickSizeM() {
-
-        if ( !this.state.size.M ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: false,
-                    M: !size.M,
-                    L: false,
-                },
-            }));
-            
-        }
-
-    }
-
-    handleClickSizeL() {
-
-        if ( !this.state.size.L ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: false,
-                    M: false,
-                    L: !size.L,
-                },
-            }));
-            
-        }
-
-    }
-
-
 
     renderMyBag() {
 
@@ -196,64 +103,11 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             return <CurrencyOptions />
     }
 
-    renderProductSize() {
-
-        const { size } = this.state;
-
-        return (
-            <ProductSize className="product-size">
-                <span>SIZE:</span>
-                <div className="size-options">
-
-                    <Size 
-                        origin="ProductPage"
-                        active={size.XS}
-                        onClick={() => this.handleClickSizeXS()}
-                        value='XS'
-                    >
-                        <span>XS</span>
-                    </Size>
-                
-                
-                    <Size 
-                        origin="ProductPage"
-                        active={size.S}
-                        onClick={() => this.handleClickSizeS()}
-                        value='S'
-                    >
-                        <span>S</span>
-                    </Size>
-                
-                
-                    <Size 
-                        origin="ProductPage"
-                        active={size.M}
-                        onClick={() => this.handleClickSizeM()}
-                        value='M'
-                    >
-                        <span>M</span>
-                    </Size>
-                
-                
-                    <Size 
-                        origin="ProductPage"
-                        active={size.L}
-                        onClick={() => this.handleClickSizeL()}
-                        value='L'
-                    >
-                        <span>L</span>
-                    </Size>
-
-                </div>
-
-            </ProductSize>
-        );
-    }
-
     renderProductAttributes(productAttributes: AttributeSetType[]) {
 
         const textAttributes = productAttributes.filter( attribute => attribute.type === 'text' );
     
+        const colorAttributes = productAttributes.filter( attribute => attribute.type === 'swatch' );
 
         return (
             <ProductAttributes className="product-attributes">
@@ -288,28 +142,17 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         const restOfTitle = title.filter( title => title !== strongTitle );
 
         return (
-            <>
-                <aside className="product-images">
-                    <SmallImage className="small-image"/> {/**later i'll change to real images */}
-                    <SmallImage className="small-image"/> {/**later i'll change to real images */}
-                    <SmallImage className="small-image"/> {/**later i'll change to real images */}
-                </aside>
-
                 <ProductContainer>
 
-                    <BigImage className="big-image">
-                        <img src={product.gallery[0]} alt={`${product.name} image 0`} />
-                    </BigImage> 
-
+                    <ImagesContainer images={product.gallery}/>
 
                     <ProductContent className="product-content">
 
                         <span className="product-title">
                             <strong>{strongTitle}</strong>
                             <span>{restOfTitle}</span>
+                            <span>- {product.brand}</span>
                         </span>
-
-                        {/* { this.renderProductSize() } */}
 
                         { this.renderProductAttributes(product.attributes) }
 
@@ -331,13 +174,12 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                         </DefaultButton>
 
                         <div className="product-info">
-                            {product.description}
+                            <div dangerouslySetInnerHTML={{ __html: product.description }} />
                         </div>
 
                     </ProductContent>
 
                 </ProductContainer>
-            </>
         )
 
     }

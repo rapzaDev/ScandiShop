@@ -20,40 +20,10 @@ export const Main = styled.main`
 
     margin-top: 5rem;
 
-    height: fit-content;
+    height: max-content;
     width: 100%;
 
     padding: 5rem 13.6875rem 4.5rem 6.25rem;
-
-    aside {
-        margin-right: 2.5rem;
-    }
-
-
-`;
-
-export const SmallImage = styled.div`
-    width: 4.9375rem;
-    height: 5rem;
-
-    background-color: #A6A6A6;
-
-    & + & {
-        margin-top: 2.5rem;
-    }
-
-`;
-
-export const BigImage = styled.div`
-    height: fit-content;
-    width: fit-content;
-
-    margin-right: 6.25rem;
-
-    > img {
-        height: 38.125rem;
-        width: 38.125rem;
-    }
 
 `;
 
@@ -72,7 +42,7 @@ export const ProductContent = styled.div`
 
     flex-direction:column;
 
-    width: fit-content;
+    width: 100%;
     height: fit-content;
 
     .product-title {
@@ -139,45 +109,19 @@ export const ProductContent = styled.div`
     .product-info {
         height: fit-content;
 
+        font: var(--pdp-text-content-font);
+
         p {
-            font: var(--pdp-text-content-font);
             line-height: 1.599375rem;
         }
 
-    }
-
-`
-
-export const ProductSize = styled.div`
-    display: flex;
-    position: relative;
-
-    flex-direction: column;
-
-    margin-top: 2.6875rem;
-    margin-bottom: 2.5rem;
-
-    > span {
-        font: var(--roboto-condensed-700-font);
-        margin-bottom: 0.5rem;
-        color: var(--c-text);
-    }
-
-    .size-options {
-        display: flex;
-        position: relative;
-    }
-
-    #option-button {
-
-        & + button {
-            margin-left: 0.75rem;
+        h1 {
+            margin-bottom: 0.2rem;
         }
+
     }
 
 `
-
-export const Size = styled(OptionButton)``;
 
 export const ProductAttributes = styled.div`
     display: flex;
