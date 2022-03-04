@@ -14,6 +14,7 @@ import {
 
 type ImagesContainerProps = {
     images: Array<string>;
+    shadow: boolean;
 }
 
 type ImagesContainerState = {
@@ -100,7 +101,7 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
 
         return(
 
-            <Container>
+            <Container style={ this.props.shadow ? {filter: 'brightness(0.78)'} : {} }>
                 
                 <SmallImagesWrapper>
                     <div id="small-images">

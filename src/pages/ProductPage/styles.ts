@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-import downArrow from '../../assets/images/down-arrow-icon.svg';
-
-import OptionButton from '../../components/OptionButton';
-
-
 export const ProductPageContainer = styled.div`
     display: flex;
     position: relative;
@@ -42,6 +37,7 @@ export const ProductContent = styled.div`
 
     flex-direction:column;
 
+    max-width: 18.25rem;
     width: 100%;
     height: fit-content;
 

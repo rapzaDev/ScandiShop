@@ -106,6 +106,8 @@ class ProductPage extends PureComponent<PropsFromRedux> {
 
     renderProductAttributes(productAttributes: AttributeSetType[]) {
 
+        const { bagVisible } = this.props;
+
         const textAttributes = productAttributes.filter( attribute => attribute.type === 'text' );
     
         const [ colorAttribute ] = productAttributes.filter( attribute => attribute.type === 'swatch' );
@@ -115,7 +117,7 @@ class ProductPage extends PureComponent<PropsFromRedux> {
 
                 { colorAttribute && <ColorAttributes swatchAttibute={colorAttribute} origin='ProductPage' /> }
 
-                <TextAttributes textAttributes={textAttributes} origin="ProductPage"/>
+                <TextAttributes textAttributes={textAttributes} origin="ProductPage" shadow={bagVisible}/>
 
             </ProductAttributes>  
 
@@ -147,7 +149,10 @@ class ProductPage extends PureComponent<PropsFromRedux> {
         return (
                 <ProductContainer>
 
-                    <ImagesContainer images={product.gallery}/>
+                    <ImagesContainer 
+                        images={product.gallery}
+                        shadow={this.props.bagVisible}
+                    />
 
                     <ProductContent className="product-content">
 
@@ -171,7 +176,7 @@ class ProductPage extends PureComponent<PropsFromRedux> {
                         <DefaultButton 
                             className="add-cart-button" 
                             color="green"
-                            style={ this.props.bagVisible ? {filter: 'brightness(0.9)'} : {} }
+                            style={ this.props.bagVisible ? {filter: 'brightness(0.78)'} : {} }
                         >
                             <span>ADD TO CART</span>
                         </DefaultButton>

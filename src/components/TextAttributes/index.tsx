@@ -12,6 +12,7 @@ import { Container } from './styles';
 type TextAttributesProps = {
     textAttributes: AttributeSetType[];
     origin: 'MyBag' | 'ProductPage' | 'CartPage';
+    shadow: boolean;
 }
 
 type ItemsType = {
@@ -20,9 +21,6 @@ type ItemsType = {
 }
 
 type TextAttributesState = {
-    // capacity: { '512G': boolean, '1T': boolean };
-    // usb: { 'Yes': boolean, 'No': boolean };
-    // keyboard: { 'Yes': boolean, 'No': boolean };
     [key:string]: Array<{ 
         name: string, 
         items: Array<ItemsType>
@@ -40,6 +38,7 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
         attributes: this.getAttributesState(),
     }
 
+    /**Get all text attributes of passed product and set a initial value for each text attribute. */
     getAttributesState() {
 
         const { textAttributes } = this.props;
@@ -92,14 +91,18 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
 
     render() {
 
-        const { textAttributes, origin } = this.props;
+        const { textAttributes, origin, shadow } = this.props;
         
 
         return(
             <div>
 
                 { textAttributes.map( attribute => (
-                    <Container className="text-attributes" key={attribute.id}>
+                    <Container 
+                        className="text-attributes" 
+                        key={attribute.id} 
+                        style={ shadow ? {filter: 'brightness(0.78)'} : {} }
+                    >
                     
                         <span className="attribute-name">{attribute.name}:</span>
 

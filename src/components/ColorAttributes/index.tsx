@@ -8,17 +8,56 @@ import { RootState } from '../../services/redux/store';
 import { AttributeSetType } from '../../services/graphql/types';
 
 //STYLES
-import { Container } from './styles';
+import { Container, ProductColor, ProductColorButtonWrapper } from './styles';
 
 interface ColorAttributesProps extends PropsFromRedux {
     swatchAttibute: AttributeSetType;
     origin: 'CategoryPage' | 'ProductPage' | 'CartPage' | 'MyBag';
 }
 
-class ColorAttributes extends PureComponent<ColorAttributesProps> {
+type ColorAttributesState = {
+    colorItems: Array<{
+        id: string;
+        selected?: boolean;
+    }>;
+}
+
+class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttributesState> {
 
     constructor(props: ColorAttributesProps) {
         super(props);
+    }
+
+    state: ColorAttributesState = {
+        colorItems: this.props.swatchAttibute.items,
+    }
+
+
+    /**Gets the name of the color in the parameters and sets within the color items 
+     * the selected value as true and false for the rest */
+    handleClickProductColor( colorName: string ) {
+
+        this.setState(( state ) => ({
+            colorItems: state.colorItems.map( 
+                color =>  ({
+                    id: color.id,
+                    selected: ( ( color.id === colorName ) ? true : false )
+                })
+            )
+        }))
+
+
+    }
+
+    /** Searches in the state of color items who has the prop selected as true and returns it */
+    getColorActive( colorName: string ) {
+
+        const { colorItems } = this.state;
+
+        const color = colorItems.find( color => color.id === colorName );
+
+        return color?.selected;
+
     }
 
     render() {
@@ -37,15 +76,22 @@ class ColorAttributes extends PureComponent<ColorAttributesProps> {
                 <div className="product-colors">
                     {
                         swatchAttibute?.items.map( item => 
-                            <div
-                                key={item.id} 
-                                className="product-color"
-                                style={{
-                                    backgroundColor:`${item.value}`,
-                                    border: `${item.value === '#FFFFFF' && '1px solid #A6A6A6'}`,
-                                    opacity: `${bagVisible ? '0.5' : '1'}`,
-                                }}
-                            /> 
+                            <ProductColorButtonWrapper 
+                                key={item.id}
+                                active={ this.getColorActive( item.id ) || false }
+                            >
+                                <ProductColor
+                                    key={item.id} 
+                                    className="product-color"
+                                    style={{
+                                        backgroundColor:`${item.value}`,
+                                        border: `${item.value === '#FFFFFF' && '1px solid #A6A6A6'}`,
+                                        opacity: `${bagVisible ? '0.5' : '1'}`,
+                                    }}
+                                    value={item.value}
+                                    onClick={ () => this.handleClickProductColor( item.id ) }
+                                /> 
+                            </ProductColorButtonWrapper>
                         )
                     }
                 </div>
