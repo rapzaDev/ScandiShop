@@ -7,7 +7,7 @@ import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOption
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
 //GRAPHQL
-import { AttributeSetType } from '../../services/graphql/types';
+import { AttributeSetType, ProductDataType } from '../../services/graphql/types';
 
 //COMPONENTS
 import Header from '../../components/Header';
@@ -28,12 +28,20 @@ import {
     ProductAttributes,
 } from './styles';
 
+type ProductPageState = {
+    product: ProductDataType;
+}
 
-class ProductPage extends PureComponent<PropsFromRedux> {
+
+class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
     constructor(props: PropsFromRedux) {
         super(props);
         this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
+    }
+
+    state: ProductPageState = {
+        product: this.getSelectedProduct(),
     }
  
     componentDidMount() {
@@ -54,15 +62,16 @@ class ProductPage extends PureComponent<PropsFromRedux> {
 
         // Cheking if CurrencyOptions component was rendered before page rendering
             if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
-     
-
-
-        const { product } = this.props;
-
-        console.log(product);
 
     }
     
+    /**Get the selected product data from localStorage */
+    getSelectedProduct(): ProductDataType {
+        const selectedProduct = ( localStorage.getItem('@scandishop/selectedProduct')) as string;
+
+        return JSON.parse(selectedProduct);
+    }
+
 
     handleClickOnScreen() {
         const { 
@@ -98,7 +107,7 @@ class ProductPage extends PureComponent<PropsFromRedux> {
     }
 
     renderCurrencyOptions() {
-        const {  currencyEnabled } = this.props;
+        const { currencyEnabled } = this.props;
 
         if ( currencyEnabled ) 
             return <CurrencyOptions />
@@ -128,7 +137,7 @@ class ProductPage extends PureComponent<PropsFromRedux> {
     renderProduct() {
         
         // PRODUCT STATE
-        const { product } = this.props;
+        const { product } = this.state;
 
         // CURRENCIES STATES
         const { USD, GBP, AUD, JPY, RUB } = this.props; 

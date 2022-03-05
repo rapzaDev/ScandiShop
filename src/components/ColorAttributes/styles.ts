@@ -6,6 +6,7 @@ type ContainerProps = {
 
 type ProductColorProp = {
     active: boolean;
+    origin: 'CategoryPage' | 'ProductPage' | 'CartPage' | 'MyBag';
 }
 
 export const Container = styled.div<ContainerProps>`
@@ -25,20 +26,20 @@ export const Container = styled.div<ContainerProps>`
         position: relative;
         align-items: center;
         
-        height: max-content;
+        height: 100%;
         max-width: 18.25rem;
 
         margin-bottom: 0.5rem;
 
         .product-color {
             position: relative;
-            cursor: pointer;
+            cursor: ${ ({ origin }) => origin === 'ProductPage' && 'pointer'};
 
-            width: ${ ({origin}) => ( origin === 'ProductPage' ) ? '100%' : '1.2rem' };
-            height: ${ ({origin}) => ( origin === 'ProductPage' ) ? '2.8125rem' : '1.2rem' };
+            width: ${ ({ origin }) => ( origin === 'ProductPage' ) ? '100%' : '1.2rem' };
+            height: ${ ({ origin }) => ( origin === 'ProductPage' ) ? '2.8125rem' : '1.2rem' };
 
             &:hover {
-                transform: scale(1.05);
+                ${ ({ origin }) => origin === 'ProductPage' && css`transform: scale(1.05)`};
             }
 
             & + button {
@@ -73,13 +74,20 @@ export const ProductColorButtonWrapper = styled.div<ProductColorProp>`
         margin-left: 0.4rem;
     }
 
-    ${ ({active}) => active 
+    ${ ({active, origin}) => active 
     ? css`
-        border-bottom: 4px #393748;
-        border-bottom-style: solid;
+       
+       ${ origin === 'ProductPage' && css`
+            border-bottom: 3px #393748;
+            border-bottom-style: solid;
+        `}
 
     `: css`
-        border-bottom: 4px solid transparent;
+        
+        ${ origin === 'ProductPage' && css`
+            border-bottom: 3px solid transparent;
+        `}
+
     `
     }
 

@@ -71,7 +71,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
                 origin={origin}
             >
 
-                <span className="attribute-name">{swatchAttibute.name}:</span>
+                { (origin === 'ProductPage') && <span className="attribute-name">{swatchAttibute.name}:</span>}
                 
                 <div className="product-colors">
                     {
@@ -79,6 +79,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
                             <ProductColorButtonWrapper 
                                 key={item.id}
                                 active={ this.getColorActive( item.id ) || false }
+                                origin={origin}
                             >
                                 <ProductColor
                                     key={item.id} 

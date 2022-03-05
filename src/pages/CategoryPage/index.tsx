@@ -20,6 +20,7 @@ import Header from '../../components/Header';
 import ShadowWrapper from '../../components/ShadowWrapper';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
+import ColorAttributes from '../../components/ColorAttributes';
 
 //STYLES
 import {
@@ -56,8 +57,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     async componentDidMount() {
         window.scrollTo(0, 0);
 
-        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
-
         const { 
             bagVisible, 
             handleChangeMyBagState ,
@@ -78,10 +77,15 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             console.log(productsData[2]);
 
             this.setState(() => ({
+                //Set Products states
                 allProducts: productsData[0],
                 clothesProducts: productsData[1],
                 techProducts: productsData[2],
             }));
+    }
+
+    componentDidUpdate() {
+        document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
     }
 
     handleClickOnScreen() {
@@ -107,16 +111,23 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
     }
 
-    handleClickProductInfoCartButton(selectedproduct: ProductDataType) {
+    handleClickProductInfo(selectedProduct: ProductDataType) {
 
-        const { getSelectedProductData } = this.props;
-
-        getSelectedProductData(selectedproduct);
+        localStorage.setItem('@scandishop/selectedProduct', JSON.stringify(selectedProduct) );
 
         this.setState((state) => ({
             redirectProductPage: !state.redirectProductPage
         }))
     }
+
+    handleClickProductInforCartButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+
+        //Controls the click on ProductInforCartButton above ProductInfo component
+        event.stopPropagation();
+
+        console.log('ProductInforCartButton clicado');
+    }
+
 
 
     renderMyBag() {
@@ -135,24 +146,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     }
 
     renderProductColors( product: ProductDataType ) {
-        
-        const { bagVisible } = this.props;
+    
+        const [ swatchAttibute ] = product.attributes.filter( attribute => attribute.type === 'swatch' && attribute );
 
-        const [ swatchAttibutes ] = product.attributes.filter( attribute => attribute.type === 'swatch' && attribute );
-
-        return (
-            swatchAttibutes?.items.map( item => 
-                <div
-                    key={item.id} 
-                    className="product-color"
-                    style={{
-                        backgroundColor:`${item.value}`,
-                        border: `${item.value === '#FFFFFF' && '1px solid #A6A6A6'}`,
-                        opacity: `${bagVisible ? '0.5' : '1'}`,
-                    }}
-                /> 
-            )
-        )
+        if (swatchAttibute)
+            return <ColorAttributes  swatchAttibute={swatchAttibute} origin="CategoryPage" />
+        else return <div className="empty-colors"/>
 
     }
 
@@ -184,7 +183,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                 return (
                     allProducts.map( product => (
-                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
+                        <ProductInfo 
+                            key={product.id} 
+                            id="product-info" 
+                            outOfStock={!product.inStock}
+                            onClick={ () =>  this.handleClickProductInfo(product) }
+                        >
                         
                             <div className="product-image">
 
@@ -193,18 +197,18 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }  
 
                                 <ProductInfoCartButton 
-                                    className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    id="product-cart-button"
                                     Opaque={this.props.bagVisible}
+                                    onClick={( event ) => this.handleClickProductInforCartButton(event)}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
 
                             </div> 
             
-                            <div className="product-colors">
-                                { product.attributes?.[0] && this.renderProductColors(product)}
-                            </div>
+                            
+                            { this.renderProductColors(product) }
+                            
 
                             <div className="product-names">
                                 <span className="product-title">{product.name} -</span>
@@ -225,7 +229,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                 return (
                     clothesProducts.map( product => (
-                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
+                        <ProductInfo 
+                            key={product.id} 
+                            id="product-info" 
+                            outOfStock={!product.inStock}
+                            onClick={() => this.handleClickProductInfo(product)}
+                        >
                         
                             <div className="product-image">
 
@@ -234,8 +243,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }
 
                                 <ProductInfoCartButton 
-                                    className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    id="product-cart-button"
                                     Opaque={this.props.bagVisible}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
@@ -243,9 +251,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                             </div> 
             
-                            <div className="product-colors">
-                                { product.attributes?.[0] && this.renderProductColors(product)}
-                            </div>
+                            { this.renderProductColors(product) }
 
                             <div className="product-names">
                                 <span className="product-title">{product.name} -</span>
@@ -266,7 +272,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
                 return (
                     techProducts.map( product => (
-                        <ProductInfo key={product.id} className="product-info" outOfStock={!product.inStock}>
+                        <ProductInfo 
+                            key={product.id} 
+                            id="product-info" 
+                            outOfStock={!product.inStock}
+                            onClick={() => this.handleClickProductInfo(product)}
+                        >
                         
                             <div className="product-image">
 
@@ -275,8 +286,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> } 
 
                                 <ProductInfoCartButton 
-                                    className="product-cart-button"
-                                    onClick={() => this.handleClickProductInfoCartButton(product)}
+                                    id="product-cart-button"
                                     Opaque={this.props.bagVisible}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
@@ -284,9 +294,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                             </div> 
             
-                            <div className="product-colors">
-                                { product.attributes?.[0] && this.renderProductColors(product)}
-                            </div>
+                            { this.renderProductColors(product) }
 
                             <div className="product-names">
                                 <span className="product-title">{product.name} -</span>

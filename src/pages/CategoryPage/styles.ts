@@ -55,9 +55,10 @@ export const Main = styled.main`
 export const ProductInfo = styled.div<ProductInfoProps>`
 
     display: flex;
+    flex-direction: column;
     position: relative;
 
-    flex-direction: column;
+    cursor: pointer;
 
     padding: 1rem;
 
@@ -71,7 +72,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
         .product-image {
             
-            .product-cart-button {
+            #product-cart-button {
                 visibility: ${ ({outOfStock}) => outOfStock ? 'hidden' : 'visible' };
             }
 
@@ -109,7 +110,7 @@ export const ProductInfo = styled.div<ProductInfoProps>`
 
         }
 
-        .product-cart-button {
+        #product-cart-button {
             position: absolute;
 
             bottom: -1.625rem;
@@ -119,6 +120,19 @@ export const ProductInfo = styled.div<ProductInfoProps>`
         }
 
 
+    }
+
+    #color-attributes {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .empty-colors {
+        height: 1.2rem;
+        margin-bottom: 0.75rem;
     }
 
     .product-names {
@@ -146,35 +160,6 @@ export const ProductInfo = styled.div<ProductInfoProps>`
         font: var(--raleway-300-font);
         font-size: 1.125rem;
     }
-
-
-    .product-colors {
-        display: flex;
-        justify-content: center;
-        
-        height: 1.2rem;
-        width: 100%;
-
-        margin-bottom: 0.5rem;
-
-        .product-color {
-            cursor: pointer;
-
-            width: 1.2rem;
-            height: 100%;
-
-            &:hover {
-                transform: scale(1.2);
-            }
-
-            & + div {
-                margin-left: 0.7rem;
-            }
-
-        }
-
-    }
-
 
     .product-price {
         font: var(--price-regular-font);
