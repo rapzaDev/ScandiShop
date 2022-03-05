@@ -46,9 +46,7 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
  
     componentDidMount() {
 
-        window.scrollTo(0, 0);
-
-        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
+        window.scrollTo(0, 50);
 
         const { 
             bagVisible, 
@@ -63,6 +61,10 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         // Cheking if CurrencyOptions component was rendered before page rendering
             if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
 
+    }
+
+    componentDidUpdate() {
+        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
     }
     
     /**Get the selected product data from localStorage */
@@ -151,9 +153,19 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             0
         );
 
+
+        //TITLE LOGIC
         const title = product.name.split(' ');
-        const strongTitle = title[0];
-        const restOfTitle = title.filter( title => title !== strongTitle );
+        let strongTitle = title[0];
+        let restOfTitle = title.filter( title => title !== strongTitle );
+        
+        //Cheking if the first word of the var restOfTitle is a number
+        if ( Number( restOfTitle[0] ) ) {
+            strongTitle = strongTitle + ` ${restOfTitle[0]}`
+            restOfTitle.splice(0);
+        }
+
+        restOfTitle = restOfTitle.map( word => word + ' ' );
 
         return (
                 <ProductContainer>

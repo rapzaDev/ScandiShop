@@ -57,8 +57,11 @@ export const SmallImage = styled.div<SmallImageProp>`
     flex-direction: column;
     position: relative;
 
-    width: 4.9375rem;
-    height: 5rem;
+    max-width: 4.9375rem;
+    min-width: 4.9375rem;
+
+    max-height: 5rem;
+    min-height: 5rem;
 
     cursor: pointer;
 
@@ -67,6 +70,7 @@ export const SmallImage = styled.div<SmallImageProp>`
     }
 
     img {
+        /* border: 1px solid red; */
         width: 100%;
         height: 100%;
     }
@@ -74,16 +78,18 @@ export const SmallImage = styled.div<SmallImageProp>`
     ${ ({selected}) => selected 
         ? css`
             &::after{
-                content: '';
+                content: '';                
                 position: relative;
-                visibility: visible;
-
+                
                 height: .2rem;
                 width: 100%;
-
+                
                 bottom: -0.3rem;
 
-                background-color: #A6A6A6;
+                opacity: 30%;
+
+                visibility: visible;
+                background-color: #393748;
             }
         ` 
         : css`
@@ -94,10 +100,8 @@ export const SmallImage = styled.div<SmallImageProp>`
 
                 height: .2rem;
                 width: 100%;
-
+                
                 bottom: -0.3rem;
-
-                background-color: #A6A6A6;
             }
         ` 
     }

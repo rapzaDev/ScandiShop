@@ -74,7 +74,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         // --------- GraphQL ALL PRODUCTS DATA ---------
             const productsData = await getAllProducts();
 
-            console.log(productsData[2]);
+            console.log(productsData[1]);
 
             this.setState(() => ({
                 //Set Products states

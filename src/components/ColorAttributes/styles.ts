@@ -78,14 +78,14 @@ export const ProductColorButtonWrapper = styled.div<ProductColorProp>`
     ? css`
        
        ${ origin === 'ProductPage' && css`
-            border-bottom: 3px #393748;
-            border-bottom-style: solid;
+            border-bottom: 3px solid #393748;
         `}
 
     `: css`
         
         ${ origin === 'ProductPage' && css`
             border-bottom: 3px solid transparent;
+            opacity: 60%;
         `}
 
     `
