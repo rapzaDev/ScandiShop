@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 
+type TextAttributesProps = {
+    origin: 'MyBag' | 'ProductPage' | 'CartPage';
+}
 
-export const Container = styled.div`
+export const Container = styled.div<TextAttributesProps>`
     display: flex;
     flex-direction: column;
 
@@ -16,16 +19,14 @@ export const Container = styled.div`
         font: var(--roboto-condensed-700-font);
 
         text-transform: uppercase;
+
+        font-size: ${ ({origin}) => origin === 'MyBag' && '0.8rem'};
+
     }
 
     & + .text-attributes {
         margin-top: 0.7rem;
     }
-
-    &:last-child {
-        margin-bottom: 2.5rem;
-    }
-
 
     .attributes-options {
         display: flex;

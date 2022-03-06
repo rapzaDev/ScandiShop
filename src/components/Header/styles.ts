@@ -4,7 +4,7 @@ export const HeaderComponent = styled.header`
     display: flex;
     justify-content: space-between;
 
-    position: fixed; z-index: 1000; /// FIXED HEADER
+    position: fixed; z-index: 1;
 
     background-color: var(--c-white);
     

@@ -2,18 +2,25 @@ import React, { PureComponent } from 'react';
 import { Navigate } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 
+//REDUX
 import { RootState } from '../../services/redux/store';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
-import DefaultButton from '../DefaultButton';
-import OptionButton from '../OptionButton';
+//GRAPHQL
+import { ProductDataType } from '../../services/graphql/types';
 
+//COMPONENTS
+import DefaultButton from '../DefaultButton';
+import ProductAttributes from '../ProductAttributes';
+
+//STYLES
 import {
     MyBagContainer,
     ProductWrapper,
     ProductContainer,
     ProductInfo
 } from './styles';
+
 
 type MyBagState = {
     redirectCartPage: boolean;
@@ -36,12 +43,17 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
     }
 
     componentDidMount() {
+
+        const { cartProducts } = this.props;
+        console.log(cartProducts);
+
         document.getElementById('my-bag')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
         document.getElementById('my-bag')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
+        
     }
 
-
+    
     pointerLeaveOfMyBagComponent() {
         const { deactivateMyBagComponent } = this.props;
 
@@ -68,92 +80,64 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
+    getLocalStorageCartProducts(): ProductDataType[] {
+        const cartProducts = localStorage.getItem('@scandishop/cartProducts') as string;
+
+        if ( cartProducts ) return JSON.parse(cartProducts);
+        else return [] as ProductDataType[];
+    }
 
     renderMyBagProducts() {
 
+        var CART_PRODUCTS = [] as ProductDataType[];
+
+        const { cartProducts } = this.props;
+
+        CART_PRODUCTS = cartProducts;
+
         return (
-            <>
                 <ProductWrapper className="product-wrapper">
-                    <ProductContainer className="product-container">
-                        <ProductInfo className="product-info">
-                            <p>Apollo Running Short</p>
-                            <span>$50.00</span>
 
-                            <div className="product-size">
-                                <OptionButton
-                                    origin="MyBag"
-                                    active={true}
-                                    onClick={() => {}}
-                                    value='S'
-                                >
-                                    <span>S</span>
-                                </OptionButton>
-                                <OptionButton
-                                    origin="MyBag"
-                                    active={false}
-                                    onClick={() => {}}
-                                    value='M'
-                                >
-                                    <span>M</span>
-                                </OptionButton>
-                            </div>
+                    { CART_PRODUCTS.map( 
+                        product => 
+                        (  
+                            <ProductContainer className="product-container" key={product.id}>
+                                <ProductInfo className="product-info">
+                                    <span className="product-title">
+                                        {product.name}
+                                        {' - ' + product.brand}
+                                    </span>
+                                    <div className="product-price">
+                                        <span>
+                                            {product.prices[0].currency.symbol}
+                                            {product.prices[0].currency.label}
+                                            {product.prices[0].amount}
+                                        </span>
+                                    </div>
 
-                        </ProductInfo>
+                                    <div id="attributes">
+                                        <ProductAttributes productAttributes={product.attributes} origin='MyBag'/>
+                                    </div>
 
-                        <div className="select-quantity">
-                            <div className="option-sign">+</div>
-                                <span>1</span>
-                            <div className="option-sign">-</div>
-                        </div>                    
-                    </ProductContainer>
+                                </ProductInfo>
 
-                    <aside>
-                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
-                    </aside>
+                                <div className="select-quantity">
+                                    <div className="option-sign">+</div>
+                                        <span>1</span>
+                                    <div className="option-sign">-</div>
+                                </div>   
 
-                </ProductWrapper>  
-            
-            
-                <ProductWrapper className="product-wrapper">
-                    <ProductContainer className="product-container">
-                        <ProductInfo className="product-info">
-                            <p>Jupiter Wayfarer</p>
-                            <span>$75.00</span>
+                                
+                                <div className="product-image">
+                                    <img src={product.gallery[0]} alt={product.gallery[0]} />
+                                </div>
+                            
 
-                            <div className="product-size">
-                                <OptionButton
-                                    origin="MyBag"
-                                    active={true}
-                                    onClick={() => {}}
-                                    value='S'
-                                >
-                                    <span>S</span>
-                                </OptionButton>
-                                <OptionButton
-                                    origin="MyBag"
-                                    active={false}
-                                    onClick={() => {}}
-                                    value='M'
-                                >
-                                    <span>M</span>
-                                </OptionButton>
-                            </div>
-
-                        </ProductInfo>
-
-                        <div className="select-quantity">
-                            <div className="option-sign">+</div>
-                                <span>2</span>
-                            <div className="option-sign">-</div>
-                        </div>                    
-                    </ProductContainer>
-
-                    <aside>
-                        <div className="product-image" /> {/*after I'll consume the GraphQL API and set a real image here*/}
-                    </aside>
+                            </ProductContainer>
+                        ) 
+                    )}
 
                 </ProductWrapper>
-            </>
 
         );
 
@@ -218,7 +202,10 @@ const {
 } = MyBagContext.actions;
 
 const mapState = ( state: RootState )  => ({
+//  MY BAG STATE
     bagVisible: state.myBag.value,
+// CART PRODUCTS STATE
+    cartProducts: state.products.cartProducts
 })
 
 const mapDispatch = {

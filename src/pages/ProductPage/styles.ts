@@ -1,12 +1,20 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const fade = keyframes`
+    0% {
+        transform: translateZ(100%);
+        opacity: 0;
+    }
+`
 
 export const ProductPageContainer = styled.div`
     display: flex;
+    flex-direction: column;
     position: relative;
 
-    flex-direction: column;
     height: 100vh;
 
+    animation: ${fade} .7s linear;
 `;
 
 export const Main = styled.main`
@@ -80,6 +88,7 @@ export const ProductContent = styled.div`
         display: flex;
         flex-direction: column;
 
+        margin-top: 2.5rem;
         margin-bottom: 1.25rem;
 
         span:first-child {
@@ -149,14 +158,6 @@ export const ProductContent = styled.div`
     }
 
 `
-
-export const ProductAttributes = styled.div`
-    display: flex;
-    flex-direction: column;
-
-    height: 100%;
-    width: 100%;
-`;
 
 
 

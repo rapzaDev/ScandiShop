@@ -6,11 +6,11 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../services/redux/store';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
-import ProductContext from '../../services/redux/contexts/Product';
+import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
-import { ProductDataType } from '../../services/graphql/types/';
+import { ProductDataType, AttributeSetType } from '../../services/graphql/types/';
 
 //ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
@@ -111,6 +111,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
     }
 
+
     handleClickProductInfo(selectedProduct: ProductDataType) {
 
         localStorage.setItem('@scandishop/selectedProduct', JSON.stringify(selectedProduct) );
@@ -120,12 +121,33 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         }))
     }
 
-    handleClickProductInforCartButton(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    handleClickProductInforCartButton(
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
+        product: ProductDataType
+    ) {
 
-        //Controls the click on ProductInforCartButton above ProductInfo component
+        /**Controls the click on ProductInforCartButton above ProductInfo component */
         event.stopPropagation();
 
-        console.log('ProductInforCartButton clicado');
+        const { addProductToCart, cartProducts } = this.props;
+
+        let defaultProduct = {} as ProductDataType;
+        
+        Object.assign(defaultProduct, {
+            ...product,
+            attributes: product.attributes.map<AttributeSetType>( 
+                attribute =>  ({
+                    ...attribute,
+                    items: [attribute.items[0]]
+                })
+            )
+        });
+
+        const productAlreadyInBag = cartProducts.find( product => product.id === defaultProduct.id );
+
+        if ( productAlreadyInBag ) return;
+        else addProductToCart(defaultProduct);
+        
     }
 
 
@@ -199,7 +221,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 <ProductInfoCartButton 
                                     id="product-cart-button"
                                     Opaque={this.props.bagVisible}
-                                    onClick={( event ) => this.handleClickProductInforCartButton(event)}
+                                    onClick={( event ) => this.handleClickProductInforCartButton(event, product)}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -245,6 +267,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 <ProductInfoCartButton 
                                     id="product-cart-button"
                                     Opaque={this.props.bagVisible}
+                                    onClick={( event ) => this.handleClickProductInforCartButton(event, product)}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -288,6 +311,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                 <ProductInfoCartButton 
                                     id="product-cart-button"
                                     Opaque={this.props.bagVisible}
+                                    onClick={( event ) => this.handleClickProductInforCartButton(event, product)}
                                 >
                                     <img src={cartIcon} alt="ProductInfoCartButton cart button" />
                                 </ProductInfoCartButton>  
@@ -378,8 +402,7 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
-const { getSelectedProductData } = ProductContext.actions;
-
+const { addProductToCart } = CartProductsContext.actions;
 
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATES
@@ -398,6 +421,8 @@ const mapState = ( state: RootState )  => ({
     AUD: state.currencies.AUD,
     JPY: state.currencies.JPY,
     RUB: state.currencies.RUB,
+// CART PRODUCTS STATE
+    cartProducts: state.products.cartProducts
 })
 
 const mapDispatch = {
@@ -409,8 +434,8 @@ const mapDispatch = {
     handleChangeMyCurrencyOptionsState,
     activateCurrencyOptionsComponent,
     deactivateCurrencyOptionsComponent,
-//  PRODUCT FUNCTION
-    getSelectedProductData
+//  CART PRODUCTS FUNCTION
+    addProductToCart,
 }
 
 const connector = connect(mapState, mapDispatch);

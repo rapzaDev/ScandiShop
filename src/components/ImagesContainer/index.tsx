@@ -35,7 +35,6 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
         upHeightValue: 0
     }
 
-
     handleClickSmallImage( image: string ) {
         this.setState(() => ({
             bigImage: image

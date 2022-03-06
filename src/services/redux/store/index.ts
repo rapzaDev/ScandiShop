@@ -4,7 +4,7 @@ import MyBagContext from '../contexts/MyBag';
 import CurrencyOptionsContext from '../contexts/CurrencyOptions';
 import CategoryContext from '../contexts/Categories';
 import CurrenciesContext from '../contexts/Currencies';
-import ProductContext from '../contexts/Product';
+import CartProducts from '../contexts/CartProducts';
 
 const store = configureStore({
     reducer: {
@@ -12,7 +12,7 @@ const store = configureStore({
       currencyOptions: CurrencyOptionsContext.reducer,
       categories: CategoryContext.reducer,
       currencies: CurrenciesContext.reducer,
-      product: ProductContext.reducer,
+      products: CartProducts.reducer,
     }
 });
 

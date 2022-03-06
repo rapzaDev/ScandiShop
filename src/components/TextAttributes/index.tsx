@@ -102,6 +102,7 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
                         className="text-attributes" 
                         key={attribute.id} 
                         style={ shadow ? {filter: 'brightness(0.78)'} : {} }
+                        origin={origin}
                     >
                     
                         <span className="attribute-name">{attribute.name}:</span>

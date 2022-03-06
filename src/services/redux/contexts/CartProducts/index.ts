@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ProductDataType } from '../../../graphql/types';
 
-const ProductSlice = createSlice({
-    name: "product",
-    initialState: { value: {} as ProductDataType },
+const CartProducts = createSlice({
+    name: "cartProducts",
+    initialState: { cartProducts: [] as ProductDataType[] },
     reducers: {
-        getSelectedProductData: {
+        addProductToCart: {
             reducer: ( state, action: PayloadAction<ProductDataType>) => {
-                state.value = action.payload
+                state.cartProducts.push(action.payload)
             },
             prepare: (product: ProductDataType) => {
                 return { payload: product }
@@ -17,4 +17,4 @@ const ProductSlice = createSlice({
     }
 });
 
-export default ProductSlice;
+export default CartProducts;

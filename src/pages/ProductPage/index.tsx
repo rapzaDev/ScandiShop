@@ -7,7 +7,7 @@ import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOption
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
 //GRAPHQL
-import { AttributeSetType, ProductDataType } from '../../services/graphql/types';
+import { ProductDataType } from '../../services/graphql/types';
 
 //COMPONENTS
 import Header from '../../components/Header';
@@ -15,9 +15,8 @@ import DefaultButton from '../../components/DefaultButton';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
 import ShadowWrapper from '../../components/ShadowWrapper';
-import TextAttributes from '../../components/TextAttributes';
 import ImagesContainer from '../../components/ImagesContainer';
-import ColorAttributes from '../../components/ColorAttributes';
+import ProductAttributes from '../../components/ProductAttributes';
 
 //STYLES
 import {
@@ -25,7 +24,6 @@ import {
     Main,
     ProductContainer,
     ProductContent,
-    ProductAttributes,
 } from './styles';
 
 type ProductPageState = {
@@ -65,6 +63,10 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
     componentDidUpdate() {
         document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
+    }
+
+    componentWillUnmount() {
+        localStorage.removeItem('@scandishop/selectedProduct');
     }
     
     /**Get the selected product data from localStorage */
@@ -115,27 +117,6 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             return <CurrencyOptions />
     }
 
-    renderProductAttributes(productAttributes: AttributeSetType[]) {
-
-        const { bagVisible } = this.props;
-
-        const textAttributes = productAttributes.filter( attribute => attribute.type === 'text' );
-    
-        const [ colorAttribute ] = productAttributes.filter( attribute => attribute.type === 'swatch' );
-
-        return (
-            <ProductAttributes className="product-attributes">
-
-                { colorAttribute && <ColorAttributes swatchAttibute={colorAttribute} origin='ProductPage' /> }
-
-                <TextAttributes textAttributes={textAttributes} origin="ProductPage" shadow={bagVisible}/>
-
-            </ProductAttributes>  
-
-        );
-
-    }
-
     renderProduct() {
         
         // PRODUCT STATE
@@ -183,7 +164,7 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                             <span>- {product.brand}</span>
                         </span>
 
-                        { this.renderProductAttributes(product.attributes) }
+                        <ProductAttributes productAttributes={product.attributes} origin='ProductPage'/>                        
 
                         <div className="product-price">
                             <span>PRICE:</span>
@@ -270,8 +251,6 @@ const mapState = ( state: RootState )  => ({
     AUD: state.currencies.AUD,
     JPY: state.currencies.JPY,
     RUB: state.currencies.RUB,
-//  PRODUCT STATE
-    product: state.product.value,
 })
 
 const mapDispatch = {

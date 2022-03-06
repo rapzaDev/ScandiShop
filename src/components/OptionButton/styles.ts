@@ -40,33 +40,16 @@ export const Button = styled.button<OptionButtonState>`
 
         ${ ({ origin }) => 
             ( (origin === 'MyBag') ) && css`
-                width: 1.5rem;
+                width: 2.2rem;
                 height: 1.5rem;
 
                 border-color: var(--opacity-size-color);
-                background-color: rgba(166, 166, 166, 0.2);
+                font: var(--product-size-font);
+                font-size: 0.875rem;
+                color: var(--c-black);
 
-                span {
-                    font: var(--product-size-font);
-                    font-size: 0.875rem;
-
-                    color: var(--opacity-size-color);
-                }
-
+                cursor: unset;
             `
         }
-
-        ${ ({active, origin}) => 
-            ( (active && origin === 'MyBag')) && css`
-
-                border-color: var(--c-black);
-                background-color: var(--c-white);
-                
-                span {
-                    color: var(--c-black);
-                }
-
-        `}
-
 
 `;

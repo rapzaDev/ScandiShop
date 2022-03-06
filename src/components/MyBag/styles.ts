@@ -80,34 +80,31 @@ export const MyBagContainer = styled.div<MyBagProps>`
 
 export const ProductWrapper = styled.div`
     display: flex;
-    justify-content: space-between;
+    position: relative;
+    flex-direction: column;
 
-    width: 18.31rem;
-    height: 8.6rem;
+    max-height: 19.6875rem;
+    min-height: 19.6875rem;
+    max-width: 18.3125rem;
+    min-width: 18.3125rem;
 
     margin-bottom: 2.56rem;
 
-    .product-container {
-        display: flex;
-        flex: 2;
-    }
-
-    aside {
-        display: flex;
-        flex: 1;
-
-        background-color: #A6A6A6;
-
-        width: 6.56rem;
-        height: 8.56rem;
-
-    }
-
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
 `;
 
 export const ProductContainer = styled.div`
 
     display: flex;
+    position: relative;
+
+    height: fit-content;
+    width: 100%;
+
+    margin-bottom: 2.56rem;
+
 
     .select-quantity {
         display: flex;
@@ -139,48 +136,66 @@ export const ProductContainer = styled.div`
 
     }
 
+    .product-image {
+        display: flex;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
+    }
+
 `;
 
 export const ProductInfo = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 
-    justify-content: center;
 
-    height: 8.6rem;
+    height: 100%;
+    width: fit-content;
 
-    p {
-        
-        width: 8.5rem;
-        height: 3.25rem;
+    .product-title {
+        /* min-width: 8.5rem;
+        min-height: 3.25rem; */
+
+        width: fit-content;
+        height: fit-content;
 
         font: var(--raleway-300-font);
     }
 
-    > span {
+    .product-price {
         display: flex;
         align-items: center;
 
         margin-top: 0.31rem;
         margin-bottom: 1.68rem;
 
-        font: var(--price-regular-font);
-        font-size: 1rem;
-    }
+        min-width: 3.25rem;
+        min-height: 1.625rem;
 
-    .product-size {
-        display: flex;
-
-        align-items: center;
-
-        #option-button {
-            
-            & + button {
-                margin-left: 0.5625rem;
-            } 
-
+        span {
+            font: var(--price-regular-font);
+            font-size: 1rem;
         }
 
+    }
+
+    #attributes {
+        height: 5rem;
+        padding-right: 0.2rem;
+        
+        border: 1px solid #A6A6A6;
+        border-left: none;
+        border-right: none;
+
+        overflow-y: scroll;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: #393748 transparent;
     }
 
 `;
