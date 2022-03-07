@@ -105,37 +105,6 @@ export const ProductContainer = styled.div`
 
     margin-bottom: 2.56rem;
 
-
-    .select-quantity {
-        display: flex;
-        flex-direction: column;
-
-        justify-content: space-between;
-        align-items: center;
-
-        margin-left: 2.125rem;
-        margin-right: 0.625rem;
-
-        .option-sign {
-            display: flex;
-
-            justify-content: center;
-            align-items: center;
-
-            width: 1.5rem;
-            height: 1.5rem;
-
-            border: 1px solid var(--c-black);
-            color: var(--c-black);
-        }
-
-        span {
-            font: var(--price-regular-font);
-            font-size: 1rem;
-        }
-
-    }
-
     .product-image {
         display: flex;
 
@@ -155,7 +124,8 @@ export const ProductInfo = styled.div`
 
 
     height: 100%;
-    width: fit-content;
+    max-width: 8.5rem;
+    min-width: 8.5rem;
 
     .product-title {
         /* min-width: 8.5rem;
@@ -185,17 +155,116 @@ export const ProductInfo = styled.div`
     }
 
     #attributes {
-        height: 5rem;
+        max-height: 5rem;
+        width: 100%;
+
         padding-right: 0.2rem;
-        
-        border: 1px solid #A6A6A6;
-        border-left: none;
-        border-right: none;
 
         overflow-y: scroll;
         overflow-x: hidden;
         scrollbar-width: thin;
-        scrollbar-color: #393748 transparent;
+        scrollbar-color: #A6A6A6 #393748;
+    }
+
+`;
+
+export const SelectQuantity = styled.div`
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-left: 2.125rem;
+    margin-right: 0.625rem;
+
+    .plus-sign {
+        display: flex;
+        position: relative;
+
+        cursor: pointer;
+
+        background-color: #fff;
+
+        justify-content: center;
+        align-items: center;
+
+        width: 1.5rem;
+        height: 1.5rem;
+
+        border: 1px solid var(--c-black);
+        color: var(--c-black);
+
+        transition: filter .2s linear;
+
+        &:hover {
+            filter: brightness(93%);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+
+            top: 50%;
+            left: 28%;
+
+            width: 8px;
+
+            border: 1px solid #1D1F22;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+
+            top: 33%;
+            right: 48%;
+
+            height: 8px;
+
+            border: 1px solid #1D1F22;
+        }
+
+    }
+
+    .minus-sign {
+        display: flex;
+        position: relative;
+
+        cursor: pointer;
+
+        background-color: #fff;
+
+        width: 1.5rem;
+        height: 1.5rem;
+
+        border: 1px solid var(--c-black);
+        color: var(--c-black);
+
+        transition: filter .2s linear;
+
+        &:hover {
+            filter: brightness(93%);
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+
+            top: 50%;
+            left: 28%;
+
+            width: 8px;
+
+            border: 1px solid #1D1F22;
+        }
+
+    }
+
+    span {
+        font: var(--price-regular-font);
+        font-size: 1rem;
     }
 
 `;

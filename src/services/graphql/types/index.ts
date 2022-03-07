@@ -31,4 +31,5 @@ export type ProductDataType = {
     gallery: Array<string>;
     prices: PriceType[];
     attributes: AttributeSetType[];
+    quantity?: number;
 }

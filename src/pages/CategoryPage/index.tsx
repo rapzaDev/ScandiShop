@@ -135,12 +135,13 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         
         Object.assign(defaultProduct, {
             ...product,
-            attributes: product.attributes.map<AttributeSetType>( 
+            attributes: product.attributes.map( 
                 attribute =>  ({
                     ...attribute,
-                    items: [attribute.items[0]]
+                    items: [attribute.items[0]],
                 })
-            )
+            ),
+            quantity: 1,
         });
 
         const productAlreadyInBag = cartProducts.find( product => product.id === defaultProduct.id );

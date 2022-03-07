@@ -18,12 +18,18 @@ import {
     MyBagContainer,
     ProductWrapper,
     ProductContainer,
-    ProductInfo
+    ProductInfo,
+    SelectQuantity,
 } from './styles';
 
 
+interface CartProductType extends ProductDataType {
+    quantity?: number;
+}
+
 type MyBagState = {
     redirectCartPage: boolean;
+    cartProducts: CartProductType[];
 }
 
 export type MyBagProps =  {
@@ -40,12 +46,19 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     state: MyBagState = {
         redirectCartPage: false,
+        cartProducts: [],
     }
 
     componentDidMount() {
 
-        const { cartProducts } = this.props;
-        console.log(cartProducts);
+        // const { cartProducts } = this.props;
+        console.log(this.props.cartProducts);
+
+        this.setState(() => ({
+            cartProducts: this.props.cartProducts
+        }))
+
+
 
         document.getElementById('my-bag')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
@@ -80,18 +93,12 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
-    getLocalStorageCartProducts(): ProductDataType[] {
-        const cartProducts = localStorage.getItem('@scandishop/cartProducts') as string;
-
-        if ( cartProducts ) return JSON.parse(cartProducts);
-        else return [] as ProductDataType[];
-    }
 
     renderMyBagProducts() {
 
         var CART_PRODUCTS = [] as ProductDataType[];
 
-        const { cartProducts } = this.props;
+        const { cartProducts } = this.state;
 
         CART_PRODUCTS = cartProducts;
 
@@ -121,11 +128,11 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
                                 </ProductInfo>
 
-                                <div className="select-quantity">
-                                    <div className="option-sign">+</div>
-                                        <span>1</span>
-                                    <div className="option-sign">-</div>
-                                </div>   
+                                <SelectQuantity className="select-quantity">
+                                    <button className="plus-sign"/>
+                                        <span>{product.quantity}</span>
+                                    <button className="minus-sign"/>
+                                </SelectQuantity>   
 
                                 
                                 <div className="product-image">
