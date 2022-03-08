@@ -31,5 +31,7 @@ export type ProductDataType = {
     gallery: Array<string>;
     prices: PriceType[];
     attributes: AttributeSetType[];
+
+    /**Refers to quantity of each product in the cart */
     quantity?: number;
 }

@@ -79,31 +79,12 @@ export const CartContainer = styled.div`
         }
     }
 
-    .product-quantity {
+    #bag-amount {
         position: absolute;
         top: 0;
         
         margin-top: -0.5rem;
         margin-left: 0.83rem;
-        
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        width: 1.2rem;
-        height: 1.2rem;
-
-        border-radius: 3.75rem;
-
-        background-color: var(--c-black);
-
-        span {
-            color: var(--c-white);
-            
-            font: var(--product-quantity-font);
-            
-        }
-
     }
 
 `;

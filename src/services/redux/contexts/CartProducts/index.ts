@@ -13,7 +13,15 @@ const CartProducts = createSlice({
             prepare: (product: ProductDataType) => {
                 return { payload: product }
             }
-        }
+        },
+        getLocalStorageDataProducts: {
+            reducer: ( state, action: PayloadAction<ProductDataType[]>) => {
+                state.cartProducts = action.payload
+            },
+            prepare: (products: ProductDataType[]) => {
+                return { payload: products }
+            }
+        }, 
     }
 });
 

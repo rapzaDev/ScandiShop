@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 //REDUX
 import { RootState } from '../../services/redux/store';
 import MyBagContext from '../../services/redux/contexts/MyBag';
+import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
@@ -22,18 +23,17 @@ import {
     SelectQuantity,
 } from './styles';
 
-
-interface CartProductType extends ProductDataType {
-    quantity?: number;
-}
-
 type MyBagState = {
     redirectCartPage: boolean;
-    cartProducts: CartProductType[];
+    cartProducts: ProductDataType[];
 }
 
 export type MyBagProps =  {
     isVisible: boolean;
+}
+
+window.onbeforeunload = () => {
+    window.alert('atualizacao da pagina');
 }
 
 class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
@@ -51,19 +51,46 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     componentDidMount() {
 
-        // const { cartProducts } = this.props;
-        console.log(this.props.cartProducts);
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
 
-        this.setState(() => ({
-            cartProducts: this.props.cartProducts
-        }))
+        console.log('componentDidMount - context cartProducts:', this.props.cartProducts);
+        console.log('componentDidMount - localStorage cartProducts Data:', cartProductsLocalStorage);
 
+        if ( ( !this.props.cartProducts.length ) && ( cartProductsLocalStorage.length ) ) {
+            console.log('cartProduct supllied with localStorage Data');
+            
+            const { getLocalStorageDataProducts } = this.props;
 
+            getLocalStorageDataProducts(cartProductsLocalStorage);
+
+            this.setState(() => ({
+                cartProducts: cartProductsLocalStorage
+            }))
+
+        } else if ( this.props.cartProducts ) {
+
+            console.log('localStorage is empty, so im supplying cartProducts state with cartProducts context');
+
+            this.setState(() => ({
+                cartProducts: this.props.cartProducts
+            }))
+
+        }
 
         document.getElementById('my-bag')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
         document.getElementById('my-bag')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
         
+    }
+
+    componentWillUnmount() {
+
+        const { cartProducts } = this.props;
+
+        console.log('componentWillUnmount - localStorage SETED');
+        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProducts) );
+
     }
 
     
@@ -96,7 +123,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     renderMyBagProducts() {
 
-        var CART_PRODUCTS = [] as ProductDataType[];
+        var CART_PRODUCTS = [];
 
         const { cartProducts } = this.state;
 
@@ -129,9 +156,9 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                                 </ProductInfo>
 
                                 <SelectQuantity className="select-quantity">
-                                    <button className="plus-sign"/>
+                                    <button className="plus-sign" onClick={() => {}}/>
                                         <span>{product.quantity}</span>
-                                    <button className="minus-sign"/>
+                                    <button className="minus-sign" onClick={() => {}}/>
                                 </SelectQuantity>   
 
                                 
@@ -208,6 +235,9 @@ const {
     handleChangeMyBagState
 } = MyBagContext.actions;
 
+
+const { getLocalStorageDataProducts } = CartProductsContext.actions;
+
 const mapState = ( state: RootState )  => ({
 //  MY BAG STATE
     bagVisible: state.myBag.value,
@@ -216,9 +246,12 @@ const mapState = ( state: RootState )  => ({
 })
 
 const mapDispatch = {
+//  MY BAG FUNCTIONS
     activateMyBagComponent,
     deactivateMyBagComponent,
-    handleChangeMyBagState
+    handleChangeMyBagState,
+//  CART PRODUCTS FUNCTION
+    getLocalStorageDataProducts,
 }
 
 const connector = connect(mapState, mapDispatch);

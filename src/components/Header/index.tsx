@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
+//REDUX
 import { RootState } from '../../services/redux/store';
-
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import CategoriesContext from '../../services/redux/contexts/Categories';
 
+//GRAPHQL
 import { getCategoryNames } from '../../services/graphql/components/Header/Queries';
 
 import scandishopLogo from '../../assets/images/scandishop-logo.svg'; 
@@ -14,15 +16,18 @@ import arrowDownIcon from '../../assets/images/down-arrow-icon.svg';
 import arrowUpIcon from '../../assets/images/up-arrow-icon.svg';
 import cartIcon from '../../assets/images/cart-icon.svg';
 
+//COMPONENTS
 import SelectCategoryButton from '../SelectCategoryButton';
+import BagAmount from '../BagAmount';
 
+//STYLES
 import {
     HeaderComponent,
     CurrencyAndCart,
     CurrencyButton,
     CartContainer,
 } from './styles';
-import { connect, ConnectedProps } from 'react-redux';
+
 
 type HeaderState = {
     categoryNames: string[];
@@ -142,9 +147,8 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
                 <button  onClick={() => this.handleClickCartButton() }>
                     <img src={cartIcon} alt="Cart Icon" />
                 </button>
-                <div className="product-quantity">
-                    <span>2</span>
-                </div>
+
+                <BagAmount />
             </CartContainer>
         );
     }

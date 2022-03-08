@@ -10,7 +10,7 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
-import { ProductDataType, AttributeSetType } from '../../services/graphql/types/';
+import { ProductDataType, AttributeSetType, AttributeType } from '../../services/graphql/types/';
 
 //ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
@@ -121,6 +121,71 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         }))
     }
 
+    /**Verify if the choosen product is already added on cart with the same attributes, and returns true if
+     * is a new product or false if is already in the cart.
+      */
+    addProductToCartControl( defaultProduct: ProductDataType, cartProducts: ProductDataType[]) {
+        
+        const defaultProductsItems = [] as AttributeType[]; 
+        
+        defaultProduct.attributes.forEach( 
+            attribute => attribute.items.forEach( 
+                item => defaultProductsItems.push(item)
+            )
+        )
+
+        console.log(cartProducts);
+
+        //CONTROL VARIABLE
+        let productIsNewOnCart: boolean | any;
+
+        if ( cartProducts.length === 0 ) productIsNewOnCart = true;
+        else {
+            cartProducts.forEach( 
+                product => {
+
+                    console.log('product.id', product.id);
+                    console.log('defaultProduct.id', defaultProduct.id);
+
+                    if ( ( product.id === defaultProduct.id ) && ( product.attributes.length > 0 ) ) {
+                        
+                        product.attributes.forEach( 
+                            attribute => attribute.items.forEach(
+                                item => {
+
+                                    const value = defaultProductsItems.find(
+                                        defaultItem =>  item.value === defaultItem.value
+                                    )
+                                    
+                                    /**if some value if undefined, the defaultProduct is new on cartProducts array*/
+                                    if ( value !== undefined ) {
+                                       
+                                        if( productIsNewOnCart !== true) productIsNewOnCart = false;
+
+                                    } else productIsNewOnCart = true;
+
+                                }
+                            )
+                        )
+                        
+                        return;
+                    }
+
+                    /**For products that doesn't have attributes */
+                    if ( product.id === defaultProduct.id ) {
+                        productIsNewOnCart = false;
+                        return;
+                    }
+
+                } 
+            )
+        }
+
+        if ( productIsNewOnCart === undefined ) productIsNewOnCart = true;
+
+        return productIsNewOnCart;
+    }
+
     handleClickProductInforCartButton(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
         product: ProductDataType
@@ -133,7 +198,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
         let defaultProduct = {} as ProductDataType;
         
-        Object.assign(defaultProduct, {
+        Object.assign( defaultProduct, {
             ...product,
             attributes: product.attributes.map( 
                 attribute =>  ({
@@ -144,10 +209,10 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             quantity: 1,
         });
 
-        const productAlreadyInBag = cartProducts.find( product => product.id === defaultProduct.id );
 
-        if ( productAlreadyInBag ) return;
-        else addProductToCart(defaultProduct);
+        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts);        
+
+        if ( productIsNewOnCart ) addProductToCart(defaultProduct);
         
     }
 
