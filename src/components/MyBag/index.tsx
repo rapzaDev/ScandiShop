@@ -25,15 +25,10 @@ import {
 
 type MyBagState = {
     redirectCartPage: boolean;
-    cartProducts: ProductDataType[];
 }
 
 export type MyBagProps =  {
     isVisible: boolean;
-}
-
-window.onbeforeunload = () => {
-    window.alert('atualizacao da pagina');
 }
 
 class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
@@ -46,51 +41,14 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     state: MyBagState = {
         redirectCartPage: false,
-        cartProducts: [],
     }
 
     componentDidMount() {
-
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
-
-        console.log('componentDidMount - context cartProducts:', this.props.cartProducts);
-        console.log('componentDidMount - localStorage cartProducts Data:', cartProductsLocalStorage);
-
-        if ( ( !this.props.cartProducts.length ) && ( cartProductsLocalStorage.length ) ) {
-            console.log('cartProduct supllied with localStorage Data');
-            
-            const { getLocalStorageDataProducts } = this.props;
-
-            getLocalStorageDataProducts(cartProductsLocalStorage);
-
-            this.setState(() => ({
-                cartProducts: cartProductsLocalStorage
-            }))
-
-        } else if ( this.props.cartProducts ) {
-
-            console.log('localStorage is empty, so im supplying cartProducts state with cartProducts context');
-
-            this.setState(() => ({
-                cartProducts: this.props.cartProducts
-            }))
-
-        }
 
         document.getElementById('my-bag')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
         document.getElementById('my-bag')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
         
-    }
-
-    componentWillUnmount() {
-
-        const { cartProducts } = this.props;
-
-        console.log('componentWillUnmount - localStorage SETED');
-        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProducts) );
-
     }
 
     
@@ -125,9 +83,12 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         var CART_PRODUCTS = [];
 
-        const { cartProducts } = this.state;
+        const { cartProducts } = this.props;
 
-        CART_PRODUCTS = cartProducts;
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+        CART_PRODUCTS = ( cartProducts.length ? cartProducts : cartProductsLocalStorage );
 
         return (
                 <ProductWrapper className="product-wrapper">

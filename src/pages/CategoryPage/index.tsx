@@ -10,7 +10,7 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
-import { ProductDataType, AttributeSetType, AttributeType } from '../../services/graphql/types/';
+import { ProductDataType, AttributeType } from '../../services/graphql/types/';
 
 //ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
@@ -74,10 +74,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         // --------- GraphQL ALL PRODUCTS DATA ---------
             const productsData = await getAllProducts();
 
-            console.log(productsData[1]);
-
             this.setState(() => ({
-                //Set Products states
                 allProducts: productsData[0],
                 clothesProducts: productsData[1],
                 techProducts: productsData[2],
@@ -121,31 +118,29 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         }))
     }
 
-    /**Verify if the choosen product is already added on cart with the same attributes, and returns true if
-     * is a new product or false if is already in the cart.
-      */
-    addProductToCartControl( defaultProduct: ProductDataType, cartProducts: ProductDataType[]) {
-        
+    /** Verify if the choosen product is already added on cart with the same attributes, and returns true if
+    *   is a new product or false if is already in the cart. */
+    addProductToCartControl( defaultProduct: ProductDataType, cartProducts: ProductDataType[]  ) {
+
+        //CONTROL VARIABLE
+        let productIsNewOnCart: boolean | any;
+
+        /**Contains all items of the product selected */
         const defaultProductsItems = [] as AttributeType[]; 
         
+        //Filling defaultProductsItems:
         defaultProduct.attributes.forEach( 
             attribute => attribute.items.forEach( 
                 item => defaultProductsItems.push(item)
             )
         )
 
-        console.log(cartProducts);
-
-        //CONTROL VARIABLE
-        let productIsNewOnCart: boolean | any;
-
+        //If the array is empty, the selected product is always new.
         if ( cartProducts.length === 0 ) productIsNewOnCart = true;
         else {
+            
             cartProducts.forEach( 
                 product => {
-
-                    console.log('product.id', product.id);
-                    console.log('defaultProduct.id', defaultProduct.id);
 
                     if ( ( product.id === defaultProduct.id ) && ( product.attributes.length > 0 ) ) {
                         
@@ -160,7 +155,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                                     /**if some value if undefined, the defaultProduct is new on cartProducts array*/
                                     if ( value !== undefined ) {
                                        
-                                        if( productIsNewOnCart !== true) productIsNewOnCart = false;
+                                        if( productIsNewOnCart !== true ) productIsNewOnCart =  false;
 
                                     } else productIsNewOnCart = true;
 
@@ -169,6 +164,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         )
                         
                         return;
+
                     }
 
                     /**For products that doesn't have attributes */
@@ -179,14 +175,17 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                 } 
             )
+
         }
 
+        //The selected product is new on cart , but the cartProducts array is not empty.
         if ( productIsNewOnCart === undefined ) productIsNewOnCart = true;
 
         return productIsNewOnCart;
+
     }
 
-    handleClickProductInforCartButton(
+    async handleClickProductInforCartButton(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
         product: ProductDataType
     ) {
@@ -194,7 +193,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         /**Controls the click on ProductInforCartButton above ProductInfo component */
         event.stopPropagation();
 
-        const { addProductToCart, cartProducts } = this.props;
+        const { getLocalStorageDataProducts, cartProducts } = this.props;
 
         let defaultProduct = {} as ProductDataType;
         
@@ -210,9 +209,20 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         });
 
 
-        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts);        
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
 
-        if ( productIsNewOnCart ) addProductToCart(defaultProduct);
+        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts );        
+
+        if ( productIsNewOnCart ) {
+
+            cartProductsLocalStorage.push(defaultProduct); // pushing a new value to localStorage data array.
+
+            getLocalStorageDataProducts(cartProductsLocalStorage); //adding all data of local storage on cartProducts array.
+
+            localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProductsLocalStorage) );
+
+        }
         
     }
 
@@ -468,7 +478,7 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
-const { addProductToCart } = CartProductsContext.actions;
+const { addProductToCart, getLocalStorageDataProducts } = CartProductsContext.actions;
 
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATES
@@ -500,8 +510,8 @@ const mapDispatch = {
     handleChangeMyCurrencyOptionsState,
     activateCurrencyOptionsComponent,
     deactivateCurrencyOptionsComponent,
-//  CART PRODUCTS FUNCTION
-    addProductToCart,
+//  CART PRODUCTS FUNCTIONS
+    getLocalStorageDataProducts,
 }
 
 const connector = connect(mapState, mapDispatch);

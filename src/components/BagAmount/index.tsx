@@ -10,25 +10,8 @@ import { ProductDataType } from '../../services/graphql/types';
 //STYLES
 import { Container } from './styles';
 
-type BagAmountState = {
-    cartProductsAmount: number;
-}
 
-class BagAmount extends PureComponent<PropsFromRedux, BagAmountState> {
-
-    state: BagAmountState = {
-        cartProductsAmount: 0,
-    }
-
-    componentDidMount() {
-
-        const { cartProducts } = this.props;
-
-        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProducts));
-
-        console.log('componentDidMount BagAmount activated');
-
-    }
+class BagAmount extends PureComponent<PropsFromRedux> {
 
     render() {
 
@@ -36,6 +19,7 @@ class BagAmount extends PureComponent<PropsFromRedux, BagAmountState> {
 
         const data = localStorage.getItem('@scandishop/cartProducts');
         const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
 
         const amount = ( cartProducts.length ? cartProducts.length : cartProductsLocalStorage.length );
 
@@ -58,7 +42,7 @@ const mapState = ( state: RootState )  => ({
     cartProducts: state.products.cartProducts
 })
 
-const mapDispatch = {};
+const mapDispatch = {}
 
 const connector = connect(mapState, mapDispatch);
 
