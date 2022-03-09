@@ -185,7 +185,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
     }
 
-    async handleClickProductInforCartButton(
+
+    /**Add a new porduct on Cart and MyBag component and activates MyBag component. */
+    handleClickProductInforCartButton(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
         product: ProductDataType
     ) {
@@ -193,7 +195,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         /**Controls the click on ProductInforCartButton above ProductInfo component */
         event.stopPropagation();
 
-        const { getLocalStorageDataProducts, cartProducts } = this.props;
+        const { getLocalStorageDataProducts, cartProducts, handleChangeMyBagState } = this.props;
 
         let defaultProduct = {} as ProductDataType;
         
@@ -224,6 +226,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
         }
         
+
+        handleChangeMyBagState();
+
     }
 
 

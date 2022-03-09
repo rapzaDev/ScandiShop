@@ -142,6 +142,11 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         const { bagVisible } = this.props;
 
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+        const amount = cartProductsLocalStorage.length;
+
         return (
             <>
                 <MyBagContainer 
@@ -151,7 +156,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                     
                     <div className="bag-description">
                         <strong>My Bag, </strong>
-                        <span>2 items</span>
+                        <span>{amount} items</span>
                     </div>
 
                     { this.renderMyBagProducts() }

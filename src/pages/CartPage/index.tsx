@@ -96,76 +96,7 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
             handleChangeMyBagState();
   
     }
-
-    handleClickSizeXS() {
-
-        if ( !this.state.size.XS ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: !size.XS,
-                    S: false,
-                    M: false,
-                    L: false,
-                },
-            }));
-
-        }
-            
-    }
-
-    handleClickSizeS() {
-
-        if ( !this.state.size.S ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: !size.S,
-                    M: false,
-                    L: false,
-                },
-            }));
-            
-        }
-
-    }
     
-    handleClickSizeM() {
-
-        if ( !this.state.size.M ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: false,
-                    M: !size.M,
-                    L: false,
-                },
-            }));
-            
-        }
-
-    }
-
-    handleClickSizeL() {
-
-        if ( !this.state.size.L ){
-
-            this.setState(({size}) => ({
-                size: {
-                    XS: false,
-                    S: false,
-                    M: false,
-                    L: !size.L,
-                },
-            }));
-            
-        }
-
-    }
-
-
 
     renderMyBag() {
 

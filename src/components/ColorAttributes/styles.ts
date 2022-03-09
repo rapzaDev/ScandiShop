@@ -18,6 +18,8 @@ export const Container = styled.div<ContainerProps>`
 
         font: var(--roboto-condensed-700-font);
 
+        font-size: ${ ({origin}) => origin === 'MyBag' && '0.8rem'};
+
         text-transform: uppercase;
     }
     
@@ -28,6 +30,7 @@ export const Container = styled.div<ContainerProps>`
         
         height: 100%;
         max-width: 18.25rem;
+        width: ${ ({origin}) => origin === 'MyBag' && 'fit-content'};;
 
         margin-bottom: 0.5rem;
 

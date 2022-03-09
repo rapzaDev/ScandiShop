@@ -107,6 +107,9 @@ export const ProductContainer = styled.div`
 
     .product-image {
         display: flex;
+        
+        max-width: 105px;
+        min-width: 105px;
 
         img {
             width: 100%;
@@ -122,14 +125,10 @@ export const ProductInfo = styled.div`
     flex-direction: column;
     justify-content: space-between;
 
-
     height: 100%;
-    max-width: 8.5rem;
-    min-width: 8.5rem;
+    width: 100%;
 
     .product-title {
-        /* min-width: 8.5rem;
-        min-height: 3.25rem; */
 
         width: fit-content;
         height: fit-content;
@@ -204,12 +203,9 @@ export const SelectQuantity = styled.div`
 
         &::after {
             content: '';
-            position: absolute;
+            position: relative;
 
-            top: 50%;
-            left: 28%;
-
-            width: 8px;
+            width: 0.5rem;
 
             border: 1px solid #1D1F22;
         }
@@ -218,10 +214,9 @@ export const SelectQuantity = styled.div`
             content: '';
             position: absolute;
 
-            top: 33%;
-            right: 48%;
+            left: 45%;
 
-            height: 8px;
+            height: 0.5rem;
 
             border: 1px solid #1D1F22;
         }
@@ -231,6 +226,9 @@ export const SelectQuantity = styled.div`
     .minus-sign {
         display: flex;
         position: relative;
+
+        align-items: center;
+        justify-content: center;
 
         cursor: pointer;
 
@@ -250,12 +248,9 @@ export const SelectQuantity = styled.div`
 
         &::after {
             content: '';
-            position: absolute;
+            position: relative;
 
-            top: 50%;
-            left: 28%;
-
-            width: 8px;
+            width: 0.5rem;
 
             border: 1px solid #1D1F22;
         }

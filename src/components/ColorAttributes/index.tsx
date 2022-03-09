@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 //REDUX
 import { RootState } from '../../services/redux/store';
+import ColorAttributesContext from '../../services/redux/contexts/ColorAttributes';
 
 //GRAPHQL
 import { AttributeSetType } from '../../services/graphql/types';
@@ -15,11 +16,13 @@ interface ColorAttributesProps extends PropsFromRedux {
     origin: 'CategoryPage' | 'ProductPage' | 'CartPage' | 'MyBag';
 }
 
+type ColorItemsType = {
+    id: string;
+    selected?: boolean;
+}
+
 type ColorAttributesState = {
-    colorItems: Array<{
-        id: string;
-        selected?: boolean;
-    }>;
+    colorItems: ColorItemsType[];
 }
 
 class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttributesState> {
@@ -38,7 +41,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
     handleClickProductColor( colorName: string ) {
 
         this.setState(( state ) => ({
-            colorItems: state.colorItems.map( 
+            colorItems: state.colorItems.map<ColorItemsType>( 
                 color =>  ({
                     id: color.id,
                     selected: ( ( color.id === colorName ) ? true : false )
@@ -46,6 +49,18 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
             )
         }))
 
+        const { colorItems } = this.state;
+        const colorAttributesData = colorItems.map<ColorItemsType>( 
+            color =>  ({
+                id: color.id,
+                selected: ( ( color.id === colorName ) ? true : false )
+            })
+        )
+
+        console.log(colorAttributesData);
+
+        const { getProductColorAttributes } = this.props;
+        getProductColorAttributes(colorAttributesData);
 
     }
 
@@ -71,7 +86,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
                 origin={origin}
             >
 
-                { (origin === 'ProductPage') && <span className="attribute-name">{swatchAttibute.name}:</span>}
+                { (origin !== 'CategoryPage') && <span className="attribute-name">{swatchAttibute.name}:</span>}
                 
                 <div className="product-colors">
                     {
@@ -107,12 +122,17 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
+const { getProductColorAttributes } = ColorAttributesContext.actions;
+
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATE
     bagVisible: state.myBag.value,
 })
 
-const mapDispatch = {}
+const mapDispatch = {
+//  COLOR ATTRIBUTES FUNCTION
+    getProductColorAttributes,
+}
 
 const connector = connect(mapState, mapDispatch);
 
