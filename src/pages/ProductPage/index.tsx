@@ -251,6 +251,10 @@ const mapState = ( state: RootState )  => ({
     AUD: state.currencies.AUD,
     JPY: state.currencies.JPY,
     RUB: state.currencies.RUB,
+//  PRODUCT TEXT ATTRIBUTES STATE
+    TEXT_ATTRIBUTES: state.textAttributes.textAttributes,
+//  PRODUCT COLOR ATTRIBUTES STATE
+    COLOR_ATTRIBUTES: state.colorAttributes.colorAttributes,
 })
 
 const mapDispatch = {

@@ -214,7 +214,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         const data = localStorage.getItem('@scandishop/cartProducts');
         const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
 
-        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts );        
+        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts ); 
 
         if ( productIsNewOnCart ) {
 

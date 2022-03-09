@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 //REDUX
 import { RootState } from '../../services/redux/store';
+import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
@@ -12,6 +13,18 @@ import { Container } from './styles';
 
 
 class BagAmount extends PureComponent<PropsFromRedux> {
+
+    componentDidMount() {
+
+        const { cartProducts, getLocalStorageDataProducts } = this.props;
+
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+        if ( ( cartProductsLocalStorage.length ) && (!cartProducts.length) )
+            getLocalStorageDataProducts(cartProductsLocalStorage);
+
+    }
 
     render() {
 
@@ -37,12 +50,17 @@ class BagAmount extends PureComponent<PropsFromRedux> {
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
+const { getLocalStorageDataProducts } = CartProductsContext.actions;
+
 const mapState = ( state: RootState )  => ({
 // CART PRODUCTS STATE
     cartProducts: state.products.cartProducts
 })
 
-const mapDispatch = {}
+const mapDispatch = {
+//  CART PRODUCTS FUNCTION
+    getLocalStorageDataProducts,
+}
 
 const connector = connect(mapState, mapDispatch);
 
