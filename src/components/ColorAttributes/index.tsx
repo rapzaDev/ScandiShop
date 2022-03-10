@@ -32,9 +32,32 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
     }
 
     state: ColorAttributesState = {
-        colorItems: this.props.swatchAttibute.items,
+        colorItems: [],
     }
 
+    componentDidMount() {
+        const { swatchAttibute, COLOR_ATTRIBUTES, getProductColorAttributes } = this.props;
+
+        const colorItemsData = swatchAttibute.items.map<ColorItemsType>( 
+            color =>  ({
+                id: color.id,
+                selected: ( ( swatchAttibute.items[0] === color ) ? true : false )
+            })
+        )
+
+        this.setState(() => ({
+            colorItems: colorItemsData
+        }))
+
+        /**If COLOR_ATTRIBUTES is empty or equal to colorItemsData, it will be seted.*/
+        const equalColorsState: boolean = ( 
+            ( !COLOR_ATTRIBUTES.length ) || 
+            ( colorItemsData[0].selected === COLOR_ATTRIBUTES[0].selected ) 
+        );
+        
+        if (equalColorsState) getProductColorAttributes(colorItemsData);
+ 
+    }
 
     /**Gets the name of the color in the parameters and sets within the color items 
      * the selected value as true and false for the rest */
@@ -127,6 +150,8 @@ const { getProductColorAttributes } = ColorAttributesContext.actions;
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATE
     bagVisible: state.myBag.value,
+// COLOR ATTRIBUTES STATE
+    COLOR_ATTRIBUTES: state.colorAttributes.colorAttributes,
 })
 
 const mapDispatch = {

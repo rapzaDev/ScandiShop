@@ -26,11 +26,13 @@ export const Container = styled.div<ContainerProps>`
     .product-colors {
         display: flex;
         position: relative;
-        align-items: center;
+        /* align-items: center; */
         
-        height: 100%;
-        max-width: 18.25rem;
-        width: ${ ({origin}) => origin === 'MyBag' && 'fit-content'};;
+        /* height: 100%; */
+        /* max-width: 18.25rem; */
+
+        /* width: ${ ({origin}) => origin === 'MyBag' && 'fit-content'}; */
+        width: fit-content;
 
         margin-bottom: 0.5rem;
 
@@ -38,7 +40,7 @@ export const Container = styled.div<ContainerProps>`
             position: relative;
             cursor: ${ ({ origin }) => origin === 'ProductPage' && 'pointer'};
 
-            width: ${ ({ origin }) => ( origin === 'ProductPage' ) ? '100%' : '1.2rem' };
+            width: ${ ({ origin }) => ( origin === 'ProductPage' ) ? '3.2rem' : '1.2rem' };
             height: ${ ({ origin }) => ( origin === 'ProductPage' ) ? '2.8125rem' : '1.2rem' };
 
             &:hover {

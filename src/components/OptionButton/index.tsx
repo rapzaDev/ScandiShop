@@ -1,19 +1,19 @@
-import React, { PureComponent } from 'react';
+import React, { ButtonHTMLAttributes, PureComponent } from 'react';
 
 import {
     Button
 } from './styles';
 
 export type OptionButtonState = {
-    origin: 'MyBag' | 'ProductPage' | 'CartPage';
+    origin: 'ProductPage' | 'CartPage' | 'MyBag';
     active: boolean;
 }
 
-type OptionButtonProps = {
-    origin: 'MyBag' | 'ProductPage' | 'CartPage';
+interface OptionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    origin: 'ProductPage' | 'CartPage' | 'MyBag';
     active: boolean;
     onClick: () => void;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     value: string;
 } 
 

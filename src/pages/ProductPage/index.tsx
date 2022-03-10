@@ -62,11 +62,8 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
     }
 
     componentDidUpdate() {
-        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
-    }
 
-    componentWillUnmount() {
-        localStorage.removeItem('@scandishop/selectedProduct');
+        document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
     }
     
     /**Get the selected product data from localStorage */
@@ -100,6 +97,82 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             
     }
 
+    handleClickAddToCartButton() {
+
+        const data = ( localStorage.getItem('@scandishop/selectedProduct') ) as string;
+        const selectedProduct: ProductDataType = ( data ? JSON.parse(data) : {} );
+
+        const { TEXT_ATTRIBUTES, COLOR_ATTRIBUTES } = this.props;
+
+        let productData = {} as ProductDataType;
+
+        Object.assign( productData, {
+            ...selectedProduct,
+            attributes: selectedProduct.attributes.map(
+                attribute => {
+
+                    if ( attribute.type === 'text' ) {
+
+                        const TEXT_ATTRIBUTE = TEXT_ATTRIBUTES.find(
+                            textAttribute => attribute.name === textAttribute.name
+                        )
+
+                        if ( TEXT_ATTRIBUTE !== undefined )  {
+
+                            const item = TEXT_ATTRIBUTE.items.find(
+                                target => (target.value === true)
+                            );
+                            
+                            if ( item !== undefined ) {
+
+                                attribute.items = [{
+                                    id: item.name,
+                                    value: item.name
+                                }];
+
+                                return attribute;
+
+                            }
+                    
+                        }
+
+                    }
+
+                    if ( attribute.type === 'swatch' ) {
+
+                        const COLOR_ATTRIBUTE = COLOR_ATTRIBUTES.find(
+                            colorAttribute => ( colorAttribute.selected === true )
+                        )
+
+                        if ( COLOR_ATTRIBUTE !== undefined ) {
+
+                            const item = attribute.items.find(
+                                color => color.id === COLOR_ATTRIBUTE.id
+                            )
+                            
+                            if ( item !== undefined ) {
+
+                                attribute.items = [item];
+
+                                return attribute;
+
+                            }
+                 
+
+                        }
+
+                    }
+
+                }
+            ),
+            quantity: 1,
+
+        }) //END OF OBJECT.ASSIGN
+
+        console.log(productData);
+
+    }
+
 
     renderMyBag() {
 
@@ -121,6 +194,8 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         
         // PRODUCT STATE
         const { product } = this.state;
+        // const data = ( localStorage.getItem('@scandishop/selectedProduct') ) as string;
+        // const product: ProductDataType = ( data ? JSON.parse(data) : {} );
 
         // CURRENCIES STATES
         const { USD, GBP, AUD, JPY, RUB } = this.props; 
@@ -179,6 +254,7 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                             className="add-cart-button" 
                             color="green"
                             style={ this.props.bagVisible ? {filter: 'brightness(0.78)'} : {} }
+                            onClick={ () => this.handleClickAddToCartButton() }
                         >
                             <span>ADD TO CART</span>
                         </DefaultButton>
