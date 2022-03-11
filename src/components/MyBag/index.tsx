@@ -151,9 +151,9 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
     }
 
     /** Increases the quantity of the product who invoke this function and set the new data on cartProducts context
-     *  and localStorage.
+     *  and in localStorage.
      */
-    quantity_Growth( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
+    increaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
 
         const { getLocalStorageDataProducts } = this.props;
 
@@ -192,10 +192,65 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         const { CART_PRODUCTS } = this.state;
 
         this.setState(() => ({
-            CART_PRODUCTS: this.quantity_Growth( product, CART_PRODUCTS ),
+            CART_PRODUCTS: this.increaseProductQuantity( product, CART_PRODUCTS ),
         }))
 
     }
+
+
+    /** Decreases the quantity of the product who invoke this function and set the new data on cartProducts context
+     *  and in localStorage.
+     */
+    decreaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
+
+        const { getLocalStorageDataProducts } = this.props;
+
+
+        let newCartProduct = {} as ProductDataType;
+
+        let NEW_CART_PRODUCTS = CART_PRODUCTS.map(
+            cartProduct => {
+
+                if ( cartProduct.id === product.id ) {
+
+
+                    Object.assign( newCartProduct, {
+                        ...cartProduct,
+                        quantity: cartProduct.quantity - 1,
+                    } )
+
+                    return newCartProduct;                        
+
+                }
+
+                return cartProduct;
+
+            }
+        )
+
+        /**If any product had his quantity reduced to zero don't will be in the NEW_CART_PRODUCTS*/
+        NEW_CART_PRODUCTS = NEW_CART_PRODUCTS.filter(
+            cartProduct => cartProduct.quantity > 0
+        )
+
+
+        getLocalStorageDataProducts(NEW_CART_PRODUCTS);
+        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(NEW_CART_PRODUCTS) );
+
+        return NEW_CART_PRODUCTS;
+
+    }
+
+    handleClickMinusSignButton( product: ProductDataType ) {
+        
+        const { CART_PRODUCTS } = this.state;
+
+        this.setState(() => ({
+            CART_PRODUCTS: this.decreaseProductQuantity( product, CART_PRODUCTS ),
+        }))
+
+    }
+
 
 
 
@@ -240,7 +295,10 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                                         onClick={() => this.handleClickPlusSignButton( product ) }
                                     />
                                         <span>{product.quantity}</span>
-                                    <button className="minus-sign" onClick={() => {}}/>
+                                    <button 
+                                        className="minus-sign" 
+                                        onClick={() => this.handleClickMinusSignButton( product ) }
+                                    />
                                 </SelectQuantity>   
 
                                 
@@ -272,8 +330,11 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         
         //Trick to show the current symbol and label.
-        const symbol = cartProductsLocalStorage[0].prices[priceIndex].currency.symbol;
-        const label = cartProductsLocalStorage[0].prices[priceIndex].currency.label;
+        let symbol = ''; let label = '';
+        if ( cartProductsLocalStorage.length ){
+            symbol = cartProductsLocalStorage[0].prices[priceIndex].currency.symbol;
+            label = cartProductsLocalStorage[0].prices[priceIndex].currency.label;
+        }
 
         /**variable to show the quantity of products in cart. */
         const amount = cartProductsLocalStorage.length;
