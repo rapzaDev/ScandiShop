@@ -32,9 +32,6 @@ export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts:
         cartProducts.forEach( 
             product => {
 
-                console.log('inside addProductToCartControl utils. product.id', product.id);
-                console.log('inside addProductToCartControl utils. PRODUCT.id', PRODUCT.id);
-
                 if ( product.id !== PRODUCT.id ) return;
 
                 if ( ( product.id === PRODUCT.id ) && ( product.attributes.length > 0 ) ) {
@@ -44,17 +41,6 @@ export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts:
                         attribute => attribute.items.forEach(
                             item => {
 
-                                // const value = PRODUCT_Items.find(
-                                //     PRODUCT_Item =>  {
-                                        
-                                //         if ( PRODUCT_Item.attributeName === attribute.name ) {
-
-                                //             if ( item.value === PRODUCT_Item.value ) return PRODUCT_Item;
-
-                                //         }
-                                    
-                                //     }
-                                // )
                                 let value = false;
 
                                 PRODUCT_Items.forEach(
@@ -68,9 +54,6 @@ export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts:
                                     
                                     }
                                 )
-                                
-                                console.log(`inside addProductToCartControl utils. value of comparison between PRODUCT_Item =>  item.value === PRODUCT_Item.value`, value);
-                                console.log(`item.value of ${attribute.name} = `, item.value);
 
                                 if ( value === false ) same_product.push(false);
                                 else same_product.push(true);
@@ -101,8 +84,6 @@ export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts:
         )
 
     }
-
-    console.log(productIsNewOnCart);
 
     return productIsNewOnCart;
 

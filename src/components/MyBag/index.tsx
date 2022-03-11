@@ -25,6 +25,8 @@ import {
 
 type MyBagState = {
     redirectCartPage: boolean;
+    TOTAL: number;
+    CART_PRODUCTS: ProductDataType[];
 }
 
 export type MyBagProps =  {
@@ -41,15 +43,30 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     state: MyBagState = {
         redirectCartPage: false,
+        TOTAL: 0,
+        CART_PRODUCTS: [] as ProductDataType[],
     }
 
     componentDidMount() {
+
+        this.setState(() => ({
+            TOTAL: this.settingTotalPrice(),
+            CART_PRODUCTS: this.settingCART_PRODUCTS()
+        }))
+
 
         document.getElementById('my-bag')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
 
         document.getElementById('my-bag')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
         
     }
+
+    componentDidUpdate() {
+        this.setState(() => ({
+            TOTAL: this.settingTotalPrice()
+        }))
+    }
+
 
     
     pointerLeaveOfMyBagComponent() {
@@ -64,6 +81,61 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         activateMyBagComponent();
     }
 
+    /**Returns cart products data. */
+    settingCART_PRODUCTS(): ProductDataType[] {
+
+        const { cartProducts } = this.props;
+
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+        return ( cartProducts.length ? cartProducts : cartProductsLocalStorage )
+
+    }
+
+    /**Returns the total value of cart products. */
+    settingTotalPrice(): number {
+        
+        const { cartProducts } = this.props;
+
+
+        const data = localStorage.getItem('@scandishop/cartProducts');
+        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+        const CART_PRODUCTS = ( cartProducts.length ? cartProducts : cartProductsLocalStorage );
+
+        const priceIndex = this.calculatePriceIndex();
+
+        let totalData = 0;
+
+        CART_PRODUCTS.forEach(
+            product => {
+                totalData += ( product.prices[priceIndex].amount * product.quantity );
+            }
+        )
+
+        totalData = Number( totalData.toFixed(2) );
+
+        return totalData;
+
+    }
+
+    /**Return the index of current currency.*/
+    calculatePriceIndex() {
+        // CURRENCIES STATES
+        const { USD, GBP, AUD, JPY, RUB } = this.props; 
+
+        const priceIndex = (  
+            ( USD && 0 ) ||
+            ( GBP && 1 ) ||
+            ( AUD && 2 ) ||
+            ( JPY && 3 ) ||
+            ( RUB && 4 ) ||
+            0
+        );
+
+        return priceIndex;
+    }
 
     handleClickViewBagButton() {
 
@@ -78,19 +150,60 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
+    /** Increases the quantity of the product who invoke this function and set the new data on cartProducts context
+     *  and localStorage.
+     */
+    quantity_Growth( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
+
+        const { getLocalStorageDataProducts } = this.props;
+
+
+        let newCartProduct = {} as ProductDataType;
+
+        const NEW_CART_PRODUCTS = CART_PRODUCTS.map(
+            cartProduct => {
+
+                if ( cartProduct.id === product.id ) {
+
+
+                    Object.assign( newCartProduct, {
+                        ...cartProduct,
+                        quantity: cartProduct.quantity + 1,
+                    } )
+
+                    return newCartProduct;                        
+
+                }
+
+                return cartProduct;
+
+            }
+        )
+
+        getLocalStorageDataProducts(NEW_CART_PRODUCTS);
+        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(NEW_CART_PRODUCTS) );
+
+        return NEW_CART_PRODUCTS;
+
+    }
+
+    handleClickPlusSignButton( product: ProductDataType ) {
+        
+        const { CART_PRODUCTS } = this.state;
+
+        this.setState(() => ({
+            CART_PRODUCTS: this.quantity_Growth( product, CART_PRODUCTS ),
+        }))
+
+    }
+
+
 
     renderMyBagProducts() {
 
-        var CART_PRODUCTS = [];
+        const { CART_PRODUCTS } = this.state;
 
-        const { cartProducts } = this.props;
-
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
-
-        CART_PRODUCTS = ( cartProducts.length ? cartProducts : cartProductsLocalStorage );
-
-        console.log('cartProducts MyBag:', cartProducts);
+        const priceIndex = this.calculatePriceIndex();
 
         return (
                 <ProductWrapper className="product-wrapper">
@@ -109,9 +222,9 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                                     </span>
                                     <div className="product-price">
                                         <span>
-                                            {product.prices[0].currency.symbol}
-                                            {product.prices[0].currency.label}
-                                            {product.prices[0].amount}
+                                            {product.prices[priceIndex].currency.symbol}
+                                            {product.prices[priceIndex].currency.label + ' '}
+                                            {product.prices[priceIndex].amount}
                                         </span>
                                     </div>
 
@@ -122,7 +235,10 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                                 </ProductInfo>
 
                                 <SelectQuantity className="select-quantity">
-                                    <button className="plus-sign" onClick={() => {}}/>
+                                    <button 
+                                        className="plus-sign" 
+                                        onClick={() => this.handleClickPlusSignButton( product ) }
+                                    />
                                         <span>{product.quantity}</span>
                                     <button className="minus-sign" onClick={() => {}}/>
                                 </SelectQuantity>   
@@ -147,9 +263,19 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         const { bagVisible } = this.props;
 
+        const { TOTAL } = this.state;
+
+        const priceIndex = this.calculatePriceIndex();
+
         const data = localStorage.getItem('@scandishop/cartProducts');
         const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
 
+        
+        //Trick to show the current symbol and label.
+        const symbol = cartProductsLocalStorage[0].prices[priceIndex].currency.symbol;
+        const label = cartProductsLocalStorage[0].prices[priceIndex].currency.label;
+
+        /**variable to show the quantity of products in cart. */
         const amount = cartProductsLocalStorage.length;
 
         return (
@@ -168,7 +294,11 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
                     <div className="total-price">
                         <span>Total</span>
-                        <span>$100.00</span>
+                        <span>
+                            {symbol}
+                            {label + ' '}
+                            {TOTAL}
+                        </span>
                     </div>
 
                     <div className="bag-buttons">
@@ -213,7 +343,13 @@ const mapState = ( state: RootState )  => ({
 //  MY BAG STATE
     bagVisible: state.myBag.value,
 // CART PRODUCTS STATE
-    cartProducts: state.products.cartProducts
+    cartProducts: state.products.cartProducts,
+//  CURRENCIES STATES
+    USD: state.currencies.USD, 
+    GBP: state.currencies.GBP,
+    AUD: state.currencies.AUD,
+    JPY: state.currencies.JPY,
+    RUB: state.currencies.RUB,
 })
 
 const mapDispatch = {

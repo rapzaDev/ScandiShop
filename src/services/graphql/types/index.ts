@@ -33,5 +33,5 @@ export type ProductDataType = {
     attributes: AttributeSetType[];
 
     /**Refers to quantity of each product in the cart */
-    quantity?: number;
+    quantity: number;
 }
