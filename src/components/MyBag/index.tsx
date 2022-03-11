@@ -90,13 +90,18 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         CART_PRODUCTS = ( cartProducts.length ? cartProducts : cartProductsLocalStorage );
 
+        console.log('cartProducts MyBag:', cartProducts);
+
         return (
                 <ProductWrapper className="product-wrapper">
 
                     { CART_PRODUCTS.map( 
                         product => 
                         (  
-                            <ProductContainer className="product-container" key={product.id}>
+                            <ProductContainer 
+                                className="product-container" 
+                                key={ JSON.stringify(product.id) + JSON.stringify(product.attributes) }
+                            >
                                 <ProductInfo className="product-info">
                                     <span className="product-title">
                                         {product.name}

@@ -10,7 +10,10 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
-import { ProductDataType, AttributeType } from '../../services/graphql/types/';
+import { ProductDataType } from '../../services/graphql/types/';
+
+//UTILS
+import { addProductToCartControl, ADD_PRODUCT_TO_CART } from '../../utils/functions';
 
 //ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
@@ -85,6 +88,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         document.getElementById('category-page')?.addEventListener('click', this.handleClickOnScreen );
     }
 
+
+
     handleClickOnScreen() {
         const { 
             bagVisible, 
@@ -118,74 +123,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         }))
     }
 
-    /** Verify if the choosen product is already added on cart with the same attributes, and returns true if
-    *   is a new product or false if is already in the cart. */
-    addProductToCartControl( defaultProduct: ProductDataType, cartProducts: ProductDataType[]  ) {
-
-        //CONTROL VARIABLE
-        let productIsNewOnCart: boolean | any;
-
-        /**Contains all items of the product selected */
-        const defaultProductsItems = [] as AttributeType[]; 
-        
-        //Filling defaultProductsItems:
-        defaultProduct.attributes.forEach( 
-            attribute => attribute.items.forEach( 
-                item => defaultProductsItems.push(item)
-            )
-        )
-
-        //If the array is empty, the selected product is always new.
-        if ( cartProducts.length === 0 ) productIsNewOnCart = true;
-        else {
-            
-            cartProducts.forEach( 
-                product => {
-
-                    if ( ( product.id === defaultProduct.id ) && ( product.attributes.length > 0 ) ) {
-                        
-                        product.attributes.forEach( 
-                            attribute => attribute.items.forEach(
-                                item => {
-
-                                    const value = defaultProductsItems.find(
-                                        defaultItem =>  item.value === defaultItem.value
-                                    )
-                                    
-                                    /**if some value if undefined, the defaultProduct is new on cartProducts array*/
-                                    if ( value !== undefined ) {
-                                       
-                                        if( productIsNewOnCart !== true ) productIsNewOnCart =  false;
-
-                                    } else productIsNewOnCart = true;
-
-                                }
-                            )
-                        )
-                        
-                        return;
-
-                    }
-
-                    /**For products that doesn't have attributes */
-                    if ( product.id === defaultProduct.id ) {
-                        productIsNewOnCart = false;
-                        return;
-                    }
-
-                } 
-            )
-
-        }
-
-        //The selected product is new on cart , but the cartProducts array is not empty.
-        if ( productIsNewOnCart === undefined ) productIsNewOnCart = true;
-
-        return productIsNewOnCart;
-
-    }
-
-
     /**Add a new porduct on Cart and MyBag component and activates MyBag component. */
     handleClickProductInforCartButton(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
@@ -210,21 +147,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             quantity: 1,
         });
 
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+        const productIsNewOnCart = addProductToCartControl( defaultProduct, cartProducts );
 
-        const productIsNewOnCart = this.addProductToCartControl( defaultProduct, cartProducts ); 
-
-        if ( productIsNewOnCart ) {
-
-            cartProductsLocalStorage.push(defaultProduct); // pushing a new value to localStorage data array.
-
-            getLocalStorageDataProducts(cartProductsLocalStorage); //adding all data of local storage on cartProducts array.
-
-            localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProductsLocalStorage) );
-
-        }
-        
+        ADD_PRODUCT_TO_CART( productIsNewOnCart, defaultProduct, getLocalStorageDataProducts );
 
         handleChangeMyBagState();
 

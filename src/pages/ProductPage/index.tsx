@@ -5,9 +5,13 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../services/redux/store';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
+import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
+
+//UTILS
+import { addProductToCartControl, ADD_PRODUCT_TO_CART } from '../../utils/functions';
 
 //COMPONENTS
 import Header from '../../components/Header';
@@ -65,14 +69,19 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
         document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
     }
+
+    componentWillUnmount() {
+        localStorage.removeItem('@scandishop/selectedProduct');
+    }
     
+
+
     /**Get the selected product data from localStorage */
     getSelectedProduct(): ProductDataType {
         const selectedProduct = ( localStorage.getItem('@scandishop/selectedProduct')) as string;
 
         return JSON.parse(selectedProduct);
     }
-
 
     handleClickOnScreen() {
         const { 
@@ -97,18 +106,16 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             
     }
 
-    handleClickAddToCartButton() {
-
-        const data = ( localStorage.getItem('@scandishop/selectedProduct') ) as string;
-        const selectedProduct: ProductDataType = ( data ? JSON.parse(data) : {} );
+    /**Returns a product with the selected textAttributes and swatchAttributes choosen on PDP. */
+    settingProductData( currentProduct: ProductDataType ) {
 
         const { TEXT_ATTRIBUTES, COLOR_ATTRIBUTES } = this.props;
 
         let productData = {} as ProductDataType;
 
         Object.assign( productData, {
-            ...selectedProduct,
-            attributes: selectedProduct.attributes.map(
+            ...currentProduct,
+            attributes: currentProduct.attributes.map(
                 attribute => {
 
                     if ( attribute.type === 'text' ) {
@@ -169,9 +176,31 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
         }) //END OF OBJECT.ASSIGN
 
-        console.log(productData);
+        return productData;
 
     }
+
+    handleClickAddToCartButton() {
+
+        const { getLocalStorageDataProducts, cartProducts, handleChangeMyBagState } = this.props;
+
+        //getting the selectedProduct in PLP on localStorage. 
+        const data = ( localStorage.getItem('@scandishop/selectedProduct') ) as string;
+        const currentProduct: ProductDataType = ( data ? JSON.parse(data) : {} );
+
+        const product = this.settingProductData(currentProduct);
+
+        console.log('CHOOSEN PRODUCT ON PDP',product);
+
+        //product verification
+        const productIsNewOnCart = addProductToCartControl( product, cartProducts );
+
+        ADD_PRODUCT_TO_CART( productIsNewOnCart, product, getLocalStorageDataProducts );
+
+        handleChangeMyBagState();
+
+    }
+
 
 
     renderMyBag() {
@@ -194,8 +223,6 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         
         // PRODUCT STATE
         const { product } = this.state;
-        // const data = ( localStorage.getItem('@scandishop/selectedProduct') ) as string;
-        // const product: ProductDataType = ( data ? JSON.parse(data) : {} );
 
         // CURRENCIES STATES
         const { USD, GBP, AUD, JPY, RUB } = this.props; 
@@ -313,6 +340,8 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
+const { getLocalStorageDataProducts } = CartProductsContext.actions;
+
 
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATES
@@ -331,6 +360,8 @@ const mapState = ( state: RootState )  => ({
     TEXT_ATTRIBUTES: state.textAttributes.textAttributes,
 //  PRODUCT COLOR ATTRIBUTES STATE
     COLOR_ATTRIBUTES: state.colorAttributes.colorAttributes,
+// CART PRODUCTS STATE
+    cartProducts: state.products.cartProducts
 })
 
 const mapDispatch = {
@@ -342,6 +373,8 @@ const mapDispatch = {
     handleChangeMyCurrencyOptionsState,
     activateCurrencyOptionsComponent,
     deactivateCurrencyOptionsComponent,
+//  CART PRODUCTS FUNCTIONS
+    getLocalStorageDataProducts,
 }
 
 const connector = connect(mapState, mapDispatch);
