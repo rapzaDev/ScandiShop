@@ -8,7 +8,7 @@ import MyBagContext from '../../services/redux/contexts/MyBag';
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
-import { ProductDataType } from '../../services/graphql/types';
+import { ProductDataType, AttributeType } from '../../services/graphql/types';
 
 //UTILS
 import { addProductToCartControl, ADD_PRODUCT_TO_CART } from '../../utils/functions';
@@ -70,11 +70,6 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         document.getElementById('product-page')?.addEventListener('click', this.handleClickOnScreen);
     }
 
-    componentWillUnmount() {
-        localStorage.removeItem('@scandishop/selectedProduct');
-    }
-    
-
 
     /**Get the selected product data from localStorage */
     getSelectedProduct(): ProductDataType {
@@ -132,10 +127,13 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                             
                             if ( item !== undefined ) {
 
-                                attribute.items = [{
-                                    id: item.name,
-                                    value: item.name
-                                }];
+                                attribute.items = TEXT_ATTRIBUTE.items.map(
+                                    target => ({
+                                        id: target.name,
+                                        value: target.name,
+                                        selected: target.value
+                                    })
+                                );
 
                                 return attribute;
 
@@ -150,21 +148,18 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                         const COLOR_ATTRIBUTE = COLOR_ATTRIBUTES.find(
                             colorAttribute => ( colorAttribute.selected === true )
                         )
-
+                        
                         if ( COLOR_ATTRIBUTE !== undefined ) {
 
-                            const item = attribute.items.find(
-                                color => color.id === COLOR_ATTRIBUTE.id
-                            )
-                            
-                            if ( item !== undefined ) {
+                            attribute.items = COLOR_ATTRIBUTES.map(
+                                colorAttribute => ({
+                                    id: colorAttribute.id,
+                                    value: colorAttribute.value,
+                                    selected: colorAttribute.selected
+                                })
+                            );
 
-                                attribute.items = [item];
-
-                                return attribute;
-
-                            }
-                 
+                            return attribute;
 
                         }
 
@@ -173,8 +168,12 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                 }
             ),
             quantity: 1,
-
         }) //END OF OBJECT.ASSIGN
+
+        Object.assign( productData, {
+            ...productData,
+            KEY_ID: ( JSON.stringify(productData.id) + JSON.stringify(productData.attributes) ),
+        })
 
         return productData;
 
@@ -189,8 +188,6 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
         const currentProduct: ProductDataType = ( data ? JSON.parse(data) : {} );
 
         const product = this.settingProductData(currentProduct);
-
-        console.log('CHOOSEN PRODUCT ON PDP',product);
 
         //product verification
         const productIsNewOnCart = addProductToCartControl( product, cartProducts );

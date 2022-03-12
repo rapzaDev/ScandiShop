@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type ColorItemsType = {
     id: string;
-    selected?: boolean;
+    value: string;
+    selected: boolean;
 }
 
 const ColorAttributes = createSlice({

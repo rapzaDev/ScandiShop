@@ -18,7 +18,8 @@ interface ColorAttributesProps extends PropsFromRedux {
 
 type ColorItemsType = {
     id: string;
-    selected?: boolean;
+    value: string; ////
+    selected: boolean; /// mudei o ?
 }
 
 type ColorAttributesState = {
@@ -36,27 +37,50 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
     }
 
     componentDidMount() {
-        const { swatchAttibute, COLOR_ATTRIBUTES, getProductColorAttributes } = this.props;
-
-        const colorItemsData = swatchAttibute.items.map<ColorItemsType>( 
-            color =>  ({
-                id: color.id,
-                selected: ( ( swatchAttibute.items[0] === color ) ? true : false )
-            })
-        )
 
         this.setState(() => ({
-            colorItems: colorItemsData
+            colorItems: this.getColorItemsData()
         }))
-
-        /**If COLOR_ATTRIBUTES is empty or equal to colorItemsData, it will be seted.*/
-        const equalColorsState: boolean = ( 
-            ( !COLOR_ATTRIBUTES.length ) || 
-            ( colorItemsData[0].selected === COLOR_ATTRIBUTES[0].selected ) 
-        );
-        
-        if (equalColorsState) getProductColorAttributes(colorItemsData);
  
+    }
+
+
+    getColorItemsData() {
+
+        const { 
+            swatchAttibute, 
+            origin,
+            getProductColorAttributes
+     } = this.props;
+
+        let colorItemsData;
+
+        if ( origin === 'MyBag' || origin === 'CartPage' ) {
+
+            colorItemsData = swatchAttibute.items.map<ColorItemsType>( 
+                color =>  ({
+                    id: color.id,
+                    value: color.value,
+                    selected: color.selected
+                })
+            )
+
+        } else {
+
+            colorItemsData = swatchAttibute.items.map<ColorItemsType>( 
+                color =>  ({
+                    id: color.id,
+                    value: color.value, ///
+                    selected: ( ( swatchAttibute.items[0] === color ) ? true : false )
+                })
+            )
+
+            getProductColorAttributes(colorItemsData);
+
+        }
+
+        return colorItemsData;
+
     }
 
     /**Gets the name of the color in the parameters and sets within the color items 
@@ -67,6 +91,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
             colorItems: state.colorItems.map<ColorItemsType>( 
                 color =>  ({
                     id: color.id,
+                    value: color.value, ///
                     selected: ( ( color.id === colorName ) ? true : false )
                 })
             )
@@ -76,6 +101,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
         const colorAttributesData = colorItems.map<ColorItemsType>( 
             color =>  ({
                 id: color.id,
+                value: color.value, ///
                 selected: ( ( color.id === colorName ) ? true : false )
             })
         )
@@ -88,11 +114,11 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
     }
 
     /** Searches in the state of color items who has the prop selected as true and returns it */
-    getColorActive( colorName: string ) {
+    getColorActive( colorID: string ) {
 
         const { colorItems } = this.state;
 
-        const color = colorItems.find( color => color.id === colorName );
+        const color = colorItems.find( color => color.id === colorID );
 
         return color?.selected;
 
@@ -116,7 +142,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
                         swatchAttibute?.items.map( item => 
                             <ProductColorButtonWrapper 
                                 key={item.id}
-                                active={ this.getColorActive( item.id ) || false }
+                                active={ this.getColorActive(item.id) || false }
                                 origin={origin}
                             >
                                 <ProductColor
@@ -129,6 +155,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
                                     }}
                                     value={item.value}
                                     onClick={ () => this.handleClickProductColor( item.id ) }
+                                    disabled={ origin !== 'ProductPage' }
                                 /> 
                             </ProductColorButtonWrapper>
                         )

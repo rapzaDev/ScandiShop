@@ -72,10 +72,15 @@ async function getAllProducts() {
                             id: attributeSet.id,
                             name: attributeSet.name,
                             type: attributeSet.type,
-                            items: attributeSet.items.map<AttributeType>( item => ({ id: item.id, value: item.value }))
+                            items: attributeSet.items.map<AttributeType>( item => ({ 
+                                id: item.id, 
+                                value: item.value ,
+                                selected: false, /// 
+                            }))
                         })  
                     ),
-                quantity: 0
+                quantity: 0,
+                KEY_ID: '',
             })
         )
     );

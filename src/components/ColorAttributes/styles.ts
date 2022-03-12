@@ -13,6 +13,7 @@ export const Container = styled.div<ContainerProps>`
     display: flex;
     flex-direction: column;
 
+
     .attribute-name {
         margin-bottom: 0.5rem;
 
@@ -26,12 +27,7 @@ export const Container = styled.div<ContainerProps>`
     .product-colors {
         display: flex;
         position: relative;
-        /* align-items: center; */
-        
-        /* height: 100%; */
-        /* max-width: 18.25rem; */
 
-        /* width: ${ ({origin}) => origin === 'MyBag' && 'fit-content'}; */
         width: fit-content;
 
         margin-bottom: 0.5rem;
@@ -82,13 +78,14 @@ export const ProductColorButtonWrapper = styled.div<ProductColorProp>`
     ${ ({active, origin}) => active 
     ? css`
        
-       ${ origin === 'ProductPage' && css`
+       ${ origin !== 'CategoryPage' && css`
             border-bottom: 3px solid #393748;
+
         `}
 
     `: css`
         
-        ${ origin === 'ProductPage' && css`
+        ${ origin !== 'CategoryPage' && css`
             border-bottom: 3px solid transparent;
             opacity: 60%;
         `}

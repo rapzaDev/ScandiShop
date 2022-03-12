@@ -9,6 +9,21 @@ const fadeUp = keyframes`
     }
 `
 
+const fadeDown = keyframes`
+    0% {
+        transform: translateY(10rem);
+        opacity: 0;
+    }
+`
+
+const fade = keyframes`
+    0% {
+        transform: translateZ(10%);
+        opacity: 0;
+    }
+`
+
+
 export const MyBagContainer = styled.div<MyBagProps>`
     display: flex;
     flex-direction: column;
@@ -93,23 +108,57 @@ export const ProductWrapper = styled.div`
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
+
+    animation: ${fadeDown} .4s linear .4s backwards;
 `;
+
+
+/** Appears when cart products is empty. */
+export const EmptyCart = styled.div`
+
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    max-height: 19.6875rem;
+    min-height: 19.6875rem;
+    max-width: 18.3125rem;
+    min-width: 18.3125rem;
+
+    margin-bottom: 2.56rem;
+
+    animation: ${fade} .3s linear .3s backwards;
+
+    span:first-child {
+        font: var(--price-regular-font);
+        font-size: 1rem;
+    }
+
+    span:last-child {
+        font: var(--raleway-300-font);
+        font-size: .9rem;
+    }
+
+`;
+
 
 export const ProductContainer = styled.div`
 
     display: flex;
     position: relative;
 
-    height: fit-content;
-    width: 100%;
+    max-height: 9.6rem;
+    min-height: 9.6rem;
+
+    max-width: 18.3125rem;
+    min-width: 18.3125rem;
 
     margin-bottom: 2.56rem;
 
     .product-image {
         display: flex;
-        
-        max-width: 105px;
-        min-width: 105px;
 
         img {
             width: 100%;
@@ -125,8 +174,11 @@ export const ProductInfo = styled.div`
     flex-direction: column;
     justify-content: space-between;
 
-    height: 100%;
-    width: 100%;
+    max-height: 9.6rem;
+    min-height: 9.6rem;
+
+    max-width: 8.5rem;
+    min-width: 8.5rem;
 
     .product-title {
 
@@ -157,12 +209,10 @@ export const ProductInfo = styled.div`
         max-height: 5rem;
         width: 100%;
 
-        padding-right: 0.2rem;
-
         overflow-y: scroll;
         overflow-x: hidden;
-        scrollbar-width: thin;
-        scrollbar-color: #A6A6A6 #393748;
+        scrollbar-width: none;
+        
     }
 
 `;
@@ -175,7 +225,7 @@ export const SelectQuantity = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    margin-left: 2.125rem;
+    margin-left: 1.125rem;
     margin-right: 0.625rem;
 
     .plus-sign {

@@ -10,6 +10,9 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 //GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
 
+//UTILS 
+import { CART_PRODUCTS_DATA } from '../../utils/functions';
+
 //COMPONENTS
 import DefaultButton from '../DefaultButton';
 import ProductAttributes from '../ProductAttributes';
@@ -18,6 +21,7 @@ import ProductAttributes from '../ProductAttributes';
 import {
     MyBagContainer,
     ProductWrapper,
+    EmptyCart,
     ProductContainer,
     ProductInfo,
     SelectQuantity,
@@ -51,7 +55,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         this.setState(() => ({
             TOTAL: this.settingTotalPrice(),
-            CART_PRODUCTS: this.settingCART_PRODUCTS()
+            CART_PRODUCTS: CART_PRODUCTS_DATA(this.props.cartProducts)
         }))
 
 
@@ -79,18 +83,6 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         const { activateMyBagComponent } = this.props;
 
         activateMyBagComponent();
-    }
-
-    /**Returns cart products data. */
-    settingCART_PRODUCTS(): ProductDataType[] {
-
-        const { cartProducts } = this.props;
-
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
-
-        return ( cartProducts.length ? cartProducts : cartProductsLocalStorage )
-
     }
 
     /**Returns the total value of cart products. */
@@ -163,7 +155,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         const NEW_CART_PRODUCTS = CART_PRODUCTS.map(
             cartProduct => {
 
-                if ( cartProduct.id === product.id ) {
+                if ( cartProduct.KEY_ID === product.KEY_ID ) {
 
 
                     Object.assign( newCartProduct, {
@@ -211,8 +203,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         let NEW_CART_PRODUCTS = CART_PRODUCTS.map(
             cartProduct => {
 
-                if ( cartProduct.id === product.id ) {
-
+                if ( cartProduct.KEY_ID === product.KEY_ID ) {
 
                     Object.assign( newCartProduct, {
                         ...cartProduct,
@@ -251,15 +242,13 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
-
-
-
     renderMyBagProducts() {
 
         const { CART_PRODUCTS } = this.state;
 
         const priceIndex = this.calculatePriceIndex();
 
+        if ( CART_PRODUCTS.length )
         return (
                 <ProductWrapper className="product-wrapper">
 
@@ -283,9 +272,14 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                                         </span>
                                     </div>
 
-                                    <div id="attributes">
-                                        <ProductAttributes productAttributes={product.attributes} origin='MyBag'/>
-                                    </div>
+                                    { 
+                                        <div id="attributes">
+                                            <ProductAttributes 
+                                                origin='MyBag'
+                                                productAttributes={product.attributes}
+                                            />
+                                        </div>
+                                    }
 
                                 </ProductInfo>
 
@@ -312,6 +306,14 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                     )}
 
                 </ProductWrapper>
+
+        );
+        else return (
+
+            <EmptyCart className="empty-cart">
+                <span>YOUR BAG IS EMPTY</span>
+                <span>Add Products</span>
+            </EmptyCart>
 
         );
 
@@ -358,7 +360,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                         <span>
                             {symbol}
                             {label + ' '}
-                            {TOTAL}
+                            {TOTAL ? TOTAL : '0.00'}
                         </span>
                     </div>
 

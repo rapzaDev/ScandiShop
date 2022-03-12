@@ -28,7 +28,7 @@ export const Button = styled.button<OptionButtonState>`
             `
         }
 
-        ${ ({active, origin}) => 
+        ${ ({ active, origin }) => 
             ( (active && origin === 'ProductPage') || (active && origin === 'CartPage') ) && css`
 
                 background-color: var(--c-black);
@@ -38,8 +38,10 @@ export const Button = styled.button<OptionButtonState>`
 
     // ----------- SIZE BUTTON ON MY BAG COMPONENT -----------
 
-        ${ ({ origin }) => 
-            ( (origin === 'MyBag') ) && css`
+        ${ ({ active, origin }) => active 
+        ? css`
+            
+            ${ origin === 'MyBag' && css`
                 width: 2.2rem;
                 height: 1.5rem;
 
@@ -49,7 +51,34 @@ export const Button = styled.button<OptionButtonState>`
                 color: var(--c-black);
 
                 cursor: unset;
-            `
+
+            `}
+
+        `
+        : css`
+        
+            ${ origin === 'MyBag' && css`
+                width: 2.2rem;
+                height: 1.5rem;
+
+                font: var(--product-size-font);
+                font-size: 0.875rem;
+
+                border-color: var(--opacity-size-color);
+                background-color: var(--c-white);
+
+                border: 1px solid;
+                
+                /* color: var(--opacity-size-color); */
+                color: var(--c-black);
+
+                opacity: 40%;
+
+                cursor: unset;
+
+            `}
+
+        `
         }
 
 `;

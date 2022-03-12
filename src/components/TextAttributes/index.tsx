@@ -47,19 +47,38 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
     /**Get all text attributes of passed product and set a initial value for each text attribute. */
     getAttributesState() {
 
-        const { textAttributes, getProductTextAttributes } = this.props;
+        const { textAttributes, origin, getProductTextAttributes } = this.props;
 
-        const textAttributesData = textAttributes.map<TextAttributesType>( 
-            attribute => ({
-                name: attribute.name,
-                items: attribute.items.map( 
-                    item => ({ 
-                        name: item.value,
-                        value: ( item === attribute.items[0] ? true : false )
-                    }))
-            }))
+        let textAttributesData;
 
-        getProductTextAttributes(textAttributesData);
+        if ( origin === 'MyBag' || origin === 'CartPage' ) {
+
+            textAttributesData = textAttributes.map<TextAttributesType>( 
+                attribute => ({
+                    name: attribute.name,
+                    items: attribute.items.map( 
+                        item => ({ 
+                            name: item.value,
+                            // value: ( item === attribute.items[0] ? true : false )
+                            value: item.selected
+                        }))
+                }))
+
+        } else {
+
+            textAttributesData = textAttributes.map<TextAttributesType>( 
+                attribute => ({
+                    name: attribute.name,
+                    items: attribute.items.map( 
+                        item => ({ 
+                            name: item.value,
+                            value: ( item === attribute.items[0] ? true : false )
+                        }))
+                }))
+    
+            getProductTextAttributes(textAttributesData);
+
+        }
         
         return textAttributesData;
     }
@@ -69,37 +88,17 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
         
         const attributeTarget = attributes.find( attribute => attribute.name === attributeName );
         
-        let itemActiveValue = attributeTarget?.items.find( target => target.name === item.id );
+        const itemActiveValue = attributeTarget?.items.find( target => target.name === item.id );
 
         return itemActiveValue?.value;
 
     }
 
-    handleOnClickOptionButton( attributeName: string ,itemName: string) {
+    /**Get the changes on text attributes items dynamically and returns the 
+     * text attributes with the current changes.
+     */
+    getTextAttributesData( attributeName: string ,itemName: string ) {
 
-        this.setState((state) => ({
-            attributes: state.attributes.map( attribute => {
-
-                if ( attribute.name === attributeName ) {
-                    return {
-                        name: attribute.name,
-                        items: attribute.items.map<ItemsType>( 
-                            item => ({
-                                name: item.name,
-                                value: ( item.name === itemName ? true : false )
-                            })
-                        )
-                    }
-                } 
-                
-                return attribute 
-
-            })
-        }));
-
-        /**attributes state dont change yet, so i need to create the textAttributesData
-         * to get the attributes changes on real time.
-         */
         const { attributes } = this.state;
         const textAttributesData = attributes.map( attribute => {
 
@@ -124,6 +123,16 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
         //Setting textAttributes context
         const { getProductTextAttributes } = this.props;
         getProductTextAttributes(textAttributesData);
+
+        return textAttributesData;
+
+    }
+
+    handleOnClickOptionButton( attributeName: string ,itemName: string ) {
+
+        this.setState(() => ({
+            attributes: this.getTextAttributesData( attributeName, itemName )
+        }));
 
     }
 

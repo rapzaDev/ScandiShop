@@ -1,89 +1,99 @@
-import { AttributeType, ProductDataType } from "../../services/graphql/types";
+import { ProductDataType } from "../../services/graphql/types";
 
-interface ProductItem extends AttributeType {
-    attributeName: string;
-};
+// /** Verify if the choosen product is already added on cart with the same attributes, and returns true if
+// *   is a new product or false if is already in the cart. */
+// export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts: ProductDataType[]  ): boolean {
+
+//     //CONTROL VARIABLES
+//     let same_product: boolean[] = [];
+//     let productIsNewOnCart: boolean = true; // start with true 
+     
+//     let PRODUCT_ATTRIBUTES = PRODUCT.attributes; ////
+
+//     //If the array is empty, the selected product is always new.
+//     if ( cartProducts.length === 0 ) productIsNewOnCart = true;
+//     else {
+        
+//         cartProducts.forEach( 
+//             product => {
+
+//                 if ( product.id !== PRODUCT.id ) return;
+
+//                 if ( ( product.id === PRODUCT.id ) && ( product.attributes.length > 0 ) ) {
+                    
+//                     product.attributes.forEach( 
+
+//                         attribute => {
+
+//                             const currentAttribute = PRODUCT_ATTRIBUTES.find(
+//                                 currentAttribute => attribute.name === currentAttribute.name
+//                             )
+
+//                             if ( currentAttribute ) {
+
+//                                 /**item of the attribute's product in the cart that's setted as true */
+//                                 const productCartItem = attribute.items.find(
+//                                     item => item.selected === true
+//                                 )
+
+//                                 /**item of the attributes's PRODUCTS that's setted as true */ 
+//                                 const productItem = currentAttribute.items.find(
+//                                     item => item.selected === true
+//                                 )
+
+//                                 // if the both exists
+//                                 if ( productItem && productCartItem ) {
+
+//                                     if ( productCartItem.id === productItem.id ) same_product.push(true);
+//                                     else same_product.push(false);
+
+//                                 }
+
+//                             }
+
+//                         }
+                        
+//                     )
+
+//                 }
+
+//                 /**For products that doesn't have attributes */
+//                 if ( product.id === PRODUCT.id && ( !product.attributes.length ) ) same_product.push(true);
+
+
+//                 /** If same_productVerification is empty, the product already exists on cartProducts bacause all attributes
+//                  *  are the same and will there no one setted as false. 
+//                 **/
+//                 const same_productVerification = same_product.filter( target => target === false );
+//                 if ( !same_productVerification.length ) productIsNewOnCart = false;
+
+                
+//                 //CONTROL RESET FOR THE NEXT PRODUCT ( OF EXISTS )
+//                 same_product = [];
+
+//             } 
+
+//         )
+
+//     }
+
+//     return productIsNewOnCart;
+
+// };
+
 
 /** Verify if the choosen product is already added on cart with the same attributes, and returns true if
 *   is a new product or false if is already in the cart. */
 export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts: ProductDataType[]  ): boolean {
 
     //CONTROL VARIABLES
-    let same_product: boolean[] = [];
     let productIsNewOnCart: boolean = true; // start with true 
-
-    /**Contains all items of the product selected and his respective attributes names*/
-    const PRODUCT_Items = [] as ProductItem[]; 
-    
-    //Filling PRODUCT_Items:
-    PRODUCT.attributes.forEach( 
-        attribute => attribute.items.forEach( 
-            item => PRODUCT_Items.push({
-                attributeName: attribute.name,
-                ...item
-            })
-        )
+     
+    const data = cartProducts.find (
+        product => product.KEY_ID === PRODUCT.KEY_ID
     )
 
-    //If the array is empty, the selected product is always new.
-    if ( cartProducts.length === 0 ) productIsNewOnCart = true;
-    else {
-        
-        cartProducts.forEach( 
-            product => {
-
-                if ( product.id !== PRODUCT.id ) return;
-
-                if ( ( product.id === PRODUCT.id ) && ( product.attributes.length > 0 ) ) {
-                    
-                    product.attributes.forEach( 
-
-                        attribute => attribute.items.forEach(
-                            item => {
-
-                                let value = false;
-
-                                PRODUCT_Items.forEach(
-                                    PRODUCT_Item =>  {
-                                        
-                                        if ( PRODUCT_Item.attributeName === attribute.name ) {
-
-                                            if ( item.value === PRODUCT_Item.value ) value = true;
-
-                                        }
-                                    
-                                    }
-                                )
-
-                                if ( value === false ) same_product.push(false);
-                                else same_product.push(true);
-
-                            }
-                        )
-                        
-                    )
-
-                }
-
-                /**For products that doesn't have attributes */
-                if ( product.id === PRODUCT.id && ( !product.attributes.length ) ) same_product.push(true);
-
-
-                /** If same_productVerification is empty, the product already exists on cartProducts bacause all attributes
-                 *  are the same. 
-                **/
-                const same_productVerification = same_product.filter( target => target === false );
-                if ( !same_productVerification.length ) productIsNewOnCart = false;
-
-                
-                //CONTROL RESET FOR THE NEXT PRODUCT ( OF EXISTS )
-                same_product = [];
-
-            } 
-
-        )
-
-    }
+    if ( data ) productIsNewOnCart = false;
 
     return productIsNewOnCart;
 
@@ -115,5 +125,19 @@ export function ADD_PRODUCT_TO_CART( productIsNewOnCart: boolean, PRODUCT: Produ
         localStorage.setItem('@scandishop/cartProducts', JSON.stringify(cartProductsLocalStorage) );
 
     }
+
+};
+
+/**Returns cart products data. 
+ * 
+ * @param cartProducts 
+ * cart products context state.
+*/
+export function CART_PRODUCTS_DATA( cartProducts: ProductDataType[] ): ProductDataType[] {
+
+    const data = localStorage.getItem('@scandishop/cartProducts');
+    const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+
+    return ( cartProducts.length ? cartProducts : cartProductsLocalStorage )
 
 };

@@ -4,6 +4,9 @@
 
     box-sizing: border-box;
 
+    //avoid distraction of user from focusing on the scrolling elements.
+    overscroll-behavior: none;
+
     // ---------- COLORS ----------
     
     --c-white: #fff;

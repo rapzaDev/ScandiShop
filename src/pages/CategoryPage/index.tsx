@@ -10,7 +10,7 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
 import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
-import { ProductDataType } from '../../services/graphql/types/';
+import { AttributeType, ProductDataType } from '../../services/graphql/types/';
 
 //UTILS
 import { addProductToCartControl, ADD_PRODUCT_TO_CART } from '../../utils/functions';
@@ -113,7 +113,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
     }
 
-
+    /**Redirect the user to cart page containing the selected product. */
     handleClickProductInfo(selectedProduct: ProductDataType) {
 
         localStorage.setItem('@scandishop/selectedProduct', JSON.stringify(selectedProduct) );
@@ -141,11 +141,32 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             attributes: product.attributes.map( 
                 attribute =>  ({
                     ...attribute,
-                    items: [attribute.items[0]],
+                    items: attribute.items.map(
+                        item => {
+
+                            if ( item.id === attribute.items[0].id ) {
+
+                                let newItem = {} as AttributeType;
+                                Object.assign( newItem, {
+                                    ...item,
+                                    selected: true
+                                })
+
+                                return newItem;
+                            }
+
+                            return item;
+                        }
+                    ),
                 })
             ),
             quantity: 1,
         });
+
+        Object.assign( defaultProduct, {
+            ...defaultProduct,
+            KEY_ID: ( JSON.stringify(defaultProduct.id) + JSON.stringify(defaultProduct.attributes) ),
+        })
 
         const productIsNewOnCart = addProductToCartControl( defaultProduct, cartProducts );
 
