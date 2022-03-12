@@ -59,3 +59,26 @@ export function CART_PRODUCTS_DATA( cartProducts: ProductDataType[] ): ProductDa
     return ( cartProducts.length ? cartProducts : cartProductsLocalStorage )
 
 };
+
+/**Return the index of current currency.
+ * 
+ * @param USD if true returns 0
+ * @param GBP if true returns 1
+ * @param AUD if true returns 2
+ * @param JPY if true returns 3
+ * @param RUB if true returns 4
+*/
+export function calculatePriceIndex( USD: boolean, GBP: boolean, AUD: boolean, JPY: boolean, RUB: boolean ): number {
+
+    const priceIndex = (  
+        ( USD && 0 ) ||
+        ( GBP && 1 ) ||
+        ( AUD && 2 ) ||
+        ( JPY && 3 ) ||
+        ( RUB && 4 ) ||
+        0
+    );
+
+    return priceIndex;
+
+}

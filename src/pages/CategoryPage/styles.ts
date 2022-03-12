@@ -1,4 +1,11 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+
+const fade = keyframes`
+    0% {
+        transform: translateZ(10%);
+        opacity: 0;
+    }
+`
 
 type ProductInfoProps = {
     outOfStock: boolean;
@@ -40,17 +47,17 @@ export const Main = styled.main`
             margin-bottom: 6.4375rem;
         } 
 
-        .category-content {
-            display: grid;
-            grid-template-columns: repeat(3, auto);
-            justify-content: space-between;
-            row-gap: 6.4375rem;
-
-        }
-
     }
 
 `;
+
+export const CategoryContent = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, 24.6875rem);
+    justify-content: space-between;
+    row-gap: 6.4375rem;
+`;
+
 
 export const ProductInfo = styled.div<ProductInfoProps>`
 
@@ -66,6 +73,8 @@ export const ProductInfo = styled.div<ProductInfoProps>`
     height: fit-content;
 
     opacity: ${ ({outOfStock}) => outOfStock ? 0.5 : 'unset'};
+
+    animation: ${fade} .2s linear .2s backwards;
 
     &:hover {
         box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);

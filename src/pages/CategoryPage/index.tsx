@@ -29,6 +29,7 @@ import ColorAttributes from '../../components/ColorAttributes';
 import {
     CategoryPageContainer,
     Main,
+    CategoryContent,
     ProductInfo,
     ProductInfoCartButton
 } from './styles';
@@ -394,9 +395,12 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                             ( techCategory && 'Tech' ) 
                         )}</h2>
 
-                        <div className="category-content">
+                        <CategoryContent 
+                            className="category-content"
+                            // defaultGridDisplay={ }
+                        >
                             { this.renderCategoryProducts() }
-                        </div>
+                        </CategoryContent>
 
                     </div>
 
