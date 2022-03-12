@@ -66,6 +66,20 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
 
     }
 
+    getSelectedValue( image: string, bigImage: string ) {
+
+        const { images } = this.props;
+
+        if ( images.length > 1 ) {
+
+            const value = ( image === bigImage );
+
+            return value;
+
+        } else return false;
+
+    }
+
 
     renderSmallImagesArrows() {
 
@@ -110,7 +124,8 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
                                 className='small-image' 
                                 key={image}
                                 onClick={ () => this.handleClickSmallImage( image ) } 
-                                selected={ image === bigImage }
+                                // selected={ image === bigImage }
+                                selected={ this.getSelectedValue( image, bigImage ) }
                             >
                                 <img src={image} alt={image} />
                             </SmallImage>

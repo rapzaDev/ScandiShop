@@ -124,6 +124,16 @@ export const ProductContent = styled.div`
         }
 
         margin-bottom: 2.5rem;
+
+        &:disabled {
+            background-color: var(--opacity-size-color);
+            cursor: unset;
+
+            color: var(--c-text);
+
+            opacity: 0.5;
+        }
+
     }
 
 

@@ -8,7 +8,7 @@ import MyBagContext from '../../services/redux/contexts/MyBag';
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
 //GRAPHQL
-import { ProductDataType, AttributeType } from '../../services/graphql/types';
+import { ProductDataType } from '../../services/graphql/types';
 
 //UTILS
 import { addProductToCartControl, ADD_PRODUCT_TO_CART } from '../../utils/functions';
@@ -279,8 +279,9 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                             color="green"
                             style={ this.props.bagVisible ? {filter: 'brightness(0.78)'} : {} }
                             onClick={ () => this.handleClickAddToCartButton() }
+                            disabled={ !product.inStock }
                         >
-                            <span>ADD TO CART</span>
+                            <span>{ product.inStock ? 'ADD TO CART' : 'OUT OF STOCK'}</span>
                         </DefaultButton>
 
                         <div className="product-info">

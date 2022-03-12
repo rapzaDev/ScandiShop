@@ -71,11 +71,14 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
 
             case 'tech':
                 setTechCategory();
+
                 break;
         
             default:
                 break;
         }
+
+        window.scrollTo(0, 0);
 
     }
 

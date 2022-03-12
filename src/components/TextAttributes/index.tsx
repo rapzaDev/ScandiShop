@@ -118,8 +118,6 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
 
         })
 
-        console.log(textAttributesData);
-
         //Setting textAttributes context
         const { getProductTextAttributes } = this.props;
         getProductTextAttributes(textAttributesData);

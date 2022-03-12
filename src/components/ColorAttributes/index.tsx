@@ -106,8 +106,6 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
             })
         )
 
-        console.log(colorAttributesData);
-
         const { getProductColorAttributes } = this.props;
         getProductColorAttributes(colorAttributesData);
 

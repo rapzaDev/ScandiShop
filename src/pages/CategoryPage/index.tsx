@@ -286,7 +286,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                <img className="image" src={product.gallery[0]} alt="" />
+                                <img className="image" src={product.gallery[0]} alt={`${product.name} image 0`} />
                             
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> }
 
@@ -330,7 +330,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
                         
                             <div className="product-image">
 
-                                <img className="image" src={product.gallery[0]} alt="" />
+                                <img className="image" src={product.gallery[0]} alt={`${product.name} image 0`} />
 
                                 { !product.inStock && <span className="outOfStock">OUT OF STOCK</span> } 
 
