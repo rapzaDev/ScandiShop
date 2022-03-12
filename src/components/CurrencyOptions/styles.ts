@@ -41,9 +41,19 @@ export const Container = styled.div`
         cursor: pointer;
 
         font: var(--price-regular-font);
+        color: var(--c-black);
 
         & + button {
             margin-top: 1.3rem;
+        }
+
+        transition: .2s linear;
+
+        &:hover {
+
+            transform: scale(1.15);
+            color: var(--c-primary);
+
         }
 
     }
