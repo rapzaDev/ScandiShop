@@ -7,7 +7,7 @@ type ShadowContainerProps = {
 export const ShadowContainer = styled.div<ShadowContainerProps>`
     display: flex;
 
-    position: ${ ({ active }) => active ? 'fixed' : 'relative'};
+    position: fixed;
 
     height: 100vh;
     width: 100%;
