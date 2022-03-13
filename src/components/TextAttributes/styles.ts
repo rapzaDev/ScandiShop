@@ -11,7 +11,6 @@ export const Container = styled.div<TextAttributesProps>`
     position: relative;
 
     width: 100%;
-    /* width: fit-content; */
     height: fit-content;
 
     .attribute-name {

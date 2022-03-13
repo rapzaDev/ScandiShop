@@ -5,10 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../services/redux/store';
 
 //GRAPHQL
-import { AttributeSetType, ProductDataType } from '../../services/graphql/types';
-
-//UTILS
-import { CART_PRODUCTS_DATA } from '../../utils/functions';
+import { AttributeSetType } from '../../services/graphql/types';
 
 //COMPONENTS
 import ColorAttributes from '../ColorAttributes';

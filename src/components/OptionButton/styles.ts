@@ -21,6 +21,8 @@ export const Button = styled.button<OptionButtonState>`
                 width: 3.9375rem;
                 height: 2.8125rem;
 
+                cursor: ${ origin === 'CartPage' && 'unset' };
+
                 span {
                     font: var(--product-size-font);
                 }
@@ -34,7 +36,11 @@ export const Button = styled.button<OptionButtonState>`
                 background-color: var(--c-black);
                 color: var(--c-white);
 
+                cursor: ${ origin === 'CartPage' && 'unset' }
+
         `}
+
+
 
     // ----------- SIZE BUTTON ON MY BAG COMPONENT -----------
 
@@ -69,7 +75,6 @@ export const Button = styled.button<OptionButtonState>`
 
                 border: 1px solid;
                 
-                /* color: var(--opacity-size-color); */
                 color: var(--c-black);
 
                 opacity: 40%;

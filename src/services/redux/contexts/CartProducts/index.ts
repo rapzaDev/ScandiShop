@@ -6,14 +6,6 @@ const CartProducts = createSlice({
     name: "cartProducts",
     initialState: { cartProducts: [] as ProductDataType[] },
     reducers: {
-        addProductToCart: {
-            reducer: ( state, action: PayloadAction<ProductDataType>) => {
-                state.cartProducts.push(action.payload)
-            },
-            prepare: (product: ProductDataType) => {
-                return { payload: product }
-            }
-        },
         getLocalStorageDataProducts: {
             reducer: ( state, action: PayloadAction<ProductDataType[]>) => {
                 state.cartProducts = action.payload

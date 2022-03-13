@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { Navigate } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 
 //REDUX
@@ -31,6 +32,7 @@ import {
 
 type HeaderState = {
     categoryNames: string[];
+    redirectCartPage: boolean;
 }
 
 
@@ -42,6 +44,7 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
 
     state: HeaderState = {
         categoryNames: [],
+        redirectCartPage: false,
     }
 
     async componentDidMount() {
@@ -55,6 +58,10 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     }
 
 
+    /**
+     * @description Changes the selected category button. If the user clicks on any category button
+     * and the current page isn't PLP, the user will be redirected to PLP after that.
+     */
     handleClickCategoryButton( e: React.MouseEvent<HTMLButtonElement, MouseEvent> ) {
 
         const { setAllCategory, setClothesCategory, setTechCategory } = this.props;
@@ -78,14 +85,23 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
                 break;
         }
 
-        window.scrollTo(0, 0);
+        const windowLocation = window.location.pathname;
+
+        if ( windowLocation === '/') window.scrollTo(0, 0);
+        else {
+            this.setState( ({ redirectCartPage }) => ({
+                redirectCartPage: !redirectCartPage
+            }));
+        }
 
     }
+
 
     handleCurrencyButton() {
         const { handleChangeMyCurrencyOptionsState } = this.props;
         handleChangeMyCurrencyOptionsState();
     }
+
 
     handleClickCartButton() {
         const { handleChangeMyBagState } = this.props;
@@ -178,6 +194,8 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
                     </CurrencyAndCart>
 
                 </HeaderComponent>
+
+                { this.state.redirectCartPage && <Navigate to='/'/>}
             </>
         );
 
@@ -200,15 +218,20 @@ const {
 
 
 const mapState = ( state: RootState )  => ({  
+//  CURRENCY OPTIONS COMPONENT STATES 
     currencyEnabled: state.currencyOptions.value,
+//  CATEGORIES STATES
     allCategory: state.categories.all,
     clothesCategory: state.categories.clothes,
     techCategory: state.categories.tech
 })
 
 const mapDispatch = {
+//  MY BAG COMPONENT FUNCTION
     handleChangeMyBagState,
+//  CURRENCY OPTIONS COMPONENT FUNCTION
     handleChangeMyCurrencyOptionsState,
+//  CATEGORIES FUNCTIONS
     setAllCategory, 
     setClothesCategory, 
     setTechCategory

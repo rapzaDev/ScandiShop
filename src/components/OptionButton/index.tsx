@@ -36,7 +36,7 @@ class OptionButton extends PureComponent<OptionButtonProps, OptionButtonState> {
                 id="option-button"
                 origin={this.props.origin}
                 active={this.props.active}
-                onClick={() => this.props.onClick()}
+                onClick={() => ( this.props.origin === 'ProductPage' && this.props.onClick() ) }
                 value={this.props.value}
             >
                 { this.props.children }

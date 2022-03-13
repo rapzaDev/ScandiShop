@@ -114,7 +114,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
             
     }
 
-    /**Redirect the user to cart page containing the selected product. */
+    /** @description Redirect the user to cart page containing the selected product. */
     handleClickProductInfo(selectedProduct: ProductDataType) {
 
         localStorage.setItem('@scandishop/selectedProduct', JSON.stringify(selectedProduct) );
@@ -124,7 +124,11 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
         }))
     }
 
-    /**Add a new porduct on Cart and MyBag component and activates MyBag component. */
+    /** 
+     * @description Add a new porduct on Cart and MyBag component and activates MyBag component.
+     * If the product is already added on cart, the selected product don't will be added again
+     * and the minicart will open to show the existing products there.
+     */
     handleClickProductInforCartButton(
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>, 
         product: ProductDataType
@@ -397,7 +401,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
                         <CategoryContent 
                             className="category-content"
-                            // defaultGridDisplay={ }
                         >
                             { this.renderCategoryProducts() }
                         </CategoryContent>
@@ -432,7 +435,7 @@ const {
     deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
-const { addProductToCart, getLocalStorageDataProducts } = CartProductsContext.actions;
+const { getLocalStorageDataProducts } = CartProductsContext.actions;
 
 const mapState = ( state: RootState )  => ({  
 //  MY BAG COMPONENT STATES

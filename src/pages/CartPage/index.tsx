@@ -1,58 +1,34 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
+//REDUX
 import { RootState } from '../../services/redux/store';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 
-import arrowLeft from '../../assets/images/arrow-left.svg';
-import arrowRight from '../../assets/images/arrow-right.svg';
-
+//GRAPHQL
 import Header  from '../../components/Header';
-import OptionButton from '../../components/OptionButton';
 import MyBag from '../../components/MyBag';
 import CurrencyOptions from '../../components/CurrencyOptions';
 import ShadowWrapper from '../../components/ShadowWrapper';
+import CartProductsContent from '../../components/CartProducts';
 
+//STYLES
 import {
     CartPageContainer,
     Main,
     CartProducts,
-    CartProductWrapper,
-    CartProductContainer,
-    CartProductInfo,
-    CartProductSizes,
-    ProductSelectQuantity,
-    ProductImage,
 } from './styles';
 
-type SizesType = {
-    XS: boolean;
-    S: boolean;
-    M: boolean;
-    L: boolean;
-}
 
-type CartPageState = {
-    size: SizesType;
-}
-
-class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
+class CartPage extends PureComponent<PropsFromRedux> {
 
     constructor(props: PropsFromRedux) {
         super(props);
         this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
     }
-
-    state: CartPageState = {
-        size: {
-            XS:false,
-            S:true,
-            M: false,
-            L: false
-        },
-    }
  
+
     componentDidMount() {
 
         window.scrollTo(0, 0);
@@ -135,107 +111,7 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
 
                         <CartProducts className="cart-products">
 
-                            <CartProductWrapper className="cart-product-wrapper">
-
-                                <CartProductContainer className="cart-product-container">
-
-                                    <CartProductInfo className="cart-product-info">
-                                        <strong>Apollo</strong>
-                                        <span>Running Short</span>
-
-                                        <span>$50.00</span>
-
-                                        <CartProductSizes className="cart-product-sizes">
-                                            <OptionButton
-                                                origin="CartPage"
-                                                active={false}
-                                                onClick={() => {}}
-                                                value='S'
-                                            >
-                                                <span>S</span>
-                                            </OptionButton>
-
-                                            <OptionButton
-                                                origin="CartPage"
-                                                active={true}
-                                                onClick={() => {}}
-                                                value='M'
-                                            >
-                                                <span>M</span>
-                                            </OptionButton>
-                                        </CartProductSizes>
-
-                                    </CartProductInfo>
-
-                                    <ProductSelectQuantity className="select-quantity">
-                                        <div className="option-sign">
-                                            <span>+</span>
-                                        </div>
-                                            <span className="quantity-number">1</span>
-                                        <div className="option-sign">
-                                            <span>-</span>
-                                        </div>
-                                    </ProductSelectQuantity>
-                                    
-                                </CartProductContainer>
-
-                                <ProductImage className="product-image">
-                                    <img className="arrow-image" src={arrowLeft} alt="Arrow left icon" />
-                                    <img className="arrow-image" src={arrowRight} alt="Arrow right icon" />
-                                </ProductImage>
-
-                            </CartProductWrapper>
-
-                            <CartProductWrapper className="cart-product-wrapper">
-
-                                <CartProductContainer className="cart-product-container">
-
-                                    <CartProductInfo className="cart-product-info">
-                                        <strong>Jupiter</strong>
-                                        <span>Wayfarer</span>
-
-                                        <span>$75.00</span>
-
-                                        <CartProductSizes className="cart-product-sizes">
-                                            <OptionButton
-                                                origin="CartPage"
-                                                active={false}
-                                                onClick={() => {}}
-                                                value='S'
-                                            >
-                                                <span>S</span>
-                                            </OptionButton>
-
-                                            <OptionButton
-                                                origin="CartPage"
-                                                active={true}
-                                                onClick={() => {}}
-                                                value='M'
-                                            >
-                                                <span>M</span>
-                                            </OptionButton>
-                                        </CartProductSizes>
-
-                                    </CartProductInfo>
-
-                                    <ProductSelectQuantity className="select-quantity">
-                                        <div className="option-sign">
-                                                <span>+</span>
-                                        </div>
-                                            <span className="quantity-number">2</span>
-                                        <div className="option-sign">
-                                            <span>-</span>
-                                        </div>
-                                    </ProductSelectQuantity>
-                                    
-                                </CartProductContainer>
-
-                                <ProductImage className="product-image">
-                                    <img className="arrow-image" src={arrowLeft} alt="Arrow left icon" />
-                                    <img className="arrow-image" src={arrowRight} alt="Arrow right icon" />
-                                </ProductImage>
-
-                            </CartProductWrapper>
+                            <CartProductsContent origin='CartPage'/>
 
                         </CartProducts>
 
@@ -253,30 +129,28 @@ class CartPage extends PureComponent<PropsFromRedux, CartPageState> {
 const { 
     handleChangeMyBagState,
     activateMyBagComponent,
-    deactivateMyBagComponent
 } = MyBagContext.actions;
 
 const {
     handleChangeMyCurrencyOptionsState,
-    activateCurrencyOptionsComponent,
-    deactivateCurrencyOptionsComponent
 } = CurrencyOptionsContext.actions;
 
 
 const mapState = ( state: RootState )  => ({  
+//  MY BAG COMPONENT STATES
     bagVisible: state.myBag.value,
     bagActive: state.myBag.bagActive,
+//  CURRENCY OPTIONS COMPONENT STATES 
     currencyEnabled: state.currencyOptions.value,
     currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
 })
 
 const mapDispatch = {
+//  MY BAG COMPONENT FUNCTIONS
     handleChangeMyBagState,
     activateMyBagComponent,
-    deactivateMyBagComponent,
+//  CURRENCY OPTIONS COMPONENT FUNCTION
     handleChangeMyCurrencyOptionsState,
-    activateCurrencyOptionsComponent,
-    deactivateCurrencyOptionsComponent,
 }
 
 const connector = connect(mapState, mapDispatch);

@@ -71,13 +71,15 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
     }
 
 
-    /**Get the selected product data from localStorage */
+
+    /** @description Get the selected product data from localStorage */
     getSelectedProduct(): ProductDataType {
         const selectedProduct = ( localStorage.getItem('@scandishop/selectedProduct')) as string;
 
         return JSON.parse(selectedProduct);
     }
 
+    
     handleClickOnScreen() {
         const { 
             bagVisible, 
@@ -101,7 +103,8 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             
     }
 
-    /**Returns a product with the selected textAttributes and swatchAttributes choosen on PDP. */
+
+    /** @description Returns a product with the selected textAttributes and swatchAttributes choosen on PDP. */
     settingProductData( currentProduct: ProductDataType ) {
 
         const { TEXT_ATTRIBUTES, COLOR_ATTRIBUTES } = this.props;
@@ -168,16 +171,17 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
                 }
             ),
             quantity: 1,
-        }) //END OF OBJECT.ASSIGN
+        });
 
         Object.assign( productData, {
             ...productData,
             KEY_ID: ( JSON.stringify(productData.id) + JSON.stringify(productData.attributes) ),
-        })
+        });
 
         return productData;
 
     }
+
 
     handleClickAddToCartButton() {
 

@@ -9,6 +9,7 @@ import {
     ProductDataType
 } from '../../types';
 
+/** @description Get the entire data of all products from GRAPHQL server.*/
 async function getAllProducts() {
     const GET_ALL_PRODUCTS = await client.query({
         query: gql`
@@ -75,7 +76,7 @@ async function getAllProducts() {
                             items: attributeSet.items.map<AttributeType>( item => ({ 
                                 id: item.id, 
                                 value: item.value ,
-                                selected: false, /// 
+                                selected: false,
                             }))
                         })  
                     ),

@@ -70,7 +70,6 @@ export const SmallImage = styled.div<SmallImageProp>`
     }
 
     img {
-        /* border: 1px solid red; */
         width: 100%;
         height: 100%;
     }

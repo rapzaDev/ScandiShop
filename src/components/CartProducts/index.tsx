@@ -14,41 +14,110 @@ import { calculatePriceIndex, CART_PRODUCTS_DATA } from '../../utils/functions';
 //COMPONENTS
 import ProductAttributes from '../ProductAttributes';
 
+//ICONS
+import arrowLeft from '../../assets/images/arrow-left.svg';
+import arrowRight from '../../assets/images/arrow-right.svg';
+
 //STYLES
 import {
-    ProductWrapper,
-    EmptyCart,
-    ProductContainer,
-    ProductInfo,
-    SelectQuantity,
+//  STYLED COMPONENTS FOR MY BAG COMPONENT
+    ProductWrapper_MYBAG,
+    EmptyCart_MYBAG,
+    ProductContainer_MYBAG,
+    ProductInfo_MYBAG,
+    SelectQuantity_MYBAG,
+
+// STYLED COMPONENTS FOR PRODUCT PAGE
+    ProductWrapper_PDP,
+    EmptyCart_PDP,
+    ProductContainer_PDP,
+    ProductInfo_PDP,
+    SelectQuantity_PDP,
+
 } from './styles';
 
+interface CartProductsProps extends PropsFromRedux {
+    origin: 'MyBag' | 'CartPage';
+}
+
+type ImageIndex = {
+    KEY_ID: string;
+    index: number;
+}
 
 type CartProductsState = {
     CART_PRODUCTS: ProductDataType[];
+
+    /** @description Variable to control the logic of the displayed image of each product on PDP.*/
+    images_index: ImageIndex[];
 }
 
-class CartProducts extends PureComponent<PropsFromRedux, CartProductsState> {
 
-    constructor(props: PropsFromRedux) {
+/**
+ * @description Component that will render the cart products based on the origin.
+ * 
+ * @property origin: Can be 'MyBag' or 'CartPage'.
+*/
+class CartProducts extends PureComponent<CartProductsProps, CartProductsState> {
+
+    constructor(props: CartProductsProps) {
         super(props);
     }
 
     state: CartProductsState = {
         CART_PRODUCTS: [] as ProductDataType[],
+        images_index: [] as ImageIndex[],
     }
 
     componentDidMount() {
 
         this.setState(() => ({
-            CART_PRODUCTS: CART_PRODUCTS_DATA(this.props.cartProducts)
+            CART_PRODUCTS: CART_PRODUCTS_DATA(this.props.cartProducts),
+            images_index: this.setImagesIndex(),
         }))
 
     }
 
+    componentDidUpdate( _:CartProductsProps , prevState: CartProductsState) {
+
+        const NEW_CART_PRODUCTS = CART_PRODUCTS_DATA(this.props.cartProducts);
+
+        /**avoid infinite loop*/
+        if ( ( prevState.CART_PRODUCTS.length === 0 ) ) return;
+
+        /**If the user change the quantity of any product in MyBag component, that will 
+         * be reflected on PDP too with this conditional.
+         */
+        if ( prevState.CART_PRODUCTS !== NEW_CART_PRODUCTS ) {
+
+            this.setState(() => ({
+                CART_PRODUCTS: CART_PRODUCTS_DATA(this.props.cartProducts)
+            }))
+
+        }
+
+    }
 
 
-    /** Increases the quantity of the product who invoke this function and set the new data on cartProducts context
+    /** @description Set the inital state of images_index[ ] */
+    setImagesIndex(): ImageIndex[] {
+        
+        const cartProducts = CART_PRODUCTS_DATA(this.props.cartProducts);
+
+        const images_index = cartProducts.map<ImageIndex>(
+            product => ({
+                KEY_ID: product.KEY_ID,
+                index: 0
+            })
+        )
+
+        return images_index;
+
+    }
+
+
+    /** 
+     * @description Increases the quantity of the product who invoke this function and set the new data on cartProducts context
      *  and in localStorage.
      */
      increaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
@@ -96,7 +165,8 @@ class CartProducts extends PureComponent<PropsFromRedux, CartProductsState> {
     }
 
 
-    /** Decreases the quantity of the product who invoke this function and set the new data on cartProducts context
+    /** 
+     *  @description Decreases the quantity of the product who invoke this function and set the new data on cartProducts context
      *  and in localStorage.
      */
      decreaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
@@ -146,10 +216,157 @@ class CartProducts extends PureComponent<PropsFromRedux, CartProductsState> {
             CART_PRODUCTS: this.decreaseProductQuantity( product, CART_PRODUCTS ),
         }))
 
-    }    
+    }
+    
+    
+    getStrongProductTitle( product: ProductDataType ): string {
+
+        //TITLE LOGIC
+        const title = product.name.split(' ');
+        let strongTitle = title[0];
+        let restOfTitle = title.filter( title => title !== strongTitle );
+        
+        //Cheking if the first word of the var restOfTitle is a number
+        if ( Number( restOfTitle[0] ) ) strongTitle = strongTitle + ` ${restOfTitle[0]}`;
+
+        return strongTitle;
+
+    }
 
 
+    getRestOfProductTitle( product: ProductDataType ): string[] {
 
+        //TITLE LOGIC
+        const title = product.name.split(' ');
+        let strongTitle = title[0];
+        let restOfTitle = title.filter( title => title !== strongTitle );
+        
+        //Cheking if the first word of the var restOfTitle is a number
+        if ( Number( restOfTitle[0] ) ) restOfTitle.splice(0);
+
+        restOfTitle = restOfTitle.map( word => word + ' ' );
+
+        return restOfTitle;
+
+    }
+
+
+    /**@description Controls the click on the left arrow inside the image on PDP to switch images to the left.*/
+    leftArrowClick( product: ProductDataType ) {
+
+        const { images_index } = this.state;
+
+        const data = images_index.find(
+            target => target.KEY_ID === product.KEY_ID
+        )
+
+        if ( data ) {
+
+            if ( data.index === 0 ) data.index = product.gallery.length - 1;
+            else --data.index;
+
+            const newImages_index = images_index.map(
+                target => {
+
+                    if ( target.KEY_ID === data.KEY_ID ) return data;
+                    else return target;
+
+                }
+            )
+
+            this.setState(() => ({
+                images_index: newImages_index
+            }))
+
+        }
+
+    }
+
+
+    /** @description Controls the click on the right arrow inside the image on PDP to switch images to the right.*/
+    rightArrowClick( product: ProductDataType ) {
+
+        const { images_index } = this.state;
+
+        const data = images_index.find(
+            target => target.KEY_ID === product.KEY_ID
+        )
+
+        if ( data ) {
+
+            if ( data.index === (product.gallery.length - 1) ) data.index = 0;
+            else ++data.index;
+
+            const newImages_index = images_index.map(
+                target => {
+
+                    if ( target.KEY_ID === data.KEY_ID ) return data;
+                    else return target;
+
+                }
+            )
+
+            this.setState(() => ({
+                images_index: newImages_index
+            }))
+
+        }
+        
+
+    }
+
+
+    renderProductImages( product: ProductDataType ) {
+
+        if ( product.gallery.length === 1 ) {
+
+            return (
+
+                <div className="product-image_PDP">
+                    <img src={product.gallery[0]} alt={product.gallery[0]} />
+                </div>
+
+            );
+
+        }
+
+
+        const { images_index } = this.state;
+
+        const data = images_index.find(
+            target => target.KEY_ID === product.KEY_ID
+        )
+
+        let index: number = 0;
+
+        if ( data ) index = data.index;
+
+        return (
+
+            <div className="product-image_PDP">
+
+                <button className="left-arrow" onClick={ () => this.leftArrowClick( product ) }>
+                    <img src={arrowLeft} alt="Arrow left icon" />
+                </button>
+                
+                <img src={product.gallery[index]} alt={product.gallery[index]} />
+
+                <button className="right-arrow" onClick={ () => this.rightArrowClick( product ) }>
+                    <img src={arrowRight} alt="Arrow right icon" />
+                </button>
+
+            </div>
+
+        );
+
+    }
+
+    /**
+     * @description Render the cart products based on the origin.
+     * 
+     * @param origin 
+     * Can be 'MyBag' or 'CartPage'
+    */
     renderCartProducts() {
 
         const { CART_PRODUCTS } = this.state;
@@ -157,76 +374,169 @@ class CartProducts extends PureComponent<PropsFromRedux, CartProductsState> {
         // CURRENCIES STATES
         const { USD, GBP, AUD, JPY, RUB } = this.props; 
 
+        // ORIGIN
+        const { origin } = this.props;
+
+
+
         const priceIndex = calculatePriceIndex( USD, GBP, AUD, JPY, RUB );
 
-        if ( CART_PRODUCTS.length )
-        return (
-                <ProductWrapper className="product-wrapper">
 
-                    { CART_PRODUCTS.map( 
-                        product => 
-                        (  
-                            <ProductContainer 
-                                className="product-container" 
-                                key={ JSON.stringify(product.id) + JSON.stringify(product.attributes) }
-                            >
-                                <ProductInfo className="product-info">
-                                    <span className="product-title">
-                                        {product.name}
-                                        {' - ' + product.brand}
-                                    </span>
-                                    <div className="product-price">
-                                        <span>
-                                            {product.prices[priceIndex].currency.symbol}
-                                            {product.prices[priceIndex].currency.label + ' '}
-                                            {product.prices[priceIndex].amount}
+        // --------- RENDER FOR MY BAG COMPONENT ---------
+        if ( origin === 'MyBag' ) {
+
+            if ( CART_PRODUCTS.length ){
+
+                return (
+                    <ProductWrapper_MYBAG className="product-wrapper_MYBAG">
+
+                        { CART_PRODUCTS.map( 
+                            product => 
+                            (  
+                                <ProductContainer_MYBAG
+                                    className="product-container_MYBAG" 
+                                    key={ JSON.stringify(product.id) + JSON.stringify(product.attributes) }
+                                >
+                                    <ProductInfo_MYBAG className="product-info_MYBAG">
+                                        <span className="product-title_MYBAG">
+                                            {product.name}
+                                            {' - ' + product.brand}
                                         </span>
-                                    </div>
-
-                                    { 
-                                        <div id="attributes">
-                                            <ProductAttributes 
-                                                origin='MyBag'
-                                                productAttributes={product.attributes}
-                                            />
+                                        <div className="product-price_MYBAG">
+                                            <span>
+                                                {product.prices[priceIndex].currency.symbol}
+                                                {product.prices[priceIndex].currency.label + ' '}
+                                                {product.prices[priceIndex].amount}
+                                            </span>
                                         </div>
-                                    }
 
-                                </ProductInfo>
+                                        { 
+                                            <div id="attributes_MYBAG">
+                                                <ProductAttributes 
+                                                    origin='MyBag'
+                                                    productAttributes={product.attributes}
+                                                />
+                                            </div>
+                                        }
 
-                                <SelectQuantity className="select-quantity">
-                                    <button 
-                                        className="plus-sign" 
-                                        onClick={() => this.handleClickPlusSignButton( product ) }
-                                    />
-                                        <span>{product.quantity}</span>
-                                    <button 
-                                        className="minus-sign" 
-                                        onClick={() => this.handleClickMinusSignButton( product ) }
-                                    />
-                                </SelectQuantity>   
+                                    </ProductInfo_MYBAG>
 
+                                    <SelectQuantity_MYBAG className="select-quantity_MYBAG">
+                                        <button 
+                                            className="plus-sign_MYBAG" 
+                                            onClick={() => this.handleClickPlusSignButton( product ) }
+                                        />
+                                            <span>{product.quantity}</span>
+                                        <button 
+                                            className="minus-sign_MYBAG" 
+                                            onClick={() => this.handleClickMinusSignButton( product ) }
+                                        />
+                                    </SelectQuantity_MYBAG>   
+
+                                    
+                                    <div className="product-image_MYBAG">
+                                        <img src={product.gallery[0]} alt={product.gallery[0]} />
+                                    </div>
                                 
-                                <div className="product-image">
-                                    <img src={product.gallery[0]} alt={product.gallery[0]} />
-                                </div>
-                            
 
-                            </ProductContainer>
-                        ) 
-                    )}
+                                </ProductContainer_MYBAG>
+                            ) 
+                        )}
 
-                </ProductWrapper>
+                    </ProductWrapper_MYBAG>
 
-        );
-        else return (
+                );
 
-            <EmptyCart className="empty-cart">
-                <span>YOUR BAG IS EMPTY</span>
-                <span>Add Products</span>
-            </EmptyCart>
+            }
+            else return (
 
-        );
+                <EmptyCart_MYBAG className="empty-cart_MYBAG">
+                    <span>YOUR BAG IS EMPTY</span>
+                    <span>Add Products</span>
+                </EmptyCart_MYBAG>
+
+            );
+
+        }
+
+        // --------- RENDER FOR CART PAGE ---------
+        if ( origin === 'CartPage' ) {
+
+            if ( CART_PRODUCTS.length ){
+
+                return (
+                    <ProductWrapper_PDP className="product-wrapper_PDP">
+
+                        { CART_PRODUCTS.map( 
+                            product => 
+                            (  
+                                <ProductContainer_PDP
+                                    className="product-container_PDP" 
+                                    key={ JSON.stringify(product.id) + JSON.stringify(product.attributes) }
+                                    style={ this.props.bagVisible ? {filter: 'brightness(0.78)'} : {} }
+                                >
+                                    <ProductInfo_PDP className="product-info_PDP">
+                                        <div className="product-title_PDP">
+                                            <strong>{ this.getStrongProductTitle( product ) }</strong>
+                                            <span>{ this.getRestOfProductTitle( product ) }</span>
+                                            <span>{' - ' + product.brand}</span>
+                                        </div>
+
+                                        <div className="product-price_PDP">
+                                            <span>
+                                                {product.prices[priceIndex].currency.symbol}
+                                                {product.prices[priceIndex].currency.label + ' '}
+                                                {product.prices[priceIndex].amount}
+                                            </span>
+                                        </div>
+
+                                        { 
+                                            <div id="attributes_PDP">
+                                                <ProductAttributes 
+                                                    origin='CartPage'
+                                                    productAttributes={product.attributes}
+                                                />
+                                            </div>
+                                        }
+
+                                    </ProductInfo_PDP>
+
+                                    <SelectQuantity_PDP className="select-quantity_PDP">
+                                        <button 
+                                            className="plus-sign_PDP" 
+                                            onClick={() => this.handleClickPlusSignButton( product ) }
+                                        />
+                                            <span>{product.quantity}</span>
+                                        <button 
+                                            className="minus-sign_PDP" 
+                                            onClick={() => this.handleClickMinusSignButton( product ) }
+                                        />
+                                    </SelectQuantity_PDP>   
+
+                                    
+                                    { this.renderProductImages( product ) }
+                                
+
+                                </ProductContainer_PDP>
+                            ) 
+                        )}
+
+                    </ProductWrapper_PDP>
+
+                );
+
+            }
+            else return (
+
+                <EmptyCart_PDP className="empty-cart_PDP">
+                    <span>YOUR BAG IS EMPTY</span>
+                    <span>Add Products</span>
+                </EmptyCart_PDP>
+
+            );
+
+        }
+
 
     }
 
@@ -244,6 +554,8 @@ class CartProducts extends PureComponent<PropsFromRedux, CartProductsState> {
 const { getLocalStorageDataProducts } = CartProductsContext.actions;
 
 const mapState = ( state: RootState )  => ({
+//  MY BAG COMPONENT STATES
+    bagVisible: state.myBag.value,
 // CART PRODUCTS STATE
     cartProducts: state.products.cartProducts,
 //  CURRENCIES STATES

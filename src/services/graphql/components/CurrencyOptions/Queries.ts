@@ -6,6 +6,7 @@ type GetCurrenciesType = {
     symbol: string;
 }
 
+/**@description Get all currencies data from GRAPHQL server. */
 async function getCurrencies() {
     const GET_CURRENCIES = await client.query({
         query: gql`

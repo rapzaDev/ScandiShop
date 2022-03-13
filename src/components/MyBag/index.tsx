@@ -11,22 +11,16 @@ import CartProductsContext from '../../services/redux/contexts/CartProducts';
 import { ProductDataType } from '../../services/graphql/types';
 
 //UTILS 
-import { CART_PRODUCTS_DATA } from '../../utils/functions';
+import { CART_PRODUCTS_DATA, calculatePriceIndex } from '../../utils/functions';
 
 //COMPONENTS
-import CartProducts from '../CartProducts';
+import CartProductsContent from '../CartProducts';
 import DefaultButton from '../DefaultButton';
-import ProductAttributes from '../ProductAttributes';
 
 
 //STYLES
 import {
     MyBagContainer,
-    ProductWrapper,
-    EmptyCart,
-    ProductContainer,
-    ProductInfo,
-    SelectQuantity,
 } from './styles';
 
 type MyBagState = {
@@ -87,10 +81,15 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
         activateMyBagComponent();
     }
 
-    /**Returns the total value of cart products. */
+
+    /**@description Returns the total value of all products on cart. */
     settingTotalPrice(): number {
         
         const { cartProducts } = this.props;
+
+        // CURRENCIES STATES
+        const { USD, GBP, AUD, JPY, RUB } = this.props; 
+
 
 
         const data = localStorage.getItem('@scandishop/cartProducts');
@@ -98,7 +97,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
         const CART_PRODUCTS = ( cartProducts.length ? cartProducts : cartProductsLocalStorage );
 
-        const priceIndex = this.calculatePriceIndex();
+        const priceIndex = calculatePriceIndex( USD, GBP, AUD, JPY, RUB );
 
         let totalData = 0;
 
@@ -114,22 +113,6 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
-    /**Return the index of current currency.*/
-    calculatePriceIndex() {
-        // CURRENCIES STATES
-        const { USD, GBP, AUD, JPY, RUB } = this.props; 
-
-        const priceIndex = (  
-            ( USD && 0 ) ||
-            ( GBP && 1 ) ||
-            ( AUD && 2 ) ||
-            ( JPY && 3 ) ||
-            ( RUB && 4 ) ||
-            0
-        );
-
-        return priceIndex;
-    }
 
     handleClickViewBagButton() {
 
@@ -144,194 +127,23 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     }
 
-    /** Increases the quantity of the product who invoke this function and set the new data on cartProducts context
-     *  and in localStorage.
-     */
-    increaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
 
-        const { getLocalStorageDataProducts } = this.props;
-
-
-        let newCartProduct = {} as ProductDataType;
-
-        const NEW_CART_PRODUCTS = CART_PRODUCTS.map(
-            cartProduct => {
-
-                if ( cartProduct.KEY_ID === product.KEY_ID ) {
-
-
-                    Object.assign( newCartProduct, {
-                        ...cartProduct,
-                        quantity: cartProduct.quantity + 1,
-                    } )
-
-                    return newCartProduct;                        
-
-                }
-
-                return cartProduct;
-
-            }
-        )
-
-        getLocalStorageDataProducts(NEW_CART_PRODUCTS);
-        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(NEW_CART_PRODUCTS) );
-
-        return NEW_CART_PRODUCTS;
-
-    }
-
-    handleClickPlusSignButton( product: ProductDataType ) {
-        
-        const { CART_PRODUCTS } = this.state;
-
-        this.setState(() => ({
-            CART_PRODUCTS: this.increaseProductQuantity( product, CART_PRODUCTS ),
-        }))
-
-    }
-
-
-    /** Decreases the quantity of the product who invoke this function and set the new data on cartProducts context
-     *  and in localStorage.
-     */
-    decreaseProductQuantity( product: ProductDataType, CART_PRODUCTS: ProductDataType[] ) {
-
-        const { getLocalStorageDataProducts } = this.props;
-
-
-        let newCartProduct = {} as ProductDataType;
-
-        let NEW_CART_PRODUCTS = CART_PRODUCTS.map(
-            cartProduct => {
-
-                if ( cartProduct.KEY_ID === product.KEY_ID ) {
-
-                    Object.assign( newCartProduct, {
-                        ...cartProduct,
-                        quantity: cartProduct.quantity - 1,
-                    } )
-
-                    return newCartProduct;                        
-
-                }
-
-                return cartProduct;
-
-            }
-        )
-
-        /**If any product had his quantity reduced to zero don't will be in the NEW_CART_PRODUCTS*/
-        NEW_CART_PRODUCTS = NEW_CART_PRODUCTS.filter(
-            cartProduct => cartProduct.quantity > 0
-        )
-
-
-        getLocalStorageDataProducts(NEW_CART_PRODUCTS);
-        localStorage.setItem('@scandishop/cartProducts', JSON.stringify(NEW_CART_PRODUCTS) );
-
-        return NEW_CART_PRODUCTS;
-
-    }
-
-    handleClickMinusSignButton( product: ProductDataType ) {
-        
-        const { CART_PRODUCTS } = this.state;
-
-        this.setState(() => ({
-            CART_PRODUCTS: this.decreaseProductQuantity( product, CART_PRODUCTS ),
-        }))
-
-    }
-
-    renderMyBagProducts() {
-
-        const { CART_PRODUCTS } = this.state;
-
-        const priceIndex = this.calculatePriceIndex();
-
-        if ( CART_PRODUCTS.length )
-        return (
-                <ProductWrapper className="product-wrapper">
-
-                    { CART_PRODUCTS.map( 
-                        product => 
-                        (  
-                            <ProductContainer 
-                                className="product-container" 
-                                key={ JSON.stringify(product.id) + JSON.stringify(product.attributes) }
-                            >
-                                <ProductInfo className="product-info">
-                                    <span className="product-title">
-                                        {product.name}
-                                        {' - ' + product.brand}
-                                    </span>
-                                    <div className="product-price">
-                                        <span>
-                                            {product.prices[priceIndex].currency.symbol}
-                                            {product.prices[priceIndex].currency.label + ' '}
-                                            {product.prices[priceIndex].amount}
-                                        </span>
-                                    </div>
-
-                                    { 
-                                        <div id="attributes">
-                                            <ProductAttributes 
-                                                origin='MyBag'
-                                                productAttributes={product.attributes}
-                                            />
-                                        </div>
-                                    }
-
-                                </ProductInfo>
-
-                                <SelectQuantity className="select-quantity">
-                                    <button 
-                                        className="plus-sign" 
-                                        onClick={() => this.handleClickPlusSignButton( product ) }
-                                    />
-                                        <span>{product.quantity}</span>
-                                    <button 
-                                        className="minus-sign" 
-                                        onClick={() => this.handleClickMinusSignButton( product ) }
-                                    />
-                                </SelectQuantity>   
-
-                                
-                                <div className="product-image">
-                                    <img src={product.gallery[0]} alt={product.gallery[0]} />
-                                </div>
-                            
-
-                            </ProductContainer>
-                        ) 
-                    )}
-
-                </ProductWrapper>
-
-        );
-        else return (
-
-            <EmptyCart className="empty-cart">
-                <span>YOUR BAG IS EMPTY</span>
-                <span>Add Products</span>
-            </EmptyCart>
-
-        );
-
-    }
 
     render() {
 
         const { bagVisible } = this.props;
 
+        // CURRENCIES STATES
+        const { USD, GBP, AUD, JPY, RUB } = this.props; 
+
         const { TOTAL } = this.state;
 
-        const priceIndex = this.calculatePriceIndex();
+
 
         const data = localStorage.getItem('@scandishop/cartProducts');
         const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
 
+        const priceIndex = calculatePriceIndex( USD, GBP, AUD, JPY, RUB );
         
         //Trick to show the current symbol and label.
         let symbol = ''; let label = '';
@@ -340,7 +152,10 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
             label = cartProductsLocalStorage[0].prices[priceIndex].currency.label;
         }
 
-        /**variable to show the quantity of products in cart. */
+        /** 
+         * @description 
+         * variable to show the quantity of products in cart. 
+         * */
         const amount = cartProductsLocalStorage.length;
 
         return (
@@ -355,12 +170,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
                         <span>{amount} items</span>
                     </div>
 
-
-                    <CartProducts />
-                    {/* { this.renderMyBagProducts() }  */}
-
-
-
+                    <CartProductsContent origin='MyBag'/>
 
                     <div className="total-price">
                         <span>Total</span>

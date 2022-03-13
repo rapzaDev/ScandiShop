@@ -35,11 +35,14 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
         upHeightValue: 0
     }
 
+
+
     handleClickSmallImage( image: string ) {
         this.setState(() => ({
             bigImage: image
         }))
     }
+
 
     clickOnSmallImagesArrowUp() {
         const smallImages = document.getElementById('small-images');
@@ -53,6 +56,7 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
 
     }
 
+
     clickOnSmallImagesArrowDown() {
         
         const smallImages = document.getElementById('small-images');
@@ -65,6 +69,7 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
         }))
 
     }
+
 
     getSelectedValue( image: string, bigImage: string ) {
 
@@ -107,6 +112,8 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
 
     }
 
+
+    
     render() {
 
         const { images } = this.props;
@@ -124,7 +131,6 @@ class ImagesContainer extends PureComponent<ImagesContainerProps, ImagesContaine
                                 className='small-image' 
                                 key={image}
                                 onClick={ () => this.handleClickSmallImage( image ) } 
-                                // selected={ image === bigImage }
                                 selected={ this.getSelectedValue( image, bigImage ) }
                             >
                                 <img src={image} alt={image} />

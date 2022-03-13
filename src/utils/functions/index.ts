@@ -1,11 +1,12 @@
 import { ProductDataType } from "../../services/graphql/types";
 
-/** Verify if the choosen product is already added on cart with the same attributes, and returns true if
+/** 
+* @description Verify if the choosen product is already added on cart with the same attributes, and returns true if
 *   is a new product or false if is already in the cart. */
 export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts: ProductDataType[]  ): boolean {
 
     //CONTROL VARIABLES
-    let productIsNewOnCart: boolean = true; // start with true 
+    let productIsNewOnCart: boolean = true;
      
     const data = cartProducts.find (
         product => product.KEY_ID === PRODUCT.KEY_ID
@@ -17,7 +18,9 @@ export function addProductToCartControl( PRODUCT: ProductDataType, cartProducts:
 
 };
 
-/** If productIsNewOnCart variable is true, this function adds the product to cart products and to the localStorage.
+
+/** 
+ * @description If productIsNewOnCart variable is true, this function adds the product to cart products and to the localStorage.
 *   Otherwise, it does nothing.
 
     @param getLocalStorageDataProducts
@@ -46,7 +49,9 @@ export function ADD_PRODUCT_TO_CART( productIsNewOnCart: boolean, PRODUCT: Produ
 
 };
 
-/**Returns cart products data. 
+
+/**
+ * @description Returns cart products data. 
  * 
  * @param cartProducts 
  * cart products context state.
@@ -60,7 +65,9 @@ export function CART_PRODUCTS_DATA( cartProducts: ProductDataType[] ): ProductDa
 
 };
 
-/**Return the index of current currency.
+
+/**
+ * @description Return the index of current currency.
  * 
  * @param USD if true returns 0
  * @param GBP if true returns 1

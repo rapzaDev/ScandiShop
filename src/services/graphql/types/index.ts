@@ -14,7 +14,7 @@ export type AttributeType = {
     id: string;
     value: string;
 
-    /**Refers to the selected item option on cart products for each attribute item. */
+    /** @description Refers to the selected item option on cart products for each attribute item. */
     selected: boolean;
 }
 
@@ -35,11 +35,12 @@ export type ProductDataType = {
     prices: PriceType[];
     attributes: AttributeSetType[];
 
-    /**Refers to quantity of each product in the cart */
+    /** @description Refers to quantity of each product in the cart. */
     quantity: number;
 
-    /**Each product in cart products will have one unique key. That will make more ease
-     * to locate any product and make changes on cart products
+    /**
+     * @description Each product in cart products will have one unique key. That will make more ease
+     * to locate any product and make changes on cart products.
      */
     KEY_ID: string;
 }

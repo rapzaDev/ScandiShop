@@ -44,7 +44,9 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
         attributes: this.getAttributesState(),
     }
 
-    /**Get all text attributes of passed product and set a initial value for each text attribute. */
+
+
+    /** @description Get all text attributes of passed product and set a initial value for each text attribute. */
     getAttributesState() {
 
         const { textAttributes, origin, getProductTextAttributes } = this.props;
@@ -59,7 +61,6 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
                     items: attribute.items.map( 
                         item => ({ 
                             name: item.value,
-                            // value: ( item === attribute.items[0] ? true : false )
                             value: item.selected
                         }))
                 }))
@@ -83,6 +84,7 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
         return textAttributesData;
     }
 
+
     getOptionButtonActiveVar( attributeName: string ,item: AttributeType) {
         const { attributes } = this.state;
         
@@ -94,7 +96,8 @@ class TextAttributes extends PureComponent<TextAttributesProps, TextAttributesSt
 
     }
 
-    /**Get the changes on text attributes items dynamically and returns the 
+    /**
+     * @description Get the changes on text attributes items dynamically and returns the 
      * text attributes with the current changes.
      */
     getTextAttributesData( attributeName: string ,itemName: string ) {

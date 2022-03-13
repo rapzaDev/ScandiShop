@@ -1,13 +1,15 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
+//REDUX
 import { RootState } from '../../services/redux/store';
-
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import CurrenciesContext from '../../services/redux/contexts/Currencies';
 
+//GRAPHQL
 import { getCurrencies } from '../../services/graphql/components/CurrencyOptions/Queries';
 
+//STYLES
 import { 
     Container
  } from './styles';
@@ -46,6 +48,8 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
 
     }
 
+
+
     pointerLeaveOfMyBagComponent() {
         const { deactivateCurrencyOptionsComponent } = this.props;
 
@@ -58,6 +62,7 @@ class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState
         activateCurrencyOptionsComponent();
     }
 
+    
 
     handleOnClick( e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 

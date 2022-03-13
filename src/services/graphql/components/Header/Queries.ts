@@ -5,6 +5,7 @@ type GetCategoryNamesType = {
     name: string;
 }
 
+/**@description Get the names of all categories from GRAPHQL server.*/
 async function getCategoryNames() {
     const GET_CATEGORY_NAMES = await client.query({
         query: gql`

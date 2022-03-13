@@ -18,8 +18,8 @@ interface ColorAttributesProps extends PropsFromRedux {
 
 type ColorItemsType = {
     id: string;
-    value: string; ////
-    selected: boolean; /// mudei o ?
+    value: string;
+    selected: boolean;
 }
 
 type ColorAttributesState = {
@@ -43,6 +43,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
         }))
  
     }
+
 
 
     getColorItemsData() {
@@ -83,15 +84,21 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
 
     }
 
-    /**Gets the name of the color in the parameters and sets within the color items 
-     * the selected value as true and false for the rest */
+
+    /**
+     * @description 
+     * Gets the name of the color in the parameters and sets within the color items 
+     * the selected value as true and false for the rest. 
+     * 
+     * @params colorName: name of the selected color
+     * */
     handleClickProductColor( colorName: string ) {
 
         this.setState(( state ) => ({
             colorItems: state.colorItems.map<ColorItemsType>( 
                 color =>  ({
                     id: color.id,
-                    value: color.value, ///
+                    value: color.value,
                     selected: ( ( color.id === colorName ) ? true : false )
                 })
             )
@@ -101,7 +108,7 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
         const colorAttributesData = colorItems.map<ColorItemsType>( 
             color =>  ({
                 id: color.id,
-                value: color.value, ///
+                value: color.value,
                 selected: ( ( color.id === colorName ) ? true : false )
             })
         )
@@ -111,7 +118,8 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
 
     }
 
-    /** Searches in the state of color items who has the prop selected as true and returns it */
+
+    /** @description Searches in the state of color items who has the prop selected as true and returns it */
     getColorActive( colorID: string ) {
 
         const { colorItems } = this.state;
@@ -122,6 +130,8 @@ class ColorAttributes extends PureComponent<ColorAttributesProps, ColorAttribute
 
     }
 
+
+    
     render() {
 
         const { swatchAttibute, bagVisible, origin } = this.props;
