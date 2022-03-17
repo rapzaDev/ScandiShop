@@ -311,8 +311,7 @@ class CartProducts extends PureComponent<
   /**
    * @description Render the cart products based on the origin.
    *
-   * @param origin
-   * Can be 'MyBag' or 'CartPage'
+   * @var origin: Can be 'MyBag' or 'CartPage'.
    */
   // eslint-disable-next-line consistent-return
   renderCartProducts() {

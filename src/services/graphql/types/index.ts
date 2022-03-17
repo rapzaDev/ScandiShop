@@ -1,8 +1,3 @@
-export type ParsedDataType = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: Array<any>;
-};
-
 export type PriceType = {
   amount: number;
   currency: {

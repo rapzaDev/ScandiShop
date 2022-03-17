@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
+
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -12,7 +13,7 @@ import Header from '../../components/Header';
 import MyBag from '../../components/MyBag';
 import ShadowWrapper from '../../components/ShadowWrapper';
 // GRAPHQL
-import { getAllProducts } from '../../services/graphql/pages/CategoryPage/Queries';
+import { getProducts } from '../../services/graphql/pages/CategoryPage/Queries';
 import { AttributeType, ProductDataType } from '../../services/graphql/types';
 // REDUX
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
@@ -23,6 +24,7 @@ import { RootState } from '../../services/redux/store';
 import {
   addProductToCartControl,
   ADD_PRODUCT_TO_CART,
+  calculatePriceIndex,
 } from '../../utils/functions';
 // STYLES
 import {
@@ -35,9 +37,7 @@ import {
 
 type CategoryPageState = {
   redirectProductPage: boolean;
-  allProducts: ProductDataType[];
-  clothesProducts: ProductDataType[];
-  techProducts: ProductDataType[];
+  categoryProducts: ProductDataType[];
 };
 
 class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
@@ -47,9 +47,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
     this.state = {
       redirectProductPage: false,
-      allProducts: [],
-      clothesProducts: [],
-      techProducts: [],
+      categoryProducts: [],
     } as CategoryPageState;
   }
 
@@ -69,20 +67,48 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     // Cheking if CurrencyOptions component was rendered before page rendering
     if (currencyEnabled) handleChangeMyCurrencyOptionsState();
 
-    // --------- GraphQL ALL PRODUCTS DATA ---------
-    const productsData = await getAllProducts();
-
-    this.setState(() => ({
-      allProducts: productsData[0],
-      clothesProducts: productsData[1],
-      techProducts: productsData[2],
-    }));
+    await this.setCategoryProducts();
   }
 
-  componentDidUpdate() {
+  async componentDidUpdate(prevProps: PropsFromRedux) {
     document
       .getElementById('category-page')
       ?.addEventListener('click', this.handleClickOnScreen);
+
+    const { allCategory, clothesCategory, techCategory } = this.props;
+
+    if (prevProps.allCategory !== allCategory) {
+      await this.setCategoryProducts();
+    }
+
+    if (prevProps.clothesCategory !== clothesCategory) {
+      await this.setCategoryProducts();
+    }
+
+    if (prevProps.techCategory !== techCategory) {
+      await this.setCategoryProducts();
+    }
+  }
+
+  /**
+   * @description Gets the GraphQL products data, based on the current category option,
+   * and sets the category products on PLP.
+   */
+  async setCategoryProducts() {
+    // CATEGORIES STATES
+    const { allCategory, clothesCategory, techCategory } = this.props;
+
+    const selectedCategory =
+      (allCategory && 'all') ||
+      (clothesCategory && 'clothes') ||
+      (techCategory && 'tech') ||
+      'all';
+
+    const products = await getProducts(selectedCategory);
+
+    this.setState(() => ({
+      categoryProducts: products,
+    }));
   }
 
   handleClickOnScreen() {
@@ -208,165 +234,57 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
   }
 
   renderCategoryProducts() {
-    // CATEGORIES STATES
-    const { allCategory, clothesCategory, techCategory } = this.props;
-
     // CURRENCIES STATES
     const { USD, GBP, AUD, JPY, RUB } = this.props;
+
+    const priceIndex = calculatePriceIndex(USD, GBP, AUD, JPY, RUB);
 
     //  MY BAG PROPS
     const { bagVisible } = this.props;
 
-    // PRODUCTS CONTENT ARRAYS
-    const { allProducts, clothesProducts, techProducts } = this.state;
+    const { categoryProducts } = this.state;
 
-    const priceIndex =
-      (USD && 0) || (GBP && 1) || (AUD && 2) || (JPY && 3) || (RUB && 4) || 0;
+    return categoryProducts.map((product) => (
+      <ProductInfo
+        key={product.id}
+        id="product-info"
+        outOfStock={!product.inStock}
+        onClick={() => this.handleClickProductInfo(product)}
+      >
+        <div className="product-image">
+          <img
+            className="image"
+            src={product.gallery[0]}
+            alt={`${product.name} principal image`}
+          />
 
-    const selectedCategory =
-      (allCategory && 'all') ||
-      (clothesCategory && 'clothes') ||
-      (techCategory && 'tech');
+          {!product.inStock && <span className="outOfStock">OUT OF STOCK</span>}
 
-    switch (selectedCategory) {
-      case 'all':
-        return allProducts.map((product) => (
-          <ProductInfo
-            key={product.id}
-            id="product-info"
-            outOfStock={!product.inStock}
-            onClick={() => this.handleClickProductInfo(product)}
+          <ProductInfoCartButton
+            id="product-cart-button"
+            Opaque={bagVisible}
+            onClick={(event) =>
+              this.handleClickProductInforCartButton(event, product)
+            }
           >
-            <div className="product-image">
-              <img
-                className="image"
-                src={product.gallery[0]}
-                alt={`${product.name} image 0`}
-              />
+            <img src={cartIcon} alt="ProductInfoCartButton cart button" />
+          </ProductInfoCartButton>
+        </div>
 
-              {!product.inStock && (
-                <span className="outOfStock">OUT OF STOCK</span>
-              )}
+        {this.renderProductColors(product)}
 
-              <ProductInfoCartButton
-                id="product-cart-button"
-                Opaque={bagVisible}
-                onClick={(event) =>
-                  this.handleClickProductInforCartButton(event, product)
-                }
-              >
-                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-              </ProductInfoCartButton>
-            </div>
+        <div className="product-names">
+          <span className="product-title">{product.name} -</span>
+          <span className="product-brand">{product.brand}</span>
+        </div>
 
-            {this.renderProductColors(product)}
-
-            <div className="product-names">
-              <span className="product-title">{product.name} -</span>
-              <span className="product-brand">{product.brand}</span>
-            </div>
-
-            <span className="product-price">
-              {product.prices[priceIndex].currency.symbol}
-              {product.prices[priceIndex].currency.label}
-              {` ${product.prices[priceIndex].amount}`}
-            </span>
-          </ProductInfo>
-        ));
-
-      case 'clothes':
-        return clothesProducts.map((product) => (
-          <ProductInfo
-            key={product.id}
-            id="product-info"
-            outOfStock={!product.inStock}
-            onClick={() => this.handleClickProductInfo(product)}
-          >
-            <div className="product-image">
-              <img
-                className="image"
-                src={product.gallery[0]}
-                alt={`${product.name} image 0`}
-              />
-
-              {!product.inStock && (
-                <span className="outOfStock">OUT OF STOCK</span>
-              )}
-
-              <ProductInfoCartButton
-                id="product-cart-button"
-                Opaque={bagVisible}
-                onClick={(event) =>
-                  this.handleClickProductInforCartButton(event, product)
-                }
-              >
-                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-              </ProductInfoCartButton>
-            </div>
-
-            {this.renderProductColors(product)}
-
-            <div className="product-names">
-              <span className="product-title">{product.name} -</span>
-              <span className="product-brand">{product.brand}</span>
-            </div>
-
-            <span className="product-price">
-              {product.prices[priceIndex].currency.symbol}
-              {product.prices[priceIndex].currency.label}
-              {` ${product.prices[priceIndex].amount}`}
-            </span>
-          </ProductInfo>
-        ));
-
-      case 'tech':
-        return techProducts.map((product) => (
-          <ProductInfo
-            key={product.id}
-            id="product-info"
-            outOfStock={!product.inStock}
-            onClick={() => this.handleClickProductInfo(product)}
-          >
-            <div className="product-image">
-              <img
-                className="image"
-                src={product.gallery[0]}
-                alt={`${product.name} image 0`}
-              />
-
-              {!product.inStock && (
-                <span className="outOfStock">OUT OF STOCK</span>
-              )}
-
-              <ProductInfoCartButton
-                id="product-cart-button"
-                Opaque={bagVisible}
-                onClick={(event) =>
-                  this.handleClickProductInforCartButton(event, product)
-                }
-              >
-                <img src={cartIcon} alt="ProductInfoCartButton cart button" />
-              </ProductInfoCartButton>
-            </div>
-
-            {this.renderProductColors(product)}
-
-            <div className="product-names">
-              <span className="product-title">{product.name} -</span>
-              <span className="product-brand">{product.brand}</span>
-            </div>
-
-            <span className="product-price">
-              {product.prices[priceIndex].currency.symbol}
-              {product.prices[priceIndex].currency.label}
-              {` ${product.prices[priceIndex].amount}`}
-            </span>
-          </ProductInfo>
-        ));
-
-      default:
-        break;
-    }
+        <span className="product-price">
+          {product.prices[priceIndex].currency.symbol}
+          {product.prices[priceIndex].currency.label}
+          {` ${product.prices[priceIndex].amount}`}
+        </span>
+      </ProductInfo>
+    ));
   }
 
   render() {

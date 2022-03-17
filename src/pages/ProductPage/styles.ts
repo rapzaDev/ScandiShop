@@ -52,9 +52,9 @@ export const ProductContent = styled.div`
   max-height: 32.0625rem;
   height: fit-content;
 
-  overflow-y: scroll;
+  /* overflow-y: scroll;
   overflow-x: hidden;
-  scrollbar-width: none;
+  scrollbar-width: none; */
 
   .product-title {
     display: flex;
@@ -134,7 +134,10 @@ export const ProductContent = styled.div`
     height: fit-content;
     width: fit-content;
 
+    /* border: 1px solid red; */
+
     font: var(--pdp-text-content-font);
+    line-height: 1.599375rem;
 
     p {
       line-height: 1.599375rem;

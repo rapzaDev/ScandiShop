@@ -15,6 +15,8 @@ import CategoriesContext from '../../services/redux/contexts/Categories';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import { RootState } from '../../services/redux/store';
+//  UTILS
+// import { calculatePriceIndex, CART_PRODUCTS_DATA } from '../../utils/functions';
 // COMPONENTS
 import BagAmount from '../BagAmount';
 import SelectCategoryButton from '../SelectCategoryButton';
@@ -192,6 +194,14 @@ const mapState = (state: RootState) => ({
   allCategory: state.categories.all,
   clothesCategory: state.categories.clothes,
   techCategory: state.categories.tech,
+  // CART PRODUCTS STATE
+  cartProducts: state.products.cartProducts,
+  //  CURRENCIES STATES
+  USD: state.currencies.USD,
+  GBP: state.currencies.GBP,
+  AUD: state.currencies.AUD,
+  JPY: state.currencies.JPY,
+  RUB: state.currencies.RUB,
 });
 
 const mapDispatch = {

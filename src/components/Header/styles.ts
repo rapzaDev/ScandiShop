@@ -50,6 +50,7 @@ export const CurrencyButton = styled.button`
   display: flex;
 
   width: 0.375rem;
+  /* width: 100%; */
 
   background: var(--c-white);
 
