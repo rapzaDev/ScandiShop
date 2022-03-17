@@ -5,202 +5,187 @@ const fade = keyframes`
         transform: translateZ(10%);
         opacity: 0;
     }
-`
+`;
 
 type ProductInfoProps = {
-    outOfStock: boolean;
-}
+  outOfStock: boolean;
+};
 
 type ProductInfoCartButtonProps = {
-    Opaque: boolean;
-}
-
+  Opaque: boolean;
+};
 
 export const CategoryPageContainer = styled.div`
-    display: flex;
+  display: flex;
 
-    flex-direction: column;
-    height: 100vh;
-
+  flex-direction: column;
+  height: 100vh;
 `;
 
 export const Main = styled.main`
-    display: flex;
-    position: relative;
+  display: flex;
+  position: relative;
 
-    margin-top: 5rem;
+  margin-top: 5rem;
 
-    padding: 5rem 6.25rem 11.9375rem;
+  padding: 5rem 6.25rem 11.9375rem;
 
-    .category-container {
-
-        width: 100%;
-
-        display: flex;
-        flex-direction: column;
-
-        h2 {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 400;
-            font-size: 2.625rem;
-
-            margin-bottom: 6.4375rem;
-        } 
-
-    }
-
-`;
-
-export const CategoryContent = styled.div`
-    display: grid;
-    grid-template-columns: repeat(3, 24.6875rem);
-    justify-content: space-between;
-    row-gap: 6.4375rem;
-`;
-
-
-export const ProductInfo = styled.div<ProductInfoProps>`
+  .category-container {
+    width: 100%;
 
     display: flex;
     flex-direction: column;
-    position: relative;
 
-    cursor: pointer;
+    h2 {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 400;
+      font-size: 2.625rem;
 
-    padding: 1rem;
-
-    width: 23.125rem;
-    height: fit-content;
-
-    opacity: ${ ({outOfStock}) => outOfStock ? 0.5 : 'unset'};
-
-    animation: ${fade} .2s linear .2s backwards;
-
-    &:hover {
-        box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);
-
-        .product-image {
-            
-            #product-cart-button {
-                visibility: ${ ({outOfStock}) => outOfStock ? 'hidden' : 'visible' };
-            }
-
-        }
-
+      margin-bottom: 6.4375rem;
     }
+  }
+`;
+
+export const CategoryContent = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 24.6875rem);
+  justify-content: space-between;
+  row-gap: 6.4375rem;
+`;
+
+export const ProductInfo = styled.div<ProductInfoProps>`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  cursor: pointer;
+
+  padding: 1rem;
+
+  width: 23.125rem;
+  height: fit-content;
+
+  opacity: ${({ outOfStock }) => (outOfStock ? 0.5 : 'unset')};
+
+  animation: ${fade} 0.2s linear 0.2s backwards;
+
+  &:hover {
+    box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);
 
     .product-image {
-        display: flex;
-        position: relative;
+      #product-cart-button {
+        visibility: ${({ outOfStock }) => (outOfStock ? 'hidden' : 'visible')};
+      }
+    }
+  }
 
-        align-items: center;
-        justify-content: center;
+  .product-image {
+    display: flex;
+    position: relative;
 
-        width: 100%;
-        height: 20.625rem;
+    align-items: center;
+    justify-content: center;
 
-        margin-bottom: 1.5rem;
+    width: 100%;
+    height: 20.625rem;
 
-        .image {
-            z-index: -1;
+    margin-bottom: 1.5rem;
 
-            height: fit-content;
-            width: fit-content;
-            
-            height: 20.625rem;
-            max-width: 22.25rem;
-        }
+    .image {
+      z-index: -1;
 
-        .outOfStock {
-            font: 400 1.5rem 'Raleway', sans-serif;
-            color: var(--c-text);
+      height: fit-content;
+      width: fit-content;
 
-            position: absolute;
-
-        }
-
-        #product-cart-button {
-            position: absolute;
-
-            bottom: -1.625rem;
-            right: 0.9375rem;
-
-            visibility: hidden;
-        }
-
-
+      height: 20.625rem;
+      max-width: 22.25rem;
     }
 
-    #color-attributes {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100%;
+    .outOfStock {
+      font: 400 1.5rem 'Raleway', sans-serif;
+      color: var(--c-text);
+
+      position: absolute;
     }
 
-    .empty-colors {
-        height: 1.2rem;
-        margin-bottom: 0.75rem;
+    #product-cart-button {
+      position: absolute;
+
+      bottom: -1.625rem;
+      right: 0.9375rem;
+
+      visibility: hidden;
     }
+  }
 
-    .product-names {
-        display: flex;
-        align-items: center;
+  #color-attributes {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
 
-        width: 100%;
+  .empty-colors {
+    height: 1.2rem;
+    margin-bottom: 0.75rem;
+  }
 
-        margin-bottom: 0.5rem;
-    }
+  .product-names {
+    display: flex;
+    align-items: center;
 
-    .product-title {
-        width: fit-content;
+    width: 100%;
 
-        font: var(--raleway-300-font);
-        font-size: 1.125rem;
-    }
+    margin-bottom: 0.5rem;
+  }
 
-    .product-brand {
-        width: fit-content;
-        height: fit-content;
+  .product-title {
+    width: fit-content;
 
-        margin-left: 0.2rem;
+    font: var(--raleway-300-font);
+    font-size: 1.125rem;
+  }
 
-        font: var(--raleway-300-font);
-        font-size: 1.125rem;
-    }
+  .product-brand {
+    width: fit-content;
+    height: fit-content;
 
-    .product-price {
-        font: var(--price-regular-font);
-    }
+    margin-left: 0.2rem;
 
+    font: var(--raleway-300-font);
+    font-size: 1.125rem;
+  }
 
+  .product-price {
+    font: var(--price-regular-font);
+  }
 `;
 
 export const ProductInfoCartButton = styled.button<ProductInfoCartButtonProps>`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    width: 3.5rem;
-    height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    cursor: pointer;
+  width: 3.5rem;
+  height: 3.5rem;
 
-    border: none;
-    border-radius: 50%;
+  cursor: pointer;
 
-    background-color: var(--c-primary);
+  border: none;
+  border-radius: 50%;
 
-    transition: transform 0.1s linear;
+  background-color: var(--c-primary);
 
-    &:hover {
-        transform: scale(1.1);
-    }
+  transition: transform 0.1s linear;
 
-    ${ ({ Opaque }) => Opaque && css`filter: brightness(0.9)` };
+  &:hover {
+    transform: scale(1.1);
+  }
 
+  ${({ Opaque }) =>
+    Opaque &&
+    css`
+      filter: brightness(0.9);
+    `};
 `;
-
-
-

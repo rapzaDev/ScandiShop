@@ -1,157 +1,126 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-//REDUX
-import { RootState } from '../../services/redux/store';
+// COMPONENTS
+import CartProductsContent from '../../components/CartProducts';
+import CurrencyOptions from '../../components/CurrencyOptions';
+import Header from '../../components/Header';
+import MyBag from '../../components/MyBag';
+import ShadowWrapper from '../../components/ShadowWrapper';
+// REDUX
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
-
-//GRAPHQL
-import Header  from '../../components/Header';
-import MyBag from '../../components/MyBag';
-import CurrencyOptions from '../../components/CurrencyOptions';
-import ShadowWrapper from '../../components/ShadowWrapper';
-import CartProductsContent from '../../components/CartProducts';
-
-//STYLES
-import {
-    CartPageContainer,
-    Main,
-    CartProducts,
-} from './styles';
-
+import { RootState } from '../../services/redux/store';
+// STYLES
+import { CartPageContainer, Main, CartProducts } from './styles';
 
 class CartPage extends PureComponent<PropsFromRedux> {
+  constructor(props: PropsFromRedux) {
+    super(props);
+    this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
+  }
 
-    constructor(props: PropsFromRedux) {
-        super(props);
-        this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
-    }
- 
+  componentDidMount() {
+    window.scrollTo(0, 0);
 
-    componentDidMount() {
+    document
+      .getElementById('cart-page')
+      ?.addEventListener('click', this.handleClickOnScreen);
 
-        window.scrollTo(0, 0);
+    const {
+      bagVisible,
+      handleChangeMyBagState,
+      currencyEnabled,
+      handleChangeMyCurrencyOptionsState,
+    } = this.props;
 
-        document.getElementById('cart-page')?.addEventListener('click', this.handleClickOnScreen);
+    // Cheking if MyBag component was rendered before page rendering
+    if (bagVisible) handleChangeMyBagState();
 
-        const { 
-            bagVisible, 
-            handleChangeMyBagState ,
-            currencyEnabled,
-            handleChangeMyCurrencyOptionsState
-        } = this.props;
+    // Cheking if CurrencyOptions component was rendered before page rendering
+    if (currencyEnabled) handleChangeMyCurrencyOptionsState();
+  }
 
-        // Cheking if MyBag component was rendered before page rendering
-            if ( bagVisible ) handleChangeMyBagState();
+  handleClickOnScreen() {
+    const {
+      bagVisible,
+      bagActive,
+      currencyEnabled,
+      currencyOptionsActive,
+      handleChangeMyCurrencyOptionsState,
+      handleChangeMyBagState,
+    } = this.props;
 
-        // Cheking if CurrencyOptions component was rendered before page rendering
-            if ( currencyEnabled ) handleChangeMyCurrencyOptionsState();
-            
-    }    
+    const verificationControl = {
+      currencyOptions: currencyEnabled && currencyOptionsActive === false,
+      myBag: bagVisible && bagActive === false,
+    };
 
-    handleClickOnScreen() {
-        const { 
-            bagVisible, 
-            bagActive, 
-            currencyEnabled,
-            currencyOptionsActive,
-            handleChangeMyCurrencyOptionsState, 
-            handleChangeMyBagState,
-        } = this.props;
+    if (verificationControl.currencyOptions)
+      handleChangeMyCurrencyOptionsState();
 
-        const verificationControl = {
-            currencyOptions: currencyEnabled && ( currencyOptionsActive === false ),
-            myBag: bagVisible && ( bagActive === false ),
-        }
+    if (verificationControl.myBag) handleChangeMyBagState();
+  }
 
-        if ( verificationControl.currencyOptions ) 
-            handleChangeMyCurrencyOptionsState();
+  renderMyBag() {
+    const { bagVisible } = this.props;
 
-        if ( verificationControl.myBag ) 
-            handleChangeMyBagState();
-  
-    }
-    
+    if (bagVisible) return <MyBag />;
+  }
 
-    renderMyBag() {
+  renderCurrencyOptions() {
+    const { currencyEnabled } = this.props;
 
-        const { bagVisible } = this.props;
+    if (currencyEnabled) return <CurrencyOptions />;
+  }
 
-        if ( bagVisible)
-            return <MyBag />
+  render() {
+    const { bagVisible } = this.props;
 
-    }
+    return (
+      <CartPageContainer id="cart-page">
+        <Header />
 
-    renderCurrencyOptions() {
-        const { currencyEnabled } = this.props;
+        {this.renderCurrencyOptions()}
 
-        if ( currencyEnabled ) 
-            return <CurrencyOptions />
-    }
+        {this.renderMyBag()}
 
-    render() {
+        <ShadowWrapper active={bagVisible} />
 
-        return (
-            
+        <Main>
+          <h2>CART</h2>
 
-            <CartPageContainer id="cart-page">
-                
-                <Header />
-
-                    { this.renderCurrencyOptions() }
-
-                    { this.renderMyBag() }
-
-                <ShadowWrapper active={this.props.bagVisible}/>
-                    
-                    <Main>
-
-                        <h2>CART</h2>
-
-                        <CartProducts className="cart-products">
-
-                            <CartProductsContent origin='CartPage'/>
-
-                        </CartProducts>
-
-                    </Main>
-
-            </CartPageContainer>
-        );
-
-    }
-
-};
+          <CartProducts className="cart-products">
+            <CartProductsContent origin="CartPage" />
+          </CartProducts>
+        </Main>
+      </CartPageContainer>
+    );
+  }
+}
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
-const { 
-    handleChangeMyBagState,
-    activateMyBagComponent,
-} = MyBagContext.actions;
+const { handleChangeMyBagState, activateMyBagComponent } = MyBagContext.actions;
 
-const {
-    handleChangeMyCurrencyOptionsState,
-} = CurrencyOptionsContext.actions;
+const { handleChangeMyCurrencyOptionsState } = CurrencyOptionsContext.actions;
 
-
-const mapState = ( state: RootState )  => ({  
-//  MY BAG COMPONENT STATES
-    bagVisible: state.myBag.value,
-    bagActive: state.myBag.bagActive,
-//  CURRENCY OPTIONS COMPONENT STATES 
-    currencyEnabled: state.currencyOptions.value,
-    currencyOptionsActive: state.currencyOptions.currencyOptionsActive, 
-})
+const mapState = (state: RootState) => ({
+  //  MY BAG COMPONENT STATES
+  bagVisible: state.myBag.value,
+  bagActive: state.myBag.bagActive,
+  //  CURRENCY OPTIONS COMPONENT STATES
+  currencyEnabled: state.currencyOptions.value,
+  currencyOptionsActive: state.currencyOptions.currencyOptionsActive,
+});
 
 const mapDispatch = {
-//  MY BAG COMPONENT FUNCTIONS
-    handleChangeMyBagState,
-    activateMyBagComponent,
-//  CURRENCY OPTIONS COMPONENT FUNCTION
-    handleChangeMyCurrencyOptionsState,
-}
+  //  MY BAG COMPONENT FUNCTIONS
+  handleChangeMyBagState,
+  activateMyBagComponent,
+  //  CURRENCY OPTIONS COMPONENT FUNCTION
+  handleChangeMyCurrencyOptionsState,
+};
 
 const connector = connect(mapState, mapDispatch);
 
@@ -160,4 +129,3 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(CartPage);
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
-

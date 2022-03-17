@@ -1,51 +1,44 @@
 import React, { ButtonHTMLAttributes, PureComponent } from 'react';
 
-import {
-    Button
-} from './styles';
+import { Button } from './styles';
 
 export type OptionButtonState = {
-    origin: 'ProductPage' | 'CartPage' | 'MyBag';
-    active: boolean;
+  origin: 'ProductPage' | 'CartPage' | 'MyBag';
+  active: boolean;
+};
+
+interface IOptionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  origin: 'ProductPage' | 'CartPage' | 'MyBag';
+  active: boolean;
+  onClick: () => void;
+  // eslint-disable-next-line react/require-default-props
+  children?: React.ReactNode;
+  value: string;
 }
 
-interface OptionButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    origin: 'ProductPage' | 'CartPage' | 'MyBag';
-    active: boolean;
-    onClick: () => void;
-    children?: React.ReactNode;
-    value: string;
-} 
+class OptionButton extends PureComponent<
+  IOptionButtonProps,
+  OptionButtonState
+> {
+  constructor(props: IOptionButtonProps) {
+    super(props);
+  }
 
-class OptionButton extends PureComponent<OptionButtonProps, OptionButtonState> {
+  render() {
+    const { origin, active, onClick, value, children } = this.props;
 
-    constructor(props: OptionButtonProps) {
-        super(props);
-    }
-
-    state:OptionButtonState = {
-        origin: this.props.origin,
-        active: false,
-    }
-
-    render() {
-
-        return (
-
-            <Button 
-                id="option-button"
-                origin={this.props.origin}
-                active={this.props.active}
-                onClick={() => ( this.props.origin === 'ProductPage' && this.props.onClick() ) }
-                value={this.props.value}
-            >
-                { this.props.children }
-            </Button>
-
-        );
-
-    }
-
-};
+    return (
+      <Button
+        id="option-button"
+        origin={origin}
+        active={active}
+        onClick={() => origin === 'ProductPage' && onClick()}
+        value={value}
+      >
+        {children}
+      </Button>
+    );
+  }
+}
 
 export default OptionButton;

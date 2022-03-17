@@ -1,32 +1,21 @@
 import React, { PureComponent } from 'react';
 
-import {   
-    ShadowContainer,
-} from './styles';
+import { ShadowContainer } from './styles';
 
 type ShadowWrapperProps = {
-    active: boolean;
-}
+  active: boolean;
+};
 
 class ShadowWrapper extends PureComponent<ShadowWrapperProps> {
+  constructor(props: ShadowWrapperProps) {
+    super(props);
+  }
 
-    constructor(props:ShadowWrapperProps) {
-        super(props);
-    }
+  render() {
+    const { active } = this.props;
 
-    render() {
-
-        return (
-
-            <ShadowContainer 
-                id="shadow-container"
-                active={this.props.active}
-            />
-
-        );
-
-    }
-
-};
+    return <ShadowContainer id="shadow-container" active={active} />;
+  }
+}
 
 export default ShadowWrapper;

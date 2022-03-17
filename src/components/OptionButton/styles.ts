@@ -1,89 +1,83 @@
 import styled, { css } from 'styled-components';
 
-import { OptionButtonState } from './';
+import { OptionButtonState } from '.';
 
 export const Button = styled.button<OptionButtonState>`
-    display: flex;
-    position: relative;
+  display: flex;
+  position: relative;
 
-    align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
 
-    border: 1px solid #000;
+  border: 1px solid #000;
 
-    background-color: transparent;
+  background-color: transparent;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    // ----------- SIZE BUTTON ON PRODUCT PAGE OR CART PAGE -----------
-        ${ ({ origin }) => 
-            ( (origin === 'ProductPage') || (origin === 'CartPage') ) && css`
-                width: 3.9375rem;
-                height: 2.8125rem;
+  // ----------- SIZE BUTTON ON PRODUCT PAGE OR CART PAGE -----------
+  ${({ origin }) =>
+    (origin === 'ProductPage' || origin === 'CartPage') &&
+    css`
+      width: 3.9375rem;
+      height: 2.8125rem;
 
-                cursor: ${ origin === 'CartPage' && 'unset' };
+      cursor: ${origin === 'CartPage' && 'unset'};
 
-                span {
-                    font: var(--product-size-font);
-                }
+      span {
+        font: var(--product-size-font);
+      }
+    `}
 
-            `
-        }
+  ${({ active, origin }) =>
+    ((active && origin === 'ProductPage') ||
+      (active && origin === 'CartPage')) &&
+    css`
+      background-color: var(--c-black);
+      color: var(--c-white);
 
-        ${ ({ active, origin }) => 
-            ( (active && origin === 'ProductPage') || (active && origin === 'CartPage') ) && css`
-
-                background-color: var(--c-black);
-                color: var(--c-white);
-
-                cursor: ${ origin === 'CartPage' && 'unset' }
-
-        `}
+      cursor: ${origin === 'CartPage' && 'unset'};
+    `}
 
 
 
     // ----------- SIZE BUTTON ON MY BAG COMPONENT -----------
 
-        ${ ({ active, origin }) => active 
-        ? css`
-            
-            ${ origin === 'MyBag' && css`
-                width: 2.2rem;
-                height: 1.5rem;
+        ${({ active, origin }) =>
+    active
+      ? css`
+          ${origin === 'MyBag' &&
+          css`
+            width: 2.2rem;
+            height: 1.5rem;
 
-                border-color: var(--opacity-size-color);
-                font: var(--product-size-font);
-                font-size: 0.875rem;
-                color: var(--c-black);
+            border-color: var(--opacity-size-color);
+            font: var(--product-size-font);
+            font-size: 0.875rem;
+            color: var(--c-black);
 
-                cursor: unset;
-
-            `}
-
+            cursor: unset;
+          `}
         `
-        : css`
-        
-            ${ origin === 'MyBag' && css`
-                width: 2.2rem;
-                height: 1.5rem;
+      : css`
+          ${origin === 'MyBag' &&
+          css`
+            width: 2.2rem;
+            height: 1.5rem;
 
-                font: var(--product-size-font);
-                font-size: 0.875rem;
+            font: var(--product-size-font);
+            font-size: 0.875rem;
 
-                border-color: var(--opacity-size-color);
-                background-color: var(--c-white);
+            border-color: var(--opacity-size-color);
+            background-color: var(--c-white);
 
-                border: 1px solid;
-                
-                color: var(--c-black);
+            border: 1px solid;
 
-                opacity: 40%;
+            color: var(--c-black);
 
-                cursor: unset;
+            opacity: 40%;
 
-            `}
-
-        `
-        }
-
+            cursor: unset;
+          `}
+        `}
 `;

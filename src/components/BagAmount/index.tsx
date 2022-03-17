@@ -1,66 +1,59 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-//REDUX
+//  REDUX
 import { RootState } from '../../services/redux/store';
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 
-//GRAPHQL
+//  GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
 
-//STYLES
+//  STYLES
 import { Container } from './styles';
 
-
 class BagAmount extends PureComponent<PropsFromRedux> {
+  componentDidMount() {
+    const { cartProducts, getLocalStorageDataProducts } = this.props;
 
-    componentDidMount() {
+    const data = localStorage.getItem('@scandishop/cartProducts');
+    const cartProductsLocalStorage: ProductDataType[] = (data ? JSON.parse(data) : []);
 
-        const { cartProducts, getLocalStorageDataProducts } = this.props;
-
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
-
-        if ( ( cartProductsLocalStorage.length ) && (!cartProducts.length) )
-            getLocalStorageDataProducts(cartProductsLocalStorage);
-
+    if ((cartProductsLocalStorage.length) && (!cartProducts.length)) {
+      getLocalStorageDataProducts(cartProductsLocalStorage);
     }
+  }
 
-    render() {
+  render() {
+    const { cartProducts } = this.props;
 
-        const { cartProducts } = this.props;
+    const data = localStorage.getItem('@scandishop/cartProducts');
+    const cartProductsLocalStorage: ProductDataType[] = (data ? JSON.parse(data) : []);
 
-        const data = localStorage.getItem('@scandishop/cartProducts');
-        const cartProductsLocalStorage: ProductDataType[] = ( data ? JSON.parse(data) : [] );
+    const amount = (cartProducts.length ? cartProducts.length : cartProductsLocalStorage.length);
 
+    return (
 
-        const amount = ( cartProducts.length ? cartProducts.length : cartProductsLocalStorage.length );
+      <Container id="bag-amount">
+        <span>{amount}</span>
+      </Container>
 
-        return(
-
-            <Container id="bag-amount">
-                <span>{amount}</span>
-            </Container>
-
-        );
-
-    }
-
-};
+    );
+  }
+}
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
 const { getLocalStorageDataProducts } = CartProductsContext.actions;
 
-const mapState = ( state: RootState )  => ({
+const mapState = (state: RootState) => ({
 // CART PRODUCTS STATE
-    cartProducts: state.products.cartProducts
-})
+  cartProducts: state.products.cartProducts,
+});
 
 const mapDispatch = {
 //  CART PRODUCTS FUNCTION
-    getLocalStorageDataProducts,
-}
+  getLocalStorageDataProducts,
+};
 
 const connector = connect(mapState, mapDispatch);
 

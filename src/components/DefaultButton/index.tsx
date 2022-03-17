@@ -1,29 +1,22 @@
 import React, { ButtonHTMLAttributes, PureComponent } from 'react';
 
-import {
-    Button,
-} from './styles';
+import { Button } from './styles';
 
-export interface DefaultButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
-    color: 'default' | 'green';
-};
+export interface IDefaultButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  color: 'default' | 'green';
+}
 
-class DefaultButton extends PureComponent<DefaultButtonProps> {
+class DefaultButton extends PureComponent<IDefaultButtonProps> {
+  constructor(props: IDefaultButtonProps) {
+    super(props);
+  }
 
-    constructor(props: DefaultButtonProps) {
-        super(props);
-    }
+  render() {
+    const { children, ...rest } = this.props;
 
-    render() {
-        const { ...rest } = this.props;
-
-        return (
-            <Button {...rest}>
-                {this.props.children}
-            </Button>
-        );
-    }
-
-};
+    return <Button {...rest}>{children}</Button>;
+  }
+}
 
 export default DefaultButton;

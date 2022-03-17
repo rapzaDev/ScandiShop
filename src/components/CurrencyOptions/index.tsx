@@ -1,172 +1,159 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-//REDUX
-import { RootState } from '../../services/redux/store';
-import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
-import CurrenciesContext from '../../services/redux/contexts/Currencies';
-
-//GRAPHQL
+// GRAPHQL
 import { getCurrencies } from '../../services/graphql/components/CurrencyOptions/Queries';
-
-//STYLES
-import { 
-    Container
- } from './styles';
+// REDUX
+import CurrenciesContext from '../../services/redux/contexts/Currencies';
+import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
+// STYLES
+import { Container } from './styles';
 
 type CurrencieDataType = {
-    symbol: string;
-    label: string;
-}
+  symbol: string;
+  label: string;
+};
 
 type CurrencyOptionsState = {
-    currencies: CurrencieDataType[];
-}
-
-class CurrencyOptions extends PureComponent<PropsFromRedux, CurrencyOptionsState> {
-
-    constructor(props:PropsFromRedux) {
-        super(props);
-        this.pointerLeaveOfMyBagComponent = this.pointerLeaveOfMyBagComponent.bind(this);
-        this.pointerEnterOfMyBagComponent = this.pointerEnterOfMyBagComponent.bind(this);
-    }
-
-    state: CurrencyOptionsState = {
-        currencies: [],
-    }
-
-    async componentDidMount() {
-        document.getElementById('currency-options')?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent );
-
-        document.getElementById('currency-options')?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent );
-
-        const currenciesData = await getCurrencies();
-
-        this.setState(() => ({
-            currencies: currenciesData
-        }))
-
-    }
-
-
-
-    pointerLeaveOfMyBagComponent() {
-        const { deactivateCurrencyOptionsComponent } = this.props;
-
-        deactivateCurrencyOptionsComponent();
-    }
-
-    pointerEnterOfMyBagComponent() {
-        const { activateCurrencyOptionsComponent } = this.props;
-
-        activateCurrencyOptionsComponent();
-    }
-
-    
-
-    handleOnClick( e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-
-        const currency = e.currentTarget.value;
-
-        const { 
-            setUSDCurrency,
-            setGBPCurrency,
-            setAUDCurrency,
-            setJPYCurrency,
-            setRUBCurrency
-        } = this.props;
-
-        const { handleChangeMyCurrencyOptionsState } = this.props;
-
-        switch (currency) {
-            case 'USD':
-                setUSDCurrency();
-                handleChangeMyCurrencyOptionsState();
-                return;
-
-            case 'GBP':
-                setGBPCurrency();
-                handleChangeMyCurrencyOptionsState();
-                return;
-
-            case 'AUD':
-                setAUDCurrency();
-                handleChangeMyCurrencyOptionsState();
-                return;
-
-            case 'JPY':
-                setJPYCurrency();
-                handleChangeMyCurrencyOptionsState();
-                return;
-
-            case 'RUB':
-                setRUBCurrency();
-                handleChangeMyCurrencyOptionsState();
-                return;
-
-            default:
-                return;
-        }
-
-    }
-
-
-    render() {
-
-        const { currencies } = this.state;
-
-        return (
-
-            <Container id="currency-options">
-                { 
-                    currencies.map( currency => (
-                        <button
-                            key={currency.symbol}
-                            value={currency.label}
-                            onClick={(e) => this.handleOnClick(e)}
-                        >
-                            {currency.symbol} {currency.label}
-                        </button>
-                    ))  
-                }
-            </Container>
-
-        );
-
-    }
-
+  currencies: CurrencieDataType[];
 };
+
+class CurrencyOptions extends PureComponent<
+  PropsFromRedux,
+  CurrencyOptionsState
+> {
+  constructor(props: PropsFromRedux) {
+    super(props);
+    this.pointerLeaveOfMyBagComponent =
+      this.pointerLeaveOfMyBagComponent.bind(this);
+    this.pointerEnterOfMyBagComponent =
+      this.pointerEnterOfMyBagComponent.bind(this);
+
+    this.state = {
+      currencies: [],
+    } as CurrencyOptionsState;
+  }
+
+  async componentDidMount() {
+    document
+      .getElementById('currency-options')
+      ?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent);
+
+    document
+      .getElementById('currency-options')
+      ?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent);
+
+    const currenciesData = await getCurrencies();
+
+    this.setState(() => ({
+      currencies: currenciesData,
+    }));
+  }
+
+  pointerLeaveOfMyBagComponent() {
+    const { deactivateCurrencyOptionsComponent } = this.props;
+
+    deactivateCurrencyOptionsComponent();
+  }
+
+  pointerEnterOfMyBagComponent() {
+    const { activateCurrencyOptionsComponent } = this.props;
+
+    activateCurrencyOptionsComponent();
+  }
+
+  handleOnClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const currency = e.currentTarget.value;
+
+    const {
+      setUSDCurrency,
+      setGBPCurrency,
+      setAUDCurrency,
+      setJPYCurrency,
+      setRUBCurrency,
+    } = this.props;
+
+    const { handleChangeMyCurrencyOptionsState } = this.props;
+
+    switch (currency) {
+      case 'USD':
+        setUSDCurrency();
+        handleChangeMyCurrencyOptionsState();
+        return;
+
+      case 'GBP':
+        setGBPCurrency();
+        handleChangeMyCurrencyOptionsState();
+        return;
+
+      case 'AUD':
+        setAUDCurrency();
+        handleChangeMyCurrencyOptionsState();
+        return;
+
+      case 'JPY':
+        setJPYCurrency();
+        handleChangeMyCurrencyOptionsState();
+        return;
+
+      case 'RUB':
+        setRUBCurrency();
+        handleChangeMyCurrencyOptionsState();
+        break;
+      default:
+    }
+  }
+
+  render() {
+    const { currencies } = this.state;
+
+    return (
+      <Container id="currency-options">
+        {currencies.map((currency) => (
+          <button
+            type="button"
+            key={currency.symbol}
+            value={currency.label}
+            onClick={(e) => this.handleOnClick(e)}
+          >
+            {currency.symbol} {currency.label}
+          </button>
+        ))}
+      </Container>
+    );
+  }
+}
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
 const {
-    activateCurrencyOptionsComponent,
-    deactivateCurrencyOptionsComponent,
-    handleChangeMyCurrencyOptionsState,
+  activateCurrencyOptionsComponent,
+  deactivateCurrencyOptionsComponent,
+  handleChangeMyCurrencyOptionsState,
 } = CurrencyOptionsContext.actions;
 
 const {
-    setUSDCurrency,
-    setGBPCurrency,
-    setAUDCurrency,
-    setJPYCurrency,
-    setRUBCurrency
+  setUSDCurrency,
+  setGBPCurrency,
+  setAUDCurrency,
+  setJPYCurrency,
+  setRUBCurrency,
 } = CurrenciesContext.actions;
 
-const mapState = ( state: RootState )  => ({});
+const mapState = () => ({});
 
 const mapDispatch = {
-//  CURRENCY OPTIONS COMPONENT FUNCTIONS
-    activateCurrencyOptionsComponent,
-    deactivateCurrencyOptionsComponent,
-    handleChangeMyCurrencyOptionsState,
-//  CURRENCIES FUNCTIONS
-    setUSDCurrency,
-    setGBPCurrency,
-    setAUDCurrency,
-    setJPYCurrency,
-    setRUBCurrency
-}
+  //  CURRENCY OPTIONS COMPONENT FUNCTIONS
+  activateCurrencyOptionsComponent,
+  deactivateCurrencyOptionsComponent,
+  handleChangeMyCurrencyOptionsState,
+  //  CURRENCIES FUNCTIONS
+  setUSDCurrency,
+  setGBPCurrency,
+  setAUDCurrency,
+  setJPYCurrency,
+  setRUBCurrency,
+};
 
 const connector = connect(mapState, mapDispatch);
 

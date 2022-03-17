@@ -1,60 +1,57 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-//REDUX
-import { RootState } from '../../services/redux/store';
-
-//GRAPHQL
+// GRAPHQL
 import { AttributeSetType } from '../../services/graphql/types';
-
-//COMPONENTS
+// REDUX
+import { RootState } from '../../services/redux/store';
+// COMPONENTS
 import ColorAttributes from '../ColorAttributes';
 import TextAttributes from '../TextAttributes';
+// STYLES
+import { Container } from './styles';
 
-//STYLES
-import {
-    Container
-} from './styles'
-
-interface ProductAttributesProps extends PropsFromRedux {
-    productAttributes: AttributeSetType[]; 
-    origin: 'ProductPage' | 'CartPage' | 'MyBag';
+interface IProductAttributesProps extends PropsFromRedux {
+  productAttributes: AttributeSetType[];
+  origin: 'ProductPage' | 'CartPage' | 'MyBag';
 }
 
-class ProductAttributes extends PureComponent<ProductAttributesProps> {
+class ProductAttributes extends PureComponent<IProductAttributesProps> {
+  render() {
+    const { productAttributes, origin, bagVisible } = this.props;
 
-    render() {
+    const textAttributes = productAttributes.filter(
+      (attribute) => attribute.type === 'text'
+    );
 
-        const { productAttributes, origin, bagVisible } = this.props;
+    const [colorAttribute] = productAttributes.filter(
+      (attribute) => attribute.type === 'swatch'
+    );
 
-        const textAttributes = productAttributes.filter( attribute => attribute.type === 'text' );
-    
-        const [ colorAttribute ] = productAttributes.filter( attribute => attribute.type === 'swatch' );
+    return (
+      <Container id="product-attributes">
+        {colorAttribute && (
+          <ColorAttributes swatchAttibute={colorAttribute} origin={origin} />
+        )}
 
-        return(
-
-            <Container id="product-attributes">
-
-                { colorAttribute && <ColorAttributes swatchAttibute={colorAttribute} origin={origin} /> }
-
-                <TextAttributes textAttributes={textAttributes} origin={origin} shadow={bagVisible}/>
-
-            </Container>
-
-        );
-
-    }
-
-};
+        <TextAttributes
+          textAttributes={textAttributes}
+          origin={origin}
+          shadow={bagVisible}
+        />
+      </Container>
+    );
+  }
+}
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
-const mapState = ( state: RootState )  => ({  
-//  MY BAG COMPONENT STATES
-    bagVisible: state.myBag.value,
-})
+const mapState = (state: RootState) => ({
+  //  MY BAG COMPONENT STATES
+  bagVisible: state.myBag.value,
+});
 
-const mapDispatch = {}
+const mapDispatch = {};
 
 const connector = connect(mapState, mapDispatch);
 
@@ -63,5 +60,3 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 export default connector(ProductAttributes);
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
-
-

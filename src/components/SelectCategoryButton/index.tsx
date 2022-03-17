@@ -1,30 +1,27 @@
 import React, { ButtonHTMLAttributes, PureComponent } from 'react';
 
-import {
-    Button,
-} from './styles';
+import { Button } from './styles';
 
-export interface SelectCategoryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>{
-    isSelected?: boolean;
-};
+export interface ISelectCategoryButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement> {
+  // eslint-disable-next-line react/require-default-props
+  isSelected?: boolean;
+}
 
-class SelectCategoryButton extends PureComponent<SelectCategoryButtonProps> {
+class SelectCategoryButton extends PureComponent<ISelectCategoryButtonProps> {
+  constructor(props: ISelectCategoryButtonProps) {
+    super(props);
+  }
 
-    constructor(props: SelectCategoryButtonProps) {
-        super(props);
-    }
+  render() {
+    const { children, ...rest } = this.props;
 
-    render() {
-
-        const { ...rest } = this.props;
-
-        return (
-            <Button className="category-button" {...rest} >
-                {this.props.children}
-            </Button>
-        );
-
-    }
-};
+    return (
+      <Button className="category-button" {...rest}>
+        {children}
+      </Button>
+    );
+  }
+}
 
 export default SelectCategoryButton;
