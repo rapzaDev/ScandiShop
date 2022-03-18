@@ -1,13 +1,11 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-//  REDUX
-import { RootState } from '../../services/redux/store';
-import CartProductsContext from '../../services/redux/contexts/CartProducts';
-
 //  GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
-
+//  REDUX
+import CartProductsContext from '../../services/redux/contexts/CartProducts';
+import { RootState } from '../../services/redux/store';
 //  STYLES
 import { Container } from './styles';
 
@@ -16,9 +14,11 @@ class BagAmount extends PureComponent<PropsFromRedux> {
     const { cartProducts, getLocalStorageDataProducts } = this.props;
 
     const data = localStorage.getItem('@scandishop/cartProducts');
-    const cartProductsLocalStorage: ProductDataType[] = (data ? JSON.parse(data) : []);
+    const cartProductsLocalStorage: ProductDataType[] = data
+      ? JSON.parse(data)
+      : [];
 
-    if ((cartProductsLocalStorage.length) && (!cartProducts.length)) {
+    if (cartProductsLocalStorage.length && !cartProducts.length) {
       getLocalStorageDataProducts(cartProductsLocalStorage);
     }
   }
@@ -27,16 +27,18 @@ class BagAmount extends PureComponent<PropsFromRedux> {
     const { cartProducts } = this.props;
 
     const data = localStorage.getItem('@scandishop/cartProducts');
-    const cartProductsLocalStorage: ProductDataType[] = (data ? JSON.parse(data) : []);
+    const cartProductsLocalStorage: ProductDataType[] = data
+      ? JSON.parse(data)
+      : [];
 
-    const amount = (cartProducts.length ? cartProducts.length : cartProductsLocalStorage.length);
+    const amount = cartProducts.length
+      ? cartProducts.length
+      : cartProductsLocalStorage.length;
 
     return (
-
       <Container id="bag-amount">
         <span>{amount}</span>
       </Container>
-
     );
   }
 }
@@ -46,12 +48,12 @@ class BagAmount extends PureComponent<PropsFromRedux> {
 const { getLocalStorageDataProducts } = CartProductsContext.actions;
 
 const mapState = (state: RootState) => ({
-// CART PRODUCTS STATE
+  // CART PRODUCTS STATE
   cartProducts: state.products.cartProducts,
 });
 
 const mapDispatch = {
-//  CART PRODUCTS FUNCTION
+  //  CART PRODUCTS FUNCTION
   getLocalStorageDataProducts,
 };
 

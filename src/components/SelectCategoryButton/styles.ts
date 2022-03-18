@@ -30,12 +30,6 @@ export const Button = styled.button<ISelectCategoryButtonProps>`
 
   background: var(--c-white);
 
-  border: none;
-
-  cursor: pointer;
-
-  text-transform: uppercase;
-
   ${({ isSelected }) =>
     isSelected
       ? css`
@@ -46,6 +40,12 @@ export const Button = styled.button<ISelectCategoryButtonProps>`
           font: var(--button-400-font);
           color: var(--c-text);
         `};
+
+  border: none;
+
+  cursor: pointer;
+
+  text-transform: uppercase;
 `;
 
 export const Underline = styled.div<ISelectCategoryButtonProps>`

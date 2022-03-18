@@ -11,7 +11,11 @@ import { ProductDataType } from '../../services/graphql/types';
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 import { RootState } from '../../services/redux/store';
 //  UTILS
-import { calculatePriceIndex, CART_PRODUCTS_DATA } from '../../utils/functions';
+import {
+  calculatePriceIndex,
+  CART_PRODUCTS_DATA,
+  increaseProductQuantity,
+} from '../../utils/functions';
 //  COMPONENTS
 import ProductAttributes from '../ProductAttributes';
 //  STYLES
@@ -105,45 +109,17 @@ class CartProducts extends PureComponent<
     return images_index;
   }
 
-  /**
-   *@description Increases the quantity of the product who invoke this function and set the new data on cartProducts context
-   *and in localStorage.
-   */
-  increaseProductQuantity(
-    product: ProductDataType,
-    CART_PRODUCTS: ProductDataType[]
-  ) {
-    const { getLocalStorageDataProducts } = this.props;
-
-    const newCartProduct = {} as ProductDataType;
-
-    const NEW_CART_PRODUCTS = CART_PRODUCTS.map((cartProduct) => {
-      if (cartProduct.KEY_ID === product.KEY_ID) {
-        Object.assign(newCartProduct, {
-          ...cartProduct,
-          quantity: cartProduct.quantity + 1,
-        });
-
-        return newCartProduct;
-      }
-
-      return cartProduct;
-    });
-
-    getLocalStorageDataProducts(NEW_CART_PRODUCTS);
-    localStorage.setItem(
-      '@scandishop/cartProducts',
-      JSON.stringify(NEW_CART_PRODUCTS)
-    );
-
-    return NEW_CART_PRODUCTS;
-  }
-
   handleClickPlusSignButton(product: ProductDataType) {
     const { CART_PRODUCTS } = this.state;
 
+    const { getLocalStorageDataProducts } = this.props;
+
     this.setState(() => ({
-      CART_PRODUCTS: this.increaseProductQuantity(product, CART_PRODUCTS),
+      CART_PRODUCTS: increaseProductQuantity(
+        product,
+        CART_PRODUCTS,
+        getLocalStorageDataProducts
+      ),
     }));
   }
 

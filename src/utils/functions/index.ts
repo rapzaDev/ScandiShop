@@ -20,9 +20,46 @@ export function addProductToCartControl(
   return productIsNewOnCart;
 }
 
+/**
+ *@description Increases the quantity of the product who invoke this function and set the new data on cartProducts context
+ *and in localStorage.
+
+ @param getLocalStorageDataProducts
+    ActionCreatorWithPreparedPayload< [ products: ProductDataType[] ], ProductDataType[], string, never, never >
+ */
+export function increaseProductQuantity(
+  product: ProductDataType,
+  CART_PRODUCTS: ProductDataType[],
+  getLocalStorageDataProducts: any
+) {
+  const newCartProduct = {} as ProductDataType;
+
+  const NEW_CART_PRODUCTS = CART_PRODUCTS.map((cartProduct) => {
+    if (cartProduct.KEY_ID === product.KEY_ID) {
+      Object.assign(newCartProduct, {
+        ...cartProduct,
+        quantity: cartProduct.quantity + 1,
+      });
+
+      return newCartProduct;
+    }
+
+    return cartProduct;
+  });
+
+  getLocalStorageDataProducts(NEW_CART_PRODUCTS);
+
+  localStorage.setItem(
+    '@scandishop/cartProducts',
+    JSON.stringify(NEW_CART_PRODUCTS)
+  );
+
+  return NEW_CART_PRODUCTS;
+}
+
 /** 
  * @description If productIsNewOnCart variable is true, this function adds the product to cart products and to the localStorage.
-*   Otherwise, it does nothing.
+*   Otherwise, increases the quantity of the product already existent on cart by 1.
 
     @param getLocalStorageDataProducts
     getLocalStorageDataProducts: ActionCreatorWithPreparedPayload<   
@@ -37,19 +74,27 @@ export function ADD_PRODUCT_TO_CART(
   PRODUCT: ProductDataType,
   getLocalStorageDataProducts: any
 ) {
+  const data = localStorage.getItem('@scandishop/cartProducts');
+  const cartProductsLocalStorage: ProductDataType[] = data
+    ? JSON.parse(data)
+    : [];
+
   if (productIsNewOnCart) {
-    const data = localStorage.getItem('@scandishop/cartProducts');
-    const cartProductsLocalStorage: ProductDataType[] = data
-      ? JSON.parse(data)
-      : [];
+    // pushing a new value to localStorage array.
+    cartProductsLocalStorage.push(PRODUCT);
 
-    cartProductsLocalStorage.push(PRODUCT); // pushing a new value to localStorage data array.
-
-    getLocalStorageDataProducts(cartProductsLocalStorage); // adding all data of local storage on cartProducts array.
+    // adding all data of local storage on cartProducts context array.
+    getLocalStorageDataProducts(cartProductsLocalStorage);
 
     localStorage.setItem(
       '@scandishop/cartProducts',
       JSON.stringify(cartProductsLocalStorage)
+    );
+  } else {
+    increaseProductQuantity(
+      PRODUCT,
+      cartProductsLocalStorage,
+      getLocalStorageDataProducts
     );
   }
 }
