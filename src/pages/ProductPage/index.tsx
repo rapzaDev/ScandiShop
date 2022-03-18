@@ -1,3 +1,4 @@
+import parse from 'html-react-parser';
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
@@ -255,7 +256,7 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
           </DefaultButton>
 
           <div className="product-info">
-            <div dangerouslySetInnerHTML={{ __html: product.description }} />
+            <div>{parse(product.description)}</div>
           </div>
         </ProductContent>
       </ProductContainer>

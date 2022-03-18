@@ -134,18 +134,9 @@ export const ProductContent = styled.div`
     height: fit-content;
     width: fit-content;
 
-    /* border: 1px solid red; */
-
     font: var(--pdp-text-content-font);
+
     line-height: 1.599375rem;
-
-    p {
-      line-height: 1.599375rem;
-
-      & + h3 {
-        margin-top: 0.4rem;
-      }
-    }
 
     h1 {
       margin-bottom: 0.2rem;
