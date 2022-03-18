@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const HeaderComponent = styled.header`
   display: flex;
+  /* align-items: center; */
   justify-content: space-between;
 
   position: fixed;
@@ -29,31 +30,53 @@ export const HeaderComponent = styled.header`
 
 export const CurrencyAndCart = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-end;
+
+  height: 2.5rem;
+  width: 12.75rem;
+
+  gap: 1.375rem;
 
   .currency {
     display: flex;
-    align-items: center;
-    justify-content: center;
+
+    width: 2.375rem;
+    height: fit-content;
+
+    img {
+      margin-top: 0.95rem;
+
+      width: fit-content;
+      height: fit-content;
+    }
   }
 `;
 
 export const CurrencyButton = styled.button`
-  margin-right: 1.375rem;
-
-  span {
-    font: var(--price-regular-font);
-    margin-right: 0.6rem;
-  }
-
   display: flex;
+  align-items: center;
+  justify-content: center;
 
-  width: 100%;
+  width: 2rem;
+  height: 1.8125rem;
 
   background: var(--c-white);
 
+  border: none;
+
+  span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font: var(--price-regular-font);
+
+    width: 0.75rem;
+    height: 1.8125rem;
+  }
+
   cursor: pointer;
-  border: 0;
 `;
 
 export const CartContainer = styled.div`
