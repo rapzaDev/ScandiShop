@@ -1,6 +1,6 @@
 import React, { ButtonHTMLAttributes, PureComponent } from 'react';
 
-import { Button } from './styles';
+import { ButtonWrapper, Button, Underline } from './styles';
 
 export interface ISelectCategoryButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,12 +14,15 @@ class SelectCategoryButton extends PureComponent<ISelectCategoryButtonProps> {
   }
 
   render() {
-    const { children, ...rest } = this.props;
+    const { children, isSelected, ...rest } = this.props;
 
     return (
-      <Button className="category-button" {...rest}>
-        {children}
-      </Button>
+      <ButtonWrapper>
+        <Button className="category-button" isSelected={isSelected} {...rest}>
+          {children}
+        </Button>
+        <Underline isSelected={isSelected} />
+      </ButtonWrapper>
     );
   }
 }

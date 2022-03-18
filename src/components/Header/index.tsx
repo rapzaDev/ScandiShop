@@ -170,12 +170,6 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
       <div className="currency">
         <CurrencyButton onClick={() => this.handleCurrencyButton()}>
           <span>{currencySymbol}</span>
-
-          {/* {currencyEnabled ? (
-            <img src={arrowUpIcon} alt="Arrow Up Icon" />
-          ) : (
-            <img src={arrowDownIcon} alt="Arrow Down Icon" />
-          )} */}
         </CurrencyButton>
         {currencyEnabled ? (
           <img src={arrowUpIcon} alt="Arrow Up Icon" />

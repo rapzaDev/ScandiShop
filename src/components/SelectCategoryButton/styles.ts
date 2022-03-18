@@ -9,16 +9,30 @@ const fadeLeft = keyframes`
     }
 `;
 
+export const ButtonWrapper = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  height: fit-content;
+  width: fit-content;
+`;
+
 export const Button = styled.button<ISelectCategoryButtonProps>`
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   height: 1.25rem;
+  width: fit-content;
 
   background: var(--c-white);
 
+  border: none;
+
   cursor: pointer;
-  border: 0;
 
   text-transform: uppercase;
 
@@ -27,38 +41,61 @@ export const Button = styled.button<ISelectCategoryButtonProps>`
       ? css`
           font: var(--button-600-font);
           color: var(--c-primary);
-
-          &::after {
-            content: '';
-            position: relative;
-            flex: 1;
-            top: 1.87rem;
-
-            height: 2px;
-            padding-top: 3px;
-            width: 6rem;
-
-            background-color: var(--c-primary);
-
-            animation: ${fadeLeft} 0.2s linear 0.2s backwards;
-          }
         `
       : css`
           font: var(--button-400-font);
           color: var(--c-text);
+        `};
+`;
 
-          &::after {
+export const Underline = styled.div<ISelectCategoryButtonProps>`
+  position: relative;
+  height: 2px;
+  width: 100%;
+
+  top: 1.8rem;
+
+  ${({ isSelected }) =>
+    isSelected
+      ? css`
+          background-color: var(--c-primary);
+
+          animation: ${fadeLeft} 0.2s linear 0.2s backwards;
+
+          &::before {
             content: '';
-            position: relative;
+            position: absolute;
+            right: -1rem;
             flex: 1;
-            top: 1.87rem;
 
             height: 2px;
-            padding-top: 3px;
-            width: 6rem;
+            width: 1rem;
 
             background-color: var(--c-primary);
 
+            animation: ${fadeLeft} 0.1s linear 0.1s backwards;
+          }
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            flex: 1;
+
+            height: 2px;
+            width: 1rem;
+
+            background-color: var(--c-primary);
+
+            animation: ${fadeLeft} 0.1s linear 0.1s backwards;
+          }
+        `
+      : css`
+          &::before {
+            visibility: hidden;
+          }
+
+          &::after {
             visibility: hidden;
           }
         `};

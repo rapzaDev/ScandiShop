@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const HeaderComponent = styled.header`
   display: flex;
-  /* align-items: center; */
+  align-items: center;
   justify-content: space-between;
 
   position: fixed;
@@ -19,12 +19,16 @@ export const HeaderComponent = styled.header`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 1rem; ///
   }
 
   .logo-div {
-    position: absolute;
-    left: 50%;
-    right: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 41px;
+    height: 41px;
   }
 `;
 
