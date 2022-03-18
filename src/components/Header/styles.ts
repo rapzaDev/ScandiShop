@@ -39,18 +39,16 @@ export const CurrencyAndCart = styled.div`
 `;
 
 export const CurrencyButton = styled.button`
-  margin-right: 2.37rem;
+  margin-right: 1.375rem;
 
-  img:first-child {
+  span {
     font: var(--price-regular-font);
-
     margin-right: 0.6rem;
   }
 
   display: flex;
 
-  width: 0.375rem;
-  /* width: 100%; */
+  width: 100%;
 
   background: var(--c-white);
 

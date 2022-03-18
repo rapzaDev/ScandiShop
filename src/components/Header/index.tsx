@@ -5,18 +5,20 @@ import { Navigate } from 'react-router-dom';
 //  ICONS
 import cartIcon from '../../assets/images/cart-icon.svg';
 import arrowDownIcon from '../../assets/images/down-arrow-icon.svg';
-import moneyIcon from '../../assets/images/money-icon.svg';
 import scandishopLogo from '../../assets/images/scandishop-logo.svg';
 import arrowUpIcon from '../../assets/images/up-arrow-icon.svg';
 // GRAPHQL
-import { getCategoryNames } from '../../services/graphql/components/Header/Queries';
+import {
+  getCategoryNames,
+  getCurrenciesSymbols,
+} from '../../services/graphql/components/Header/Queries';
 // REDUX
 import CategoriesContext from '../../services/redux/contexts/Categories';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import { RootState } from '../../services/redux/store';
 //  UTILS
-// import { calculatePriceIndex, CART_PRODUCTS_DATA } from '../../utils/functions';
+import { calculatePriceIndex } from '../../utils/functions';
 // COMPONENTS
 import BagAmount from '../BagAmount';
 import SelectCategoryButton from '../SelectCategoryButton';
@@ -31,6 +33,7 @@ import {
 type HeaderState = {
   categoryNames: string[];
   redirectCartPage: boolean;
+  currencySymbol: string;
 };
 
 class Header extends PureComponent<PropsFromRedux, HeaderState> {
@@ -40,15 +43,50 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
     this.state = {
       categoryNames: [],
       redirectCartPage: false,
+      currencySymbol: '',
     } as HeaderState;
   }
 
   async componentDidMount() {
     const categoryNamesData = await getCategoryNames();
 
+    const symbol = await this.getCurrencySymbol();
+
     this.setState(() => ({
       categoryNames: categoryNamesData,
+      currencySymbol: symbol,
     }));
+  }
+
+  async componentDidUpdate(prevProps: PropsFromRedux) {
+    const { USD, GBP, AUD, JPY, RUB } = this.props;
+
+    if (
+      prevProps.USD !== USD ||
+      prevProps.GBP !== GBP ||
+      prevProps.AUD !== AUD ||
+      prevProps.JPY !== JPY ||
+      prevProps.RUB !== RUB
+    ) {
+      const symbol = await this.getCurrencySymbol();
+
+      this.setState(() => ({
+        currencySymbol: symbol,
+      }));
+    }
+  }
+
+  /**
+   * @returns The current currency symbol
+   */
+  async getCurrencySymbol() {
+    const { USD, GBP, AUD, JPY, RUB } = this.props;
+
+    const index = calculatePriceIndex(USD, GBP, AUD, JPY, RUB);
+
+    const currenciesSymbols = await getCurrenciesSymbols();
+
+    return currenciesSymbols[index].symbol;
   }
 
   /**
@@ -126,10 +164,12 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
   renderCurrencyButton() {
     const { currencyEnabled } = this.props;
 
+    const { currencySymbol } = this.state;
+
     return (
       <div className="currency">
         <CurrencyButton onClick={() => this.handleCurrencyButton()}>
-          <img src={moneyIcon} alt="Currency Icon" />
+          <span>{currencySymbol}</span>
 
           {currencyEnabled ? (
             <img src={arrowUpIcon} alt="Arrow Up Icon" />
