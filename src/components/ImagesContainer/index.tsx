@@ -1,16 +1,7 @@
 import React, { PureComponent } from 'react';
 
-// ICONS
-import downArrow from '../../assets/images/down-arrow-icon.svg';
-import upArrow from '../../assets/images/up-arrow-icon.svg';
 // STYLES
-import {
-  Container,
-  SmallImagesWrapper,
-  SmallImage,
-  ArrowContainer,
-  BigImage,
-} from './styles';
+import { Container, SmallImagesWrapper, SmallImage, BigImage } from './styles';
 
 type ImagesContainerProps = {
   images: Array<string>;
@@ -34,36 +25,12 @@ class ImagesContainer extends PureComponent<
 
     this.state = {
       bigImage: images[0],
-      downHeightValue: images.length - 3,
-      upHeightValue: 0,
     } as ImagesContainerState;
   }
 
   handleClickSmallImage(image: string) {
     this.setState(() => ({
       bigImage: image,
-    }));
-  }
-
-  clickOnSmallImagesArrowUp() {
-    const smallImages = document.getElementById('small-images');
-
-    smallImages?.scrollBy({ top: -120 });
-
-    this.setState((state) => ({
-      upHeightValue: state.upHeightValue - 1,
-      downHeightValue: state.downHeightValue + 1,
-    }));
-  }
-
-  clickOnSmallImagesArrowDown() {
-    const smallImages = document.getElementById('small-images');
-
-    smallImages?.scrollBy({ top: 120 });
-
-    this.setState((state) => ({
-      downHeightValue: state.downHeightValue - 1,
-      upHeightValue: state.upHeightValue + 1,
     }));
   }
 
@@ -76,30 +43,6 @@ class ImagesContainer extends PureComponent<
       return value;
     }
     return false;
-  }
-
-  renderSmallImagesArrows() {
-    const { images } = this.props;
-    const { downHeightValue, upHeightValue } = this.state;
-
-    return (
-      <div className="arrows-container">
-        <ArrowContainer
-          className="arrow-container"
-          visible={!!(images.length >= 3 && upHeightValue > 0)}
-          onClick={() => this.clickOnSmallImagesArrowUp()}
-        >
-          <img src={upArrow} alt="Up Arrow Icon" />
-        </ArrowContainer>
-        <ArrowContainer
-          className="arrow-container"
-          visible={!!(images.length >= 3 && downHeightValue > 0)}
-          onClick={() => this.clickOnSmallImagesArrowDown()}
-        >
-          <img src={downArrow} alt="Down Arrow Icon" />
-        </ArrowContainer>
-      </div>
-    );
   }
 
   render() {
@@ -121,8 +64,6 @@ class ImagesContainer extends PureComponent<
               </SmallImage>
             ))}
           </div>
-
-          {this.renderSmallImagesArrows()}
         </SmallImagesWrapper>
 
         <BigImage className="big-image">

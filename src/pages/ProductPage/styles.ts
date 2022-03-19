@@ -23,9 +23,7 @@ export const Main = styled.main`
 
   margin-top: 5rem;
 
-  min-height: 41.5625rem;
-  max-height: 41.5625rem;
-  height: 100%;
+  height: max-content;
   width: 100%;
 
   padding: 5rem 13.6875rem 4.5rem 6.25rem;
@@ -35,9 +33,8 @@ export const ProductContainer = styled.div`
   display: flex;
   position: relative;
 
-  min-width: 70.0625rem;
-  max-width: 70.0625rem;
-  width: 100%;
+  width: fit-content;
+
   height: 100%;
 `;
 
@@ -46,15 +43,8 @@ export const ProductContent = styled.div`
   flex-direction: column;
   position: relative;
 
-  min-width: 18.25rem;
-  max-width: 18.25rem;
-  width: 100%;
-  max-height: 32.0625rem;
+  width: fit-content;
   height: fit-content;
-
-  /* overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: none; */
 
   .product-title {
     display: flex;

@@ -1,9 +1,5 @@
 import styled, { css } from 'styled-components';
 
-type SmallImagesArrowsProps = {
-  visible: boolean;
-};
-
 type SmallImageProp = {
   selected: boolean;
 };
@@ -12,65 +8,38 @@ export const Container = styled.div`
   display: flex;
   position: relative;
 
-  height: max-content;
-  width: max-content;
+  height: 100%;
+  width: 100%;
+`;
+
+export const SmallImagesWrapper = styled.div`
+  display: flex;
+
+  margin-right: 2.5rem;
 
   #small-images {
     display: flex;
     position: relative;
     flex-direction: column;
 
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    overflow-y: hidden;
-
-    max-height: 20.3rem;
-
-    height: max-content;
-
-    margin-right: 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-`;
-
-export const SmallImagesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  .arrows-container {
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
-
-    height: fit-content;
-    width: fit-content;
+    gap: 2.5rem;
   }
 `;
 
 export const SmallImage = styled.div<SmallImageProp>`
   display: flex;
-  flex-direction: column;
   position: relative;
-
-  max-width: 4.9375rem;
-  min-width: 4.9375rem;
-
-  max-height: 5rem;
-  min-height: 5rem;
 
   cursor: pointer;
 
-  & + & {
-    margin-top: 2.5rem;
-  }
-
   img {
-    width: 100%;
-    height: 100%;
+    object-fit: scale-down;
+
+    width: 4.9375rem;
+    height: 5rem;
   }
 
-  ${({ selected }) =>
+  /* ${({ selected }) =>
     selected
       ? css`
           &::after {
@@ -99,47 +68,20 @@ export const SmallImage = styled.div<SmallImageProp>`
 
             bottom: -0.3rem;
           }
-        `}
-`;
-
-export const ArrowContainer = styled.div<SmallImagesArrowsProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 4.9375rem;
-
-  box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.39);
-
-  height: 2.3rem;
-
-  cursor: pointer;
-
-  transition: visibility 0.1s ease-in-out;
-
-  visibility: ${({ visible }) => (visible ? 'visible' : 'collapse')};
-
-  & + .arrow-container {
-    margin-top: 0.4rem;
-  }
-
-  img {
-    height: 0.5rem;
-
-    opacity: 0.6;
-
-    margin-bottom: 0rem;
-  }
+        `} */
 `;
 
 export const BigImage = styled.div`
-  width: max-content;
-  height: max-content;
-
+  display: flex;
   margin-right: 6.25rem;
 
+  width: 100%;
+  height: 100%;
+
   > img {
+    object-fit: contain;
+
     width: 38.125rem;
-    height: 31.75rem;
+    height: 31.9375rem;
   }
 `;
