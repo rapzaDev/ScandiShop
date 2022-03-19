@@ -94,11 +94,10 @@ export const ProductInfo = styled.div<ProductInfoProps>`
     .image {
       z-index: -1;
 
-      height: fit-content;
-      width: fit-content;
+      object-fit: contain;
 
+      width: 22.25rem;
       height: 20.625rem;
-      max-width: 22.25rem;
     }
 
     .outOfStock {
