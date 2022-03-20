@@ -16,7 +16,7 @@ export const ButtonWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  height: fit-content;
+  height: auto;
   width: fit-content;
 `;
 
@@ -50,7 +50,6 @@ export const Button = styled.button<ISelectCategoryButtonProps>`
 
 export const Underline = styled.div<ISelectCategoryButtonProps>`
   position: relative;
-  height: 2px;
   width: 100%;
 
   top: 1.8rem;
@@ -58,7 +57,7 @@ export const Underline = styled.div<ISelectCategoryButtonProps>`
   ${({ isSelected }) =>
     isSelected
       ? css`
-          background-color: var(--c-primary);
+          outline: 1px solid var(--c-primary);
 
           animation: ${fadeLeft} 0.2s linear 0.2s backwards;
 
@@ -66,12 +65,9 @@ export const Underline = styled.div<ISelectCategoryButtonProps>`
             content: '';
             position: absolute;
             right: -1rem;
-            flex: 1;
 
-            height: 2px;
             width: 1rem;
-
-            background-color: var(--c-primary);
+            outline: 1px solid var(--c-primary);
 
             animation: ${fadeLeft} 0.1s linear 0.1s backwards;
           }
@@ -80,12 +76,9 @@ export const Underline = styled.div<ISelectCategoryButtonProps>`
             content: '';
             position: absolute;
             left: -1rem;
-            flex: 1;
 
-            height: 2px;
             width: 1rem;
-
-            background-color: var(--c-primary);
+            outline: 1px solid var(--c-primary);
 
             animation: ${fadeLeft} 0.1s linear 0.1s backwards;
           }

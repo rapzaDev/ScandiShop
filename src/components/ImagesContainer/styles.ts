@@ -39,28 +39,27 @@ export const SmallImage = styled.div<SmallImageProp>`
     height: 5rem;
   }
 
-  /* ${({ selected }) =>
+  ${({ selected }) =>
     selected
       ? css`
           &::after {
             content: '';
-            position: relative;
+            position: absolute;
 
-            height: 0.2rem;
+            outline: 2px solid #393748;
             width: 100%;
 
-            bottom: -0.3rem;
+            bottom: -0.7rem;
 
-            opacity: 30%;
+            opacity: 60%;
 
             visibility: visible;
-            background-color: #393748;
           }
         `
       : css`
           &::after {
             content: '';
-            position: relative;
+            position: absolute;
             visibility: hidden;
 
             height: 0.2rem;
@@ -68,7 +67,7 @@ export const SmallImage = styled.div<SmallImageProp>`
 
             bottom: -0.3rem;
           }
-        `} */
+        `}
 `;
 
 export const BigImage = styled.div`
@@ -76,12 +75,12 @@ export const BigImage = styled.div`
   margin-right: 6.25rem;
 
   width: 100%;
-  height: 100%;
+  height: fit-content;
 
   > img {
     object-fit: contain;
 
     width: 38.125rem;
-    height: 31.9375rem;
+    height: 38.125rem;
   }
 `;

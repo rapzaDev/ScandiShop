@@ -35,7 +35,7 @@ export const ProductContainer = styled.div`
 
   width: fit-content;
 
-  height: 100%;
+  height: auto;
 `;
 
 export const ProductContent = styled.div`
@@ -43,7 +43,7 @@ export const ProductContent = styled.div`
   flex-direction: column;
   position: relative;
 
-  width: fit-content;
+  width: 18.25rem;
   height: fit-content;
 
   .product-title {
@@ -129,6 +129,7 @@ export const ProductContent = styled.div`
     line-height: 1.599375rem;
 
     h1 {
+      line-height: 2.35rem;
       margin-bottom: 0.2rem;
     }
 
