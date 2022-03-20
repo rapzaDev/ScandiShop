@@ -373,7 +373,7 @@ class CartProducts extends PureComponent<
     if (origin === 'CartPage') {
       if (CART_PRODUCTS.length) {
         return (
-          <ProductWrapper_PDP className="product-wrapper_PDP">
+          <ProductWrapper_PDP id="product-wrapper_PDP">
             {CART_PRODUCTS.map((product) => (
               <ProductContainer_PDP
                 className="product-container_PDP"
@@ -409,23 +409,29 @@ class CartProducts extends PureComponent<
                   </div>
                 </ProductInfo_PDP>
 
-                <SelectQuantity_PDP className="select-quantity_PDP">
-                  <button
-                    aria-label="plus-sign"
-                    type="button"
-                    className="plus-sign_PDP"
-                    onClick={() => this.handleClickPlusSignButton(product)}
-                  />
-                  <span>{product.quantity}</span>
-                  <button
-                    aria-label="minus-sign"
-                    type="button"
-                    className="minus-sign_PDP"
-                    onClick={() => this.handleClickMinusSignButton(product)}
-                  />
-                </SelectQuantity_PDP>
+                <div className="quantity-and-image">
+                  <SelectQuantity_PDP className="select-quantity_PDP">
+                    <button
+                      aria-label="plus-sign"
+                      type="button"
+                      className="plus-sign_PDP"
+                      onClick={() => this.handleClickPlusSignButton(product)}
+                    >
+                      <div className="plus" />
+                    </button>
+                    <span>{product.quantity}</span>
+                    <button
+                      aria-label="minus-sign"
+                      type="button"
+                      className="minus-sign_PDP"
+                      onClick={() => this.handleClickMinusSignButton(product)}
+                    >
+                      <div className="minus" />
+                    </button>
+                  </SelectQuantity_PDP>
 
-                {this.renderProductImages(product)}
+                  {this.renderProductImages(product)}
+                </div>
               </ProductContainer_PDP>
             ))}
           </ProductWrapper_PDP>

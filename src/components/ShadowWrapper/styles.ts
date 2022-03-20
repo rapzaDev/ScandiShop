@@ -5,14 +5,10 @@ type ShadowContainerProps = {
 };
 
 export const ShadowContainer = styled.div<ShadowContainerProps>`
-  display: flex;
-
   position: fixed;
 
-  height: 100vh;
+  height: 100%;
   width: 100%;
-
-  flex-direction: column;
 
   z-index: 0;
 

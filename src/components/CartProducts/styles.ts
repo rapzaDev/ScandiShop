@@ -214,8 +214,6 @@ export const SelectQuantity_MYBAG = styled.div`
   }
 `;
 
-// ---------------------------------------------------------- //
-
 // --------- STYLED COMPONENTS FOR PRODUCT PAGE ---------
 
 export const ProductWrapper_PDP = styled.div`
@@ -223,15 +221,10 @@ export const ProductWrapper_PDP = styled.div`
   position: relative;
   flex-direction: column;
 
-  max-height: 27rem;
-  min-height: 27rem;
+  gap: 1.1875rem;
 
-  max-width: 68.5625rem;
-  min-width: 68.5625rem;
-
-  overflow-y: scroll;
-  overflow-x: hidden;
-  scrollbar-width: none;
+  height: fit-content;
+  width: fit-content;
 
   animation: ${fadeDown} 0.4s linear 0.4s backwards;
 `;
@@ -246,10 +239,9 @@ export const EmptyCart_PDP = styled.div`
 
   bottom: 18%;
 
-  max-height: 27rem;
   min-height: 27rem;
+  height: 100%;
 
-  max-width: 68.5625rem;
   min-width: 68.5625rem;
 
   animation: ${fade} 0.3s linear 0.3s backwards;
@@ -272,11 +264,9 @@ export const ProductContainer_PDP = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  max-width: 68.5625rem;
   min-width: 68.5625rem;
-  width: 100%;
-
-  margin-bottom: 1.1875rem;
+  width: auto;
+  height: auto;
 
   border-top: 1px solid #e5e5e5;
   padding-top: 1.3125rem;
@@ -285,11 +275,11 @@ export const ProductContainer_PDP = styled.div`
     display: flex;
     position: relative;
 
-    max-width: 8.8125rem;
-
     img {
+      object-fit: contain;
+
       width: 8.8125rem;
-      height: 100%;
+      height: auto;
     }
 
     .left-arrow {
@@ -356,17 +346,25 @@ export const ProductContainer_PDP = styled.div`
       }
     }
   }
+
+  .quantity-and-image {
+    display: flex;
+    gap: 0.75rem;
+
+    height: 100%;
+  }
 `;
 
 export const ProductInfo_PDP = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: end;
+
+  gap: 0.75rem;
 
   height: 100%;
 
   max-width: 18.25rem;
-  min-width: 18.25rem;
 
   .product-title_PDP {
     display: flex;
@@ -388,10 +386,6 @@ export const ProductInfo_PDP = styled.div`
       font-size: 1.875rem;
 
       color: var(--c-text);
-
-      &:last-child {
-        margin-bottom: 0.75rem;
-      }
     }
   }
 
@@ -401,23 +395,12 @@ export const ProductInfo_PDP = styled.div`
 
     height: 2.875rem;
 
-    margin-bottom: 0.75rem;
-
     span {
       font: var(--raleway-700-font);
       font-size: 1.5rem;
 
       color: var(--c-text);
     }
-  }
-
-  #attributes_PDP {
-    max-height: 4.71rem;
-    width: 100%;
-
-    overflow-y: scroll;
-    overflow-x: hidden;
-    scrollbar-width: thin;
   }
 `;
 
@@ -429,8 +412,7 @@ export const SelectQuantity_PDP = styled.div`
   justify-content: space-between;
   align-items: center;
 
-  right: -18.5rem;
-  height: 13.2rem;
+  height: 100%;
 
   .plus-sign_PDP {
     display: flex;
@@ -455,24 +437,35 @@ export const SelectQuantity_PDP = styled.div`
       filter: brightness(93%);
     }
 
-    &::after {
-      content: '';
+    .plus {
+      display: flex;
       position: relative;
 
-      width: 0.5rem;
+      align-items: center;
+      justify-content: center;
 
-      border: 1px solid #1d1f22;
-    }
+      width: 0.9rem;
+      height: 0.9rem;
 
-    &::before {
-      content: '';
-      position: relative;
+      &::after {
+        content: '';
+        position: absolute;
 
-      left: 0.35rem;
+        width: 100%;
+        height: 1px;
 
-      height: 0.5rem;
+        background-color: #1d1f22;
+      }
 
-      border: 1px solid #1d1f22;
+      &::before {
+        content: '';
+        position: absolute;
+
+        height: 100%;
+        width: 1px;
+
+        background-color: #1d1f22;
+      }
     }
   }
 
@@ -499,13 +492,25 @@ export const SelectQuantity_PDP = styled.div`
       filter: brightness(93%);
     }
 
-    &::after {
-      content: '';
+    .minus {
+      display: flex;
       position: relative;
 
-      width: 0.5rem;
+      align-items: center;
+      justify-content: center;
 
-      border: 1px solid #1d1f22;
+      width: 0.9rem;
+      height: 0.9rem;
+
+      &::after {
+        content: '';
+        position: absolute;
+
+        width: 100%;
+        height: 1px;
+
+        background-color: #1d1f22;
+      }
     }
   }
 

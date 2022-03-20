@@ -5,12 +5,14 @@ export const HeaderComponent = styled.header`
   align-items: center;
   justify-content: space-between;
 
+  top: 0;
+
   position: fixed;
   z-index: 1;
 
   background-color: var(--c-white);
 
-  width: 100%;
+  width: 100vw;
   height: 5rem;
 
   padding: 2rem 6.3rem;

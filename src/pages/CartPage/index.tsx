@@ -12,7 +12,7 @@ import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOption
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import { RootState } from '../../services/redux/store';
 // STYLES
-import { CartPageContainer, Main, CartProducts } from './styles';
+import { CartPageContainer, Main } from './styles';
 
 class CartPage extends PureComponent<PropsFromRedux> {
   constructor(props: PropsFromRedux) {
@@ -90,9 +90,7 @@ class CartPage extends PureComponent<PropsFromRedux> {
         <Main>
           <h2>CART</h2>
 
-          <CartProducts className="cart-products">
-            <CartProductsContent origin="CartPage" />
-          </CartProducts>
+          <CartProductsContent origin="CartPage" />
         </Main>
       </CartPageContainer>
     );
