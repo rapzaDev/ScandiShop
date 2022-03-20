@@ -30,9 +30,10 @@ export const MyBagContainer = styled.div<MyBagProps>`
   animation: ${fadeUp} 0.3s linear 0.3s backwards;
 
   width: 20rem;
+
   height: 33.75rem;
 
-  padding: 0.5rem 1rem 1.25rem 0.5rem;
+  padding: 0.5rem 1rem 1.25rem 0.65rem;
 
   .bag-description {
     position: relative;

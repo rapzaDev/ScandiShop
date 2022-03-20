@@ -315,16 +315,18 @@ class CartProducts extends PureComponent<
                 }
               >
                 <ProductInfo_MYBAG className="product-info_MYBAG">
-                  <span className="product-title_MYBAG">
-                    {product.name}
-                    {` - ${product.brand}`}
-                  </span>
-                  <div className="product-price_MYBAG">
-                    <span>
-                      {product.prices[priceIndex].currency.symbol}
-                      {`${product.prices[priceIndex].currency.label} `}
-                      {product.prices[priceIndex].amount}
+                  <div>
+                    <span className="product-title_MYBAG">
+                      {product.name}
+                      {` - ${product.brand}`}
                     </span>
+                    <div className="product-price_MYBAG">
+                      <span>
+                        {product.prices[priceIndex].currency.symbol}
+                        {`${product.prices[priceIndex].currency.label} `}
+                        {product.prices[priceIndex].amount}
+                      </span>
+                    </div>
                   </div>
 
                   <div id="attributes_MYBAG">
