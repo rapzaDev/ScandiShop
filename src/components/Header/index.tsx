@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 //  ICONS
 import cartIcon from '../../assets/images/cart-icon.svg';
@@ -211,7 +211,7 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
           </CurrencyAndCart>
         </HeaderComponent>
 
-        {redirectCartPage && <Navigate to="/" />}
+        {redirectCartPage && <Redirect to="/" />}
       </>
     );
   }

@@ -46,7 +46,7 @@ class TextAttributes extends PureComponent<
   getAttributesState() {
     const { textAttributes, origin, getProductTextAttributes } = this.props;
 
-    let textAttributesData;
+    let textAttributesData: TextAttributesType[] = [];
 
     if (origin === 'MyBag' || origin === 'CartPage') {
       textAttributesData = textAttributes.map<TextAttributesType>(
@@ -58,7 +58,7 @@ class TextAttributes extends PureComponent<
           })),
         })
       );
-    } else {
+    } else if (origin === 'ProductPage' || !origin) {
       textAttributesData = textAttributes.map<TextAttributesType>(
         (attribute) => ({
           name: attribute.name,
@@ -77,13 +77,18 @@ class TextAttributes extends PureComponent<
 
   getOptionButtonActiveVar(attributeName: string, item: AttributeType) {
     const { attributes } = this.state;
+    // const { textAttributes } = this.props;
+    // const attributes = textAttributes;
 
     const attributeTarget = attributes.find(
       (attribute) => attribute.name === attributeName
     );
 
+    console.log('item:value', item.value);
+    console.log('items', attributeTarget?.items);
+
     const itemActiveValue = attributeTarget?.items.find(
-      (target) => target.name === item.id
+      (target) => target.name === item.value
     );
 
     return itemActiveValue?.value;

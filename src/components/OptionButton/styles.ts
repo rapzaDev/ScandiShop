@@ -48,8 +48,10 @@ export const Button = styled.button<OptionButtonState>`
       ? css`
           ${origin === 'MyBag' &&
           css`
-            width: 2.2rem;
+            /* width: 2.2rem; */
+            width: auto;
             height: 1.5rem;
+            padding: 0.3rem;
 
             border-color: var(--opacity-size-color);
             font: var(--product-size-font);
@@ -62,8 +64,10 @@ export const Button = styled.button<OptionButtonState>`
       : css`
           ${origin === 'MyBag' &&
           css`
-            width: 2.2rem;
+            width: auto;
+            /* width: 2.2rem; */
             height: 1.5rem;
+            padding: 0.3rem;
 
             font: var(--product-size-font);
             font-size: 0.875rem;

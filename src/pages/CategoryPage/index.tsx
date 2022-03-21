@@ -2,7 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 // ICONS
 import cartIcon from '../../assets/images/white-cart-icon.svg';
@@ -36,7 +36,7 @@ import {
 } from './styles';
 
 type CategoryPageState = {
-  redirectProductPage: boolean;
+  redirectProductPage: string;
   categoryProducts: ProductDataType[];
 };
 
@@ -46,7 +46,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
 
     this.state = {
-      redirectProductPage: false,
+      redirectProductPage: '',
       categoryProducts: [],
     } as CategoryPageState;
   }
@@ -106,6 +106,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
     const products = await getProducts(selectedCategory);
 
+    console.log(products);
+
     this.setState(() => ({
       categoryProducts: products,
     }));
@@ -134,13 +136,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
 
   /** @description Redirect the user to cart page containing the selected product. */
   handleClickProductInfo(selectedProduct: ProductDataType) {
-    localStorage.setItem(
-      '@scandishop/selectedProduct',
-      JSON.stringify(selectedProduct)
-    );
-
-    this.setState((state) => ({
-      redirectProductPage: !state.redirectProductPage,
+    this.setState(() => ({
+      redirectProductPage: `/product/${selectedProduct.id}`,
     }));
   }
 
@@ -157,8 +154,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     event.stopPropagation();
 
     const {
-      getLocalStorageDataProducts,
+      addProductToCart,
       cartProducts,
+      increaseCartProductQuantity,
       handleChangeMyBagState,
     } = this.props;
 
@@ -200,7 +198,8 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     ADD_PRODUCT_TO_CART(
       productIsNewOnCart,
       defaultProduct,
-      getLocalStorageDataProducts
+      addProductToCart,
+      increaseCartProductQuantity
     );
 
     handleChangeMyBagState();
@@ -319,7 +318,7 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
           </div>
         </Main>
 
-        {redirectProductPage && <Navigate to="/product" />}
+        {redirectProductPage !== '' && <Redirect to={redirectProductPage} />}
       </CategoryPageContainer>
     );
   }
@@ -339,7 +338,8 @@ const {
   deactivateCurrencyOptionsComponent,
 } = CurrencyOptionsContext.actions;
 
-const { getLocalStorageDataProducts } = CartProductsContext.actions;
+const { addProductToCart, increaseCartProductQuantity } =
+  CartProductsContext.actions;
 
 const mapState = (state: RootState) => ({
   //  MY BAG COMPONENT STATES
@@ -372,7 +372,8 @@ const mapDispatch = {
   activateCurrencyOptionsComponent,
   deactivateCurrencyOptionsComponent,
   //  CART PRODUCTS FUNCTIONS
-  getLocalStorageDataProducts,
+  addProductToCart,
+  increaseCartProductQuantity,
 };
 
 const connector = connect(mapState, mapDispatch);

@@ -29,32 +29,17 @@ export function addProductToCartControl(
  */
 export function increaseProductQuantity(
   product: ProductDataType,
-  CART_PRODUCTS: ProductDataType[],
-  getLocalStorageDataProducts: any
+  // CART_PRODUCTS: ProductDataType[],
+  addProductToCart: any
 ) {
   const newCartProduct = {} as ProductDataType;
 
-  const NEW_CART_PRODUCTS = CART_PRODUCTS.map((cartProduct) => {
-    if (cartProduct.KEY_ID === product.KEY_ID) {
-      Object.assign(newCartProduct, {
-        ...cartProduct,
-        quantity: cartProduct.quantity + 1,
-      });
-
-      return newCartProduct;
-    }
-
-    return cartProduct;
+  Object.assign(newCartProduct, {
+    ...product,
+    quantity: product.quantity + 1,
   });
 
-  getLocalStorageDataProducts(NEW_CART_PRODUCTS);
-
-  localStorage.setItem(
-    '@scandishop/cartProducts',
-    JSON.stringify(NEW_CART_PRODUCTS)
-  );
-
-  return NEW_CART_PRODUCTS;
+  addProductToCart(newCartProduct);
 }
 
 /** 
@@ -72,48 +57,14 @@ export function increaseProductQuantity(
 export function ADD_PRODUCT_TO_CART(
   productIsNewOnCart: boolean,
   PRODUCT: ProductDataType,
-  getLocalStorageDataProducts: any
+  addProductToCart: any,
+  increaseCartProductQuantity: any
 ) {
-  const data = localStorage.getItem('@scandishop/cartProducts');
-  const cartProductsLocalStorage: ProductDataType[] = data
-    ? JSON.parse(data)
-    : [];
-
   if (productIsNewOnCart) {
-    // pushing a new value to localStorage array.
-    cartProductsLocalStorage.push(PRODUCT);
-
-    // adding all data of local storage on cartProducts context array.
-    getLocalStorageDataProducts(cartProductsLocalStorage);
-
-    localStorage.setItem(
-      '@scandishop/cartProducts',
-      JSON.stringify(cartProductsLocalStorage)
-    );
+    addProductToCart(PRODUCT);
   } else {
-    increaseProductQuantity(
-      PRODUCT,
-      cartProductsLocalStorage,
-      getLocalStorageDataProducts
-    );
+    increaseCartProductQuantity(PRODUCT);
   }
-}
-
-/**
- * @description Returns cart products data.
- *
- * @param cartProducts
- * cart products context state.
- */
-export function CART_PRODUCTS_DATA(
-  cartProducts: ProductDataType[]
-): ProductDataType[] {
-  const data = localStorage.getItem('@scandishop/cartProducts');
-  const cartProductsLocalStorage: ProductDataType[] = data
-    ? JSON.parse(data)
-    : [];
-
-  return cartProducts.length ? cartProducts : cartProductsLocalStorage;
 }
 
 /**

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import CartPage from '../pages/CartPage';
 import CategoryPage from '../pages/CategoryPage';
@@ -9,11 +9,14 @@ class Router extends PureComponent {
   render() {
     return (
       <BrowserRouter>
-        <Routes>
-          <Route index element={<CategoryPage />} />
-          <Route path="/product" element={<ProductPage />} />
-          <Route path="/cart" element={<CartPage />} />
-        </Routes>
+        <Switch>
+          <Route exact path="/" component={CategoryPage} />
+          <Route
+            path="/product/:id"
+            render={(props) => <ProductPage ID={props.match.params.id} />}
+          />
+          <Route path="/cart" component={CartPage} />
+        </Switch>
       </BrowserRouter>
     );
   }

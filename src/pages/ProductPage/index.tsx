@@ -11,6 +11,7 @@ import MyBag from '../../components/MyBag';
 import ProductAttributes from '../../components/ProductAttributes';
 import ShadowWrapper from '../../components/ShadowWrapper';
 // GRAPHQL
+import { getProducts } from '../../services/graphql/pages/ProductPage/Queries';
 import { ProductDataType } from '../../services/graphql/types';
 // REDUX
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
@@ -29,17 +30,21 @@ import {
   ProductContent,
 } from './styles';
 
+interface IProductPageProps extends PropsFromRedux {
+  ID: string;
+}
+
 type ProductPageState = {
   product: ProductDataType;
 };
 
-class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
-  constructor(props: PropsFromRedux) {
+class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
+  constructor(props: IProductPageProps) {
     super(props);
     this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
 
     this.state = {
-      product: this.getSelectedProduct(),
+      product: {},
     } as ProductPageState;
   }
 
@@ -58,21 +63,20 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
 
     // Cheking if CurrencyOptions component was rendered before page rendering
     if (currencyEnabled) handleChangeMyCurrencyOptionsState();
+
+    const { ID } = this.props;
+
+    getProducts(ID).then((data) =>
+      this.setState(() => ({
+        product: data,
+      }))
+    );
   }
 
   componentDidUpdate() {
     document
       .getElementById('product-page')
       ?.addEventListener('click', this.handleClickOnScreen);
-  }
-
-  /** @description Get the selected product data from localStorage */
-  getSelectedProduct(): ProductDataType {
-    const selectedProduct = localStorage.getItem(
-      '@scandishop/selectedProduct'
-    ) as string;
-
-    return JSON.parse(selectedProduct);
   }
 
   handleClickOnScreen() {
@@ -157,16 +161,13 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
     return productData;
   }
 
-  handleClickAddToCartButton() {
+  handleClickAddToCartButton(currentProduct: ProductDataType) {
     const {
-      getLocalStorageDataProducts,
+      addProductToCart,
+      increaseCartProductQuantity,
       cartProducts,
       handleChangeMyBagState,
     } = this.props;
-
-    // getting the selectedProduct in PLP on localStorage.
-    const data = localStorage.getItem('@scandishop/selectedProduct') as string;
-    const currentProduct: ProductDataType = data ? JSON.parse(data) : {};
 
     const product = this.settingProductData(currentProduct);
 
@@ -176,7 +177,8 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
     ADD_PRODUCT_TO_CART(
       productIsNewOnCart,
       product,
-      getLocalStorageDataProducts
+      addProductToCart,
+      increaseCartProductQuantity
     );
 
     handleChangeMyBagState();
@@ -197,6 +199,8 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
   renderProduct() {
     // PRODUCT STATE
     const { product } = this.state;
+
+    if (!product.name) return;
 
     // CURRENCIES STATES
     const { USD, GBP, AUD, JPY, RUB } = this.props;
@@ -249,7 +253,7 @@ class ProductPage extends PureComponent<PropsFromRedux, ProductPageState> {
             className="add-cart-button"
             color="green"
             style={bagVisible ? { filter: 'brightness(0.78)' } : {}}
-            onClick={() => this.handleClickAddToCartButton()}
+            onClick={() => this.handleClickAddToCartButton(product)}
             disabled={!product.inStock}
           >
             <span>{product.inStock ? 'ADD TO CART' : 'OUT OF STOCK'}</span>
@@ -296,7 +300,8 @@ const {
   deactivateCurrencyOptionsComponent,
 } = CurrencyOptionsContext.actions;
 
-const { getLocalStorageDataProducts } = CartProductsContext.actions;
+const { addProductToCart, increaseCartProductQuantity } =
+  CartProductsContext.actions;
 
 const mapState = (state: RootState) => ({
   //  MY BAG COMPONENT STATES
@@ -329,7 +334,8 @@ const mapDispatch = {
   activateCurrencyOptionsComponent,
   deactivateCurrencyOptionsComponent,
   //  CART PRODUCTS FUNCTIONS
-  getLocalStorageDataProducts,
+  addProductToCart,
+  increaseCartProductQuantity,
 };
 
 const connector = connect(mapState, mapDispatch);

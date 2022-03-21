@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 // GRAPHQL
 import { ProductDataType } from '../../services/graphql/types';
 // REDUX
-import CartProductsContext from '../../services/redux/contexts/CartProducts';
 import MyBagContext from '../../services/redux/contexts/MyBag';
 import { RootState } from '../../services/redux/store';
 // UTILS
@@ -112,33 +111,28 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
   }
 
   render() {
-    const { bagVisible } = this.props;
+    const { bagVisible, cartProducts } = this.props;
 
     // CURRENCIES STATES
     const { USD, GBP, AUD, JPY, RUB } = this.props;
 
     const { TOTAL } = this.state;
 
-    const data = localStorage.getItem('@scandishop/cartProducts');
-    const cartProductsLocalStorage: ProductDataType[] = data
-      ? JSON.parse(data)
-      : [];
-
     const priceIndex = calculatePriceIndex(USD, GBP, AUD, JPY, RUB);
 
     // Trick to show the current symbol and label.
     let symbol = '';
     let label = '';
-    if (cartProductsLocalStorage.length) {
-      symbol = cartProductsLocalStorage[0].prices[priceIndex].currency.symbol;
-      label = cartProductsLocalStorage[0].prices[priceIndex].currency.label;
+    if (cartProducts.length) {
+      symbol = cartProducts[0].prices[priceIndex].currency.symbol;
+      label = cartProducts[0].prices[priceIndex].currency.label;
     }
 
     /**
      * @description
      * variable to show the quantity of products in cart.
      * */
-    const amount = cartProductsLocalStorage.length;
+    const amount = cartProducts.length;
 
     const { redirectCartPage } = this.state;
 
@@ -175,7 +169,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
           </div>
         </MyBagContainer>
 
-        {redirectCartPage && <Navigate to="/cart" />}
+        {redirectCartPage && <Redirect to="/cart" />}
       </>
     );
   }
@@ -188,8 +182,6 @@ const {
   deactivateMyBagComponent,
   handleChangeMyBagState,
 } = MyBagContext.actions;
-
-const { getLocalStorageDataProducts } = CartProductsContext.actions;
 
 const mapState = (state: RootState) => ({
   //  MY BAG STATE
@@ -209,8 +201,6 @@ const mapDispatch = {
   activateMyBagComponent,
   deactivateMyBagComponent,
   handleChangeMyBagState,
-  //  CART PRODUCTS FUNCTION
-  getLocalStorageDataProducts,
 };
 
 const connector = connect(mapState, mapDispatch);

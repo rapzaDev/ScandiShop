@@ -11,11 +11,7 @@ import { ProductDataType } from '../../services/graphql/types';
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 import { RootState } from '../../services/redux/store';
 //  UTILS
-import {
-  calculatePriceIndex,
-  CART_PRODUCTS_DATA,
-  increaseProductQuantity,
-} from '../../utils/functions';
+import { calculatePriceIndex } from '../../utils/functions';
 //  COMPONENTS
 import ProductAttributes from '../ProductAttributes';
 //  STYLES
@@ -71,7 +67,7 @@ class CartProducts extends PureComponent<
     const { cartProducts } = this.props;
 
     this.setState(() => ({
-      CART_PRODUCTS: CART_PRODUCTS_DATA(cartProducts),
+      CART_PRODUCTS: cartProducts,
       images_index: this.setImagesIndex(),
     }));
   }
@@ -79,18 +75,12 @@ class CartProducts extends PureComponent<
   componentDidUpdate(_: ICartProductsProps, prevState: CartProductsState) {
     const { cartProducts } = this.props;
 
-    const NEW_CART_PRODUCTS = CART_PRODUCTS_DATA(cartProducts);
-
     /** avoid infinite loop */
     if (prevState.CART_PRODUCTS.length === 0) return;
 
-    /**
-     *If the user change the quantity of any product in MyBag component, that will
-     *be reflected on PDP too with this conditional.
-     */
-    if (prevState.CART_PRODUCTS !== NEW_CART_PRODUCTS) {
+    if (prevState.CART_PRODUCTS !== cartProducts) {
       this.setState(() => ({
-        CART_PRODUCTS: CART_PRODUCTS_DATA(cartProducts),
+        CART_PRODUCTS: cartProducts,
       }));
     }
   }
@@ -99,7 +89,7 @@ class CartProducts extends PureComponent<
   setImagesIndex(): ImageIndex[] {
     const { cartProducts } = this.props;
 
-    const products = CART_PRODUCTS_DATA(cartProducts);
+    const products = cartProducts;
 
     const images_index = products.map<ImageIndex>((product) => ({
       KEY_ID: product.KEY_ID,
@@ -110,64 +100,14 @@ class CartProducts extends PureComponent<
   }
 
   handleClickPlusSignButton(product: ProductDataType) {
-    const { CART_PRODUCTS } = this.state;
+    const { increaseCartProductQuantity } = this.props;
 
-    const { getLocalStorageDataProducts } = this.props;
-
-    this.setState(() => ({
-      CART_PRODUCTS: increaseProductQuantity(
-        product,
-        CART_PRODUCTS,
-        getLocalStorageDataProducts
-      ),
-    }));
-  }
-
-  /**
-   *  @description Decreases the quantity of the product who invoke this function and set the new data on cartProducts context
-   *  and in localStorage.
-   */
-  decreaseProductQuantity(
-    product: ProductDataType,
-    CART_PRODUCTS: ProductDataType[]
-  ) {
-    const { getLocalStorageDataProducts } = this.props;
-
-    const newCartProduct = {} as ProductDataType;
-
-    let NEW_CART_PRODUCTS = CART_PRODUCTS.map((cartProduct) => {
-      if (cartProduct.KEY_ID === product.KEY_ID) {
-        Object.assign(newCartProduct, {
-          ...cartProduct,
-          quantity: cartProduct.quantity - 1,
-        });
-
-        return newCartProduct;
-      }
-
-      return cartProduct;
-    });
-
-    /** If any product had his quantity reduced to zero don't will be in the NEW_CART_PRODUCTS */
-    NEW_CART_PRODUCTS = NEW_CART_PRODUCTS.filter(
-      (cartProduct) => cartProduct.quantity > 0
-    );
-
-    getLocalStorageDataProducts(NEW_CART_PRODUCTS);
-    localStorage.setItem(
-      '@scandishop/cartProducts',
-      JSON.stringify(NEW_CART_PRODUCTS)
-    );
-
-    return NEW_CART_PRODUCTS;
+    increaseCartProductQuantity(product);
   }
 
   handleClickMinusSignButton(product: ProductDataType) {
-    const { CART_PRODUCTS } = this.state;
-
-    this.setState(() => ({
-      CART_PRODUCTS: this.decreaseProductQuantity(product, CART_PRODUCTS),
-    }));
+    const { decreaseCartProductQuantity } = this.props;
+    decreaseCartProductQuantity(product);
   }
 
   getStrongProductTitle(product: ProductDataType): string {
@@ -453,7 +393,8 @@ class CartProducts extends PureComponent<
 
 // -------------------------------- REDUX CONFIG -------------------------------- //
 
-const { getLocalStorageDataProducts } = CartProductsContext.actions;
+const { increaseCartProductQuantity, decreaseCartProductQuantity } =
+  CartProductsContext.actions;
 
 const mapState = (state: RootState) => ({
   //  MY BAG COMPONENT STATES
@@ -470,7 +411,8 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = {
   //  CART PRODUCTS FUNCTION
-  getLocalStorageDataProducts,
+  increaseCartProductQuantity,
+  decreaseCartProductQuantity,
 };
 
 const connector = connect(mapState, mapDispatch);
