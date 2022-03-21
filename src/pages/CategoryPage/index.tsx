@@ -35,13 +35,20 @@ import {
   ProductInfoCartButton,
 } from './styles';
 
+interface ICategoryPageProps extends PropsFromRedux {
+  location: string;
+}
+
 type CategoryPageState = {
   redirectProductPage: string;
   categoryProducts: ProductDataType[];
 };
 
-class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
-  constructor(props: PropsFromRedux) {
+class CategoryPage extends PureComponent<
+  ICategoryPageProps,
+  CategoryPageState
+> {
+  constructor(props: ICategoryPageProps) {
     super(props);
     this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
 
@@ -68,6 +75,9 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     if (currencyEnabled) handleChangeMyCurrencyOptionsState();
 
     await this.setCategoryProducts();
+
+    const { location } = this.props;
+    console.log(location);
   }
 
   async componentDidUpdate(prevProps: PropsFromRedux) {
@@ -105,8 +115,6 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
       'all';
 
     const products = await getProducts(selectedCategory);
-
-    console.log(products);
 
     this.setState(() => ({
       categoryProducts: products,
@@ -290,13 +298,13 @@ class CategoryPage extends PureComponent<PropsFromRedux, CategoryPageState> {
     // CATEGORIES STATES
     const { allCategory, clothesCategory, techCategory } = this.props;
 
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
     const { redirectProductPage } = this.state;
 
     return (
       <CategoryPageContainer id="category-page">
-        <Header />
+        <Header location={location} />
 
         <ShadowWrapper active={bagVisible} />
 

@@ -30,14 +30,18 @@ import {
   CartContainer,
 } from './styles';
 
+interface IHeaderProps extends PropsFromRedux {
+  location: string;
+}
+
 type HeaderState = {
   categoryNames: string[];
   redirectCartPage: boolean;
   currencySymbol: string;
 };
 
-class Header extends PureComponent<PropsFromRedux, HeaderState> {
-  constructor(props: PropsFromRedux) {
+class Header extends PureComponent<IHeaderProps, HeaderState> {
+  constructor(props: IHeaderProps) {
     super(props);
 
     this.state = {
@@ -117,9 +121,9 @@ class Header extends PureComponent<PropsFromRedux, HeaderState> {
         break;
     }
 
-    const windowLocation = window.location.pathname;
+    const { location } = this.props;
 
-    if (windowLocation === '/') window.scrollTo(0, 0);
+    if (location === '/') window.scrollTo(0, 0);
     else {
       this.setState(({ redirectCartPage }) => ({
         redirectCartPage: !redirectCartPage,

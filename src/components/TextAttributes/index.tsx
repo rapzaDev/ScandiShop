@@ -77,15 +77,10 @@ class TextAttributes extends PureComponent<
 
   getOptionButtonActiveVar(attributeName: string, item: AttributeType) {
     const { attributes } = this.state;
-    // const { textAttributes } = this.props;
-    // const attributes = textAttributes;
 
     const attributeTarget = attributes.find(
       (attribute) => attribute.name === attributeName
     );
-
-    console.log('item:value', item.value);
-    console.log('items', attributeTarget?.items);
 
     const itemActiveValue = attributeTarget?.items.find(
       (target) => target.name === item.value

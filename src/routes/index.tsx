@@ -10,12 +10,26 @@ class Router extends PureComponent {
     return (
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={CategoryPage} />
+          <Route
+            exact
+            path="/"
+            render={(props) => (
+              <CategoryPage location={props.location.pathname} />
+            )}
+          />
           <Route
             path="/product/:id"
-            render={(props) => <ProductPage ID={props.match.params.id} />}
+            render={(props) => (
+              <ProductPage
+                location={props.location.pathname}
+                ID={props.match.params.id}
+              />
+            )}
           />
-          <Route path="/cart" component={CartPage} />
+          <Route
+            path="/cart"
+            render={(props) => <CartPage location={props.location.pathname} />}
+          />
         </Switch>
       </BrowserRouter>
     );

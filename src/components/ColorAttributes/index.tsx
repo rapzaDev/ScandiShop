@@ -56,7 +56,7 @@ class ColorAttributes extends PureComponent<
     } else {
       colorItemsData = swatchAttibute.items.map<ColorItemsType>((color) => ({
         id: color.id,
-        value: color.value, ///
+        value: color.value,
         selected: swatchAttibute.items[0] === color,
       }));
 

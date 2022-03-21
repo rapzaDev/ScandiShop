@@ -42,15 +42,6 @@ class BagAmount extends PureComponent<PropsFromRedux, BagAmountState> {
 
     const cartProducts = products;
 
-    // const data = localStorage.getItem('@scandishop/cartProducts');
-    // const cartProductsLocalStorage: ProductDataType[] = data
-    //   ? JSON.parse(data)
-    //   : [];
-
-    // const amount = cartProducts.length
-    //   ? cartProducts.length
-    //   : cartProductsLocalStorage.length;
-
     const amount = cartProducts.length;
 
     return (

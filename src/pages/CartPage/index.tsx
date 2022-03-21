@@ -14,8 +14,12 @@ import { RootState } from '../../services/redux/store';
 // STYLES
 import { CartPageContainer, Main } from './styles';
 
-class CartPage extends PureComponent<PropsFromRedux> {
-  constructor(props: PropsFromRedux) {
+interface ICartPageProps extends PropsFromRedux {
+  location: string;
+}
+
+class CartPage extends PureComponent<ICartPageProps> {
+  constructor(props: ICartPageProps) {
     super(props);
     this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
   }
@@ -75,11 +79,11 @@ class CartPage extends PureComponent<PropsFromRedux> {
   }
 
   render() {
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
     return (
       <CartPageContainer id="cart-page">
-        <Header />
+        <Header location={location} />
 
         {this.renderCurrencyOptions()}
 

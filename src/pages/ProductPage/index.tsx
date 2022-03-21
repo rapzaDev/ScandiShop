@@ -32,6 +32,7 @@ import {
 
 interface IProductPageProps extends PropsFromRedux {
   ID: string;
+  location: string;
 }
 
 type ProductPageState = {
@@ -268,11 +269,11 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
   }
 
   render() {
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
     return (
       <ProductPageContainer id="product-page">
-        <Header />
+        <Header location={location} />
 
         {this.renderCurrencyOptions()}
 
