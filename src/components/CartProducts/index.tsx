@@ -32,6 +32,8 @@ import {
 
 interface ICartProductsProps extends PropsFromRedux {
   origin: 'MyBag' | 'CartPage';
+  // eslint-disable-next-line react/require-default-props
+  MyBagproducts?: ProductDataType[];
 }
 
 type ImageIndex = {
@@ -99,13 +101,23 @@ class CartProducts extends PureComponent<
     return images_index;
   }
 
-  handleClickPlusSignButton(product: ProductDataType) {
+  handleClickPlusSignButton(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    product: ProductDataType
+  ) {
+    e.stopPropagation();
+
     const { increaseCartProductQuantity } = this.props;
 
     increaseCartProductQuantity(product);
   }
 
-  handleClickMinusSignButton(product: ProductDataType) {
+  handleClickMinusSignButton(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    product: ProductDataType
+  ) {
+    e.stopPropagation();
+
     const { decreaseCartProductQuantity } = this.props;
     decreaseCartProductQuantity(product);
   }
@@ -232,6 +244,9 @@ class CartProducts extends PureComponent<
   // eslint-disable-next-line consistent-return
   renderCartProducts() {
     const { CART_PRODUCTS } = this.state;
+    const { MyBagproducts } = this.props;
+
+    const PRODUCTS = CART_PRODUCTS.length ? CART_PRODUCTS : MyBagproducts;
 
     // CURRENCIES STATES
     const { USD, GBP, AUD, JPY, RUB } = this.props;
@@ -243,10 +258,10 @@ class CartProducts extends PureComponent<
 
     // --------- RENDER FOR MY BAG COMPONENT ---------
     if (origin === 'MyBag') {
-      if (CART_PRODUCTS.length) {
+      if (PRODUCTS?.length) {
         return (
           <ProductWrapper_MYBAG className="product-wrapper_MYBAG">
-            {CART_PRODUCTS.map((product) => (
+            {PRODUCTS?.map((product) => (
               <ProductContainer_MYBAG
                 className="product-container_MYBAG"
                 key={
@@ -282,14 +297,14 @@ class CartProducts extends PureComponent<
                     aria-label="plus-sign"
                     type="button"
                     className="plus-sign_MYBAG"
-                    onClick={() => this.handleClickPlusSignButton(product)}
+                    onClick={(e) => this.handleClickPlusSignButton(e, product)}
                   />
                   <span>{product.quantity}</span>
                   <button
                     aria-label="minus-sign"
                     type="button"
                     className="minus-sign_MYBAG"
-                    onClick={() => this.handleClickMinusSignButton(product)}
+                    onClick={(e) => this.handleClickMinusSignButton(e, product)}
                   />
                 </SelectQuantity_MYBAG>
 
@@ -311,10 +326,10 @@ class CartProducts extends PureComponent<
 
     // --------- RENDER FOR CART PAGE ---------
     if (origin === 'CartPage') {
-      if (CART_PRODUCTS.length) {
+      if (PRODUCTS?.length) {
         return (
           <ProductWrapper_PDP id="product-wrapper_PDP">
-            {CART_PRODUCTS.map((product) => (
+            {PRODUCTS?.map((product) => (
               <ProductContainer_PDP
                 className="product-container_PDP"
                 key={
@@ -355,7 +370,9 @@ class CartProducts extends PureComponent<
                       aria-label="plus-sign"
                       type="button"
                       className="plus-sign_PDP"
-                      onClick={() => this.handleClickPlusSignButton(product)}
+                      onClick={(e) =>
+                        this.handleClickPlusSignButton(e, product)
+                      }
                     >
                       <div className="plus" />
                     </button>
@@ -364,7 +381,9 @@ class CartProducts extends PureComponent<
                       aria-label="minus-sign"
                       type="button"
                       className="minus-sign_PDP"
-                      onClick={() => this.handleClickMinusSignButton(product)}
+                      onClick={(e) =>
+                        this.handleClickMinusSignButton(e, product)
+                      }
                     >
                       <div className="minus" />
                     </button>

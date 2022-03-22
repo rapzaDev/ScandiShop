@@ -12,7 +12,7 @@ import ProductAttributes from '../../components/ProductAttributes';
 import ShadowWrapper from '../../components/ShadowWrapper';
 // GRAPHQL
 import { getProducts } from '../../services/graphql/pages/ProductPage/Queries';
-import { ProductDataType } from '../../services/graphql/types';
+import { AttributeType, ProductDataType } from '../../services/graphql/types';
 // REDUX
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
 import CurrencyOptionsContext from '../../services/redux/contexts/CurrencyOptions';
@@ -42,7 +42,6 @@ type ProductPageState = {
 class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
   constructor(props: IProductPageProps) {
     super(props);
-    this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
 
     this.state = {
       product: {},
@@ -74,16 +73,9 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
     );
   }
 
-  componentDidUpdate() {
-    document
-      .getElementById('product-page')
-      ?.addEventListener('click', this.handleClickOnScreen);
-  }
-
   handleClickOnScreen() {
     const {
       bagVisible,
-      bagActive,
       currencyEnabled,
       currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
@@ -92,7 +84,7 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
 
     const verificationControl = {
       currencyOptions: currencyEnabled && currencyOptionsActive === false,
-      myBag: bagVisible && bagActive === false,
+      myBag: bagVisible,
     };
 
     if (verificationControl.currencyOptions)
@@ -105,51 +97,70 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
   settingProductData(currentProduct: ProductDataType) {
     const { TEXT_ATTRIBUTES, COLOR_ATTRIBUTES } = this.props;
 
-    const productData = {} as ProductDataType;
+    // eslint-disable-next-line prefer-const
+    let productData = {} as ProductDataType;
+    productData.attributes = [];
 
-    Object.assign(productData, {
-      ...currentProduct,
-      attributes: currentProduct.attributes.map((attribute) => {
-        if (attribute.type === 'text') {
-          const TEXT_ATTRIBUTE = TEXT_ATTRIBUTES.find(
-            (textAttribute) => attribute.name === textAttribute.name
+    currentProduct.attributes.forEach((attribute) => {
+      if (attribute.type === 'text') {
+        const TEXT_ATTRIBUTE = TEXT_ATTRIBUTES.find(
+          (textAttribute) => attribute.name === textAttribute.name
+        );
+
+        if (TEXT_ATTRIBUTE !== undefined) {
+          const item = TEXT_ATTRIBUTE.items.find(
+            (target) => target.value === true
           );
 
-          if (TEXT_ATTRIBUTE !== undefined) {
-            const item = TEXT_ATTRIBUTE.items.find(
-              (target) => target.value === true
-            );
-
-            if (item !== undefined) {
-              attribute.items = TEXT_ATTRIBUTE.items.map((target) => ({
+          if (item !== undefined) {
+            const itemsData: AttributeType[] =
+              TEXT_ATTRIBUTE.items.map<AttributeType>((target) => ({
                 id: target.name,
                 value: target.name,
                 selected: target.value,
               }));
 
-              return attribute;
-            }
-          }
-        }
-
-        if (attribute.type === 'swatch') {
-          const COLOR_ATTRIBUTE = COLOR_ATTRIBUTES.find(
-            (colorAttribute) => colorAttribute.selected === true
-          );
-
-          if (COLOR_ATTRIBUTE !== undefined) {
-            attribute.items = COLOR_ATTRIBUTES.map((colorAttribute) => ({
-              id: colorAttribute.id,
-              value: colorAttribute.value,
-              selected: colorAttribute.selected,
-            }));
+            productData.attributes.push({
+              id: attribute.id,
+              name: attribute.name,
+              type: attribute.type,
+              items: itemsData,
+            });
 
             return attribute;
           }
         }
+      }
 
-        return attribute;
-      }),
+      if (attribute.type === 'swatch') {
+        const COLOR_ATTRIBUTE = COLOR_ATTRIBUTES.find(
+          (colorAttribute) => colorAttribute.selected === true
+        );
+
+        if (COLOR_ATTRIBUTE !== undefined) {
+          const itemsData: AttributeType[] = COLOR_ATTRIBUTES.map(
+            (colorAttribute) => ({
+              id: colorAttribute.id,
+              value: colorAttribute.value,
+              selected: colorAttribute.selected,
+            })
+          );
+
+          productData.attributes.push({
+            id: attribute.id,
+            name: attribute.name,
+            type: attribute.type,
+            items: itemsData,
+          });
+
+          return attribute;
+        }
+      }
+    });
+
+    Object.assign(productData, {
+      ...currentProduct,
+      attributes: productData.attributes,
       quantity: 1,
     });
 
@@ -186,9 +197,9 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
   }
 
   renderMyBag() {
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
-    if (bagVisible) return <MyBag />;
+    if (bagVisible) return <MyBag location={location} />;
   }
 
   renderCurrencyOptions() {
@@ -272,7 +283,10 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
     const { bagVisible, location } = this.props;
 
     return (
-      <ProductPageContainer id="product-page">
+      <ProductPageContainer
+        id="product-page"
+        onClick={() => this.handleClickOnScreen()}
+      >
         <Header location={location} />
 
         {this.renderCurrencyOptions()}

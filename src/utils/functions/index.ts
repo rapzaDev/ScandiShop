@@ -20,28 +20,6 @@ export function addProductToCartControl(
   return productIsNewOnCart;
 }
 
-/**
- *@description Increases the quantity of the product who invoke this function and set the new data on cartProducts context
- *and in localStorage.
-
- @param getLocalStorageDataProducts
-    ActionCreatorWithPreparedPayload< [ products: ProductDataType[] ], ProductDataType[], string, never, never >
- */
-export function increaseProductQuantity(
-  product: ProductDataType,
-  // CART_PRODUCTS: ProductDataType[],
-  addProductToCart: any
-) {
-  const newCartProduct = {} as ProductDataType;
-
-  Object.assign(newCartProduct, {
-    ...product,
-    quantity: product.quantity + 1,
-  });
-
-  addProductToCart(newCartProduct);
-}
-
 /** 
  * @description If productIsNewOnCart variable is true, this function adds the product to cart products and to the localStorage.
 *   Otherwise, increases the quantity of the product already existent on cart by 1.

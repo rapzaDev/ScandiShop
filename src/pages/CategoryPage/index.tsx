@@ -50,7 +50,6 @@ class CategoryPage extends PureComponent<
 > {
   constructor(props: ICategoryPageProps) {
     super(props);
-    this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
 
     this.state = {
       redirectProductPage: '',
@@ -75,16 +74,9 @@ class CategoryPage extends PureComponent<
     if (currencyEnabled) handleChangeMyCurrencyOptionsState();
 
     await this.setCategoryProducts();
-
-    const { location } = this.props;
-    console.log(location);
   }
 
   async componentDidUpdate(prevProps: PropsFromRedux) {
-    document
-      .getElementById('category-page')
-      ?.addEventListener('click', this.handleClickOnScreen);
-
     const { allCategory, clothesCategory, techCategory } = this.props;
 
     if (prevProps.allCategory !== allCategory) {
@@ -124,16 +116,15 @@ class CategoryPage extends PureComponent<
   handleClickOnScreen() {
     const {
       bagVisible,
-      bagActive,
       currencyEnabled,
-      currencyOptionsActive,
+      // currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
       handleChangeMyBagState,
     } = this.props;
 
     const verificationControl = {
-      currencyOptions: currencyEnabled && currencyOptionsActive === false,
-      myBag: bagVisible && bagActive === false,
+      currencyOptions: currencyEnabled,
+      myBag: bagVisible,
     };
 
     if (verificationControl.currencyOptions)
@@ -166,6 +157,7 @@ class CategoryPage extends PureComponent<
       cartProducts,
       increaseCartProductQuantity,
       handleChangeMyBagState,
+      bagVisible,
     } = this.props;
 
     const defaultProduct = {} as ProductDataType;
@@ -210,13 +202,13 @@ class CategoryPage extends PureComponent<
       increaseCartProductQuantity
     );
 
-    handleChangeMyBagState();
+    if (!bagVisible) handleChangeMyBagState();
   }
 
   renderMyBag() {
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
-    if (bagVisible) return <MyBag />;
+    if (bagVisible) return <MyBag location={location} />;
   }
 
   renderCurrencyOptions() {
@@ -303,7 +295,10 @@ class CategoryPage extends PureComponent<
     const { redirectProductPage } = this.state;
 
     return (
-      <CategoryPageContainer id="category-page">
+      <CategoryPageContainer
+        id="category-page"
+        onClick={() => this.handleClickOnScreen()}
+      >
         <Header location={location} />
 
         <ShadowWrapper active={bagVisible} />

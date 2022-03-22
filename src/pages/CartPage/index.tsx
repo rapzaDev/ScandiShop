@@ -21,15 +21,10 @@ interface ICartPageProps extends PropsFromRedux {
 class CartPage extends PureComponent<ICartPageProps> {
   constructor(props: ICartPageProps) {
     super(props);
-    this.handleClickOnScreen = this.handleClickOnScreen.bind(this);
   }
 
   componentDidMount() {
     window.scrollTo(0, 0);
-
-    document
-      .getElementById('cart-page')
-      ?.addEventListener('click', this.handleClickOnScreen);
 
     const {
       bagVisible,
@@ -48,7 +43,6 @@ class CartPage extends PureComponent<ICartPageProps> {
   handleClickOnScreen() {
     const {
       bagVisible,
-      bagActive,
       currencyEnabled,
       currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
@@ -57,7 +51,7 @@ class CartPage extends PureComponent<ICartPageProps> {
 
     const verificationControl = {
       currencyOptions: currencyEnabled && currencyOptionsActive === false,
-      myBag: bagVisible && bagActive === false,
+      myBag: bagVisible,
     };
 
     if (verificationControl.currencyOptions)
@@ -67,9 +61,9 @@ class CartPage extends PureComponent<ICartPageProps> {
   }
 
   renderMyBag() {
-    const { bagVisible } = this.props;
+    const { bagVisible, location } = this.props;
 
-    if (bagVisible) return <MyBag />;
+    if (bagVisible) return <MyBag location={location} />;
   }
 
   renderCurrencyOptions() {
@@ -82,7 +76,10 @@ class CartPage extends PureComponent<ICartPageProps> {
     const { bagVisible, location } = this.props;
 
     return (
-      <CartPageContainer id="cart-page">
+      <CartPageContainer
+        id="cart-page"
+        onClick={() => this.handleClickOnScreen()}
+      >
         <Header location={location} />
 
         {this.renderCurrencyOptions()}

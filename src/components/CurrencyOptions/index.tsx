@@ -24,10 +24,6 @@ class CurrencyOptions extends PureComponent<
 > {
   constructor(props: PropsFromRedux) {
     super(props);
-    this.pointerLeaveOfMyBagComponent =
-      this.pointerLeaveOfMyBagComponent.bind(this);
-    this.pointerEnterOfMyBagComponent =
-      this.pointerEnterOfMyBagComponent.bind(this);
 
     this.state = {
       currencies: [],
@@ -35,14 +31,6 @@ class CurrencyOptions extends PureComponent<
   }
 
   async componentDidMount() {
-    document
-      .getElementById('currency-options')
-      ?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent);
-
-    document
-      .getElementById('currency-options')
-      ?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent);
-
     const currenciesData = await getCurrencies();
 
     this.setState(() => ({
@@ -50,16 +38,8 @@ class CurrencyOptions extends PureComponent<
     }));
   }
 
-  pointerLeaveOfMyBagComponent() {
-    const { deactivateCurrencyOptionsComponent } = this.props;
-
-    deactivateCurrencyOptionsComponent();
-  }
-
-  pointerEnterOfMyBagComponent() {
-    const { activateCurrencyOptionsComponent } = this.props;
-
-    activateCurrencyOptionsComponent();
+  handleContainerClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    e.stopPropagation();
   }
 
   handleOnClick(currencyLabel: string) {
@@ -106,7 +86,10 @@ class CurrencyOptions extends PureComponent<
     const { currencies } = this.state;
 
     return (
-      <Container id="currency-options">
+      <Container
+        id="currency-options"
+        onClick={(e) => this.handleContainerClick(e)}
+      >
         {currencies.map((currency) => (
           <button
             type="button"

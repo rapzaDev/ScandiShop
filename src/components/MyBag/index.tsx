@@ -15,6 +15,10 @@ import DefaultButton from '../DefaultButton';
 // STYLES
 import { MyBagContainer } from './styles';
 
+interface IMyBagProps extends PropsFromRedux {
+  location: string;
+}
+
 type MyBagState = {
   redirectCartPage: boolean;
   TOTAL: number;
@@ -24,13 +28,9 @@ export type MyBagProps = {
   isVisible: boolean;
 };
 
-class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
-  constructor(props: PropsFromRedux) {
+class MyBag extends PureComponent<IMyBagProps, MyBagState> {
+  constructor(props: IMyBagProps) {
     super(props);
-    this.pointerLeaveOfMyBagComponent =
-      this.pointerLeaveOfMyBagComponent.bind(this);
-    this.pointerEnterOfMyBagComponent =
-      this.pointerEnterOfMyBagComponent.bind(this);
 
     this.state = {
       redirectCartPage: false,
@@ -42,14 +42,6 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
     this.setState(() => ({
       TOTAL: this.settingTotalPrice(),
     }));
-
-    document
-      .getElementById('my-bag')
-      ?.addEventListener('pointerleave', this.pointerLeaveOfMyBagComponent);
-
-    document
-      .getElementById('my-bag')
-      ?.addEventListener('pointerenter', this.pointerEnterOfMyBagComponent);
   }
 
   componentDidUpdate() {
@@ -58,16 +50,8 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
     }));
   }
 
-  pointerLeaveOfMyBagComponent() {
-    const { deactivateMyBagComponent } = this.props;
-
-    deactivateMyBagComponent();
-  }
-
-  pointerEnterOfMyBagComponent() {
-    const { activateMyBagComponent } = this.props;
-
-    activateMyBagComponent();
+  handleClickMyBag(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+    e.stopPropagation();
   }
 
   /** @description Returns the total value of all products on cart. */
@@ -99,10 +83,12 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
     return totalData;
   }
 
-  handleClickViewBagButton() {
-    const windowLocation = window.location.pathname;
+  handleClickViewBagButton(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
 
-    if (windowLocation === '/cart') window.location.reload();
+    const { location, handleChangeMyBagState } = this.props;
+
+    if (location === '/cart') handleChangeMyBagState();
     else {
       this.setState(({ redirectCartPage }) => ({
         redirectCartPage: !redirectCartPage,
@@ -112,6 +98,8 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
   render() {
     const { bagVisible, cartProducts } = this.props;
+
+    console.log(cartProducts);
 
     // CURRENCIES STATES
     const { USD, GBP, AUD, JPY, RUB } = this.props;
@@ -138,13 +126,17 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
 
     return (
       <>
-        <MyBagContainer id="my-bag" isVisible={bagVisible}>
+        <MyBagContainer
+          id="my-bag"
+          isVisible={bagVisible}
+          onClick={(e) => this.handleClickMyBag(e)}
+        >
           <div className="bag-description">
             <strong>My Bag, </strong>
             <span>{amount} items</span>
           </div>
 
-          <CartProductsContent origin="MyBag" />
+          <CartProductsContent origin="MyBag" MyBagproducts={cartProducts} />
 
           <div className="total-price">
             <span>Total</span>
@@ -159,7 +151,7 @@ class MyBag extends PureComponent<PropsFromRedux, MyBagState> {
             <DefaultButton
               className="default-button"
               color="default"
-              onClick={() => this.handleClickViewBagButton()}
+              onClick={(e) => this.handleClickViewBagButton(e)}
             >
               VIEW BAG
             </DefaultButton>
