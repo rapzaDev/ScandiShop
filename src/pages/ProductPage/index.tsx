@@ -50,7 +50,7 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
   }
 
   componentDidMount() {
-    window.scrollTo(0, 50);
+    window.scrollTo(0, 0);
 
     const {
       bagVisible,

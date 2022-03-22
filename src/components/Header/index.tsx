@@ -97,13 +97,10 @@ class Header extends PureComponent<IHeaderProps, HeaderState> {
    * @description Changes the selected category button. If the user clicks on any category button
    * and the current page isn't PLP, the user will be redirected to PLP after that.
    */
-  handleClickCategoryButton(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  handleClickCategoryButton(categoryName: string) {
     const { setAllCategory, setClothesCategory, setTechCategory } = this.props;
-    const { value } = e.currentTarget;
 
-    switch (value) {
+    switch (categoryName) {
       case 'all':
         setAllCategory();
         break;
@@ -150,7 +147,7 @@ class Header extends PureComponent<IHeaderProps, HeaderState> {
         {categoryNames.map((categoryName) => (
           <SelectCategoryButton
             key={categoryName}
-            onClick={(e) => this.handleClickCategoryButton(e)}
+            onClick={() => this.handleClickCategoryButton(categoryName)}
             value={categoryName}
             isSelected={
               (categoryName === 'all' && allCategory) ||

@@ -62,9 +62,7 @@ class CurrencyOptions extends PureComponent<
     activateCurrencyOptionsComponent();
   }
 
-  handleOnClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const currency = e.currentTarget.value;
-
+  handleOnClick(currencyLabel: string) {
     const {
       setUSDCurrency,
       setGBPCurrency,
@@ -75,7 +73,7 @@ class CurrencyOptions extends PureComponent<
 
     const { handleChangeMyCurrencyOptionsState } = this.props;
 
-    switch (currency) {
+    switch (currencyLabel) {
       case 'USD':
         setUSDCurrency();
         handleChangeMyCurrencyOptionsState();
@@ -114,7 +112,7 @@ class CurrencyOptions extends PureComponent<
             type="button"
             key={currency.symbol}
             value={currency.label}
-            onClick={(e) => this.handleOnClick(e)}
+            onClick={() => this.handleOnClick(currency.label)}
           >
             {currency.symbol} {currency.label}
           </button>
