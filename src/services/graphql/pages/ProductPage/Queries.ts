@@ -13,7 +13,7 @@ import {
  * @param productID  Name of the current product on PDP.
  * @returns The product data that matches with the product url id.
  */
-async function getProducts(productID: string) {
+async function getProduct(productID: string) {
   const GET_PRODUCT = await client.query({
     query: gql`
       query {
@@ -84,4 +84,4 @@ async function getProducts(productID: string) {
   return product;
 }
 
-export { getProducts };
+export { getProduct };

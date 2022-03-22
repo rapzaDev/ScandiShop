@@ -11,7 +11,7 @@ import MyBag from '../../components/MyBag';
 import ProductAttributes from '../../components/ProductAttributes';
 import ShadowWrapper from '../../components/ShadowWrapper';
 // GRAPHQL
-import { getProducts } from '../../services/graphql/pages/ProductPage/Queries';
+import { getProduct } from '../../services/graphql/pages/ProductPage/Queries';
 import { AttributeType, ProductDataType } from '../../services/graphql/types';
 // REDUX
 import CartProductsContext from '../../services/redux/contexts/CartProducts';
@@ -66,7 +66,7 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
 
     const { ID } = this.props;
 
-    getProducts(ID).then((data) =>
+    getProduct(ID).then((data) =>
       this.setState(() => ({
         product: data,
       }))
@@ -77,13 +77,12 @@ class ProductPage extends PureComponent<IProductPageProps, ProductPageState> {
     const {
       bagVisible,
       currencyEnabled,
-      currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
       handleChangeMyBagState,
     } = this.props;
 
     const verificationControl = {
-      currencyOptions: currencyEnabled && currencyOptionsActive === false,
+      currencyOptions: currencyEnabled,
       myBag: bagVisible,
     };
 

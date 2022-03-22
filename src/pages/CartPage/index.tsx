@@ -44,13 +44,12 @@ class CartPage extends PureComponent<ICartPageProps> {
     const {
       bagVisible,
       currencyEnabled,
-      currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
       handleChangeMyBagState,
     } = this.props;
 
     const verificationControl = {
-      currencyOptions: currencyEnabled && currencyOptionsActive === false,
+      currencyOptions: currencyEnabled,
       myBag: bagVisible,
     };
 

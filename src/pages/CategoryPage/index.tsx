@@ -108,6 +108,8 @@ class CategoryPage extends PureComponent<
 
     const products = await getProducts(selectedCategory);
 
+    console.log('PRODUTOS NA PAGINA DE CATEGORIA:', products);
+
     this.setState(() => ({
       categoryProducts: products,
     }));
@@ -117,7 +119,6 @@ class CategoryPage extends PureComponent<
     const {
       bagVisible,
       currencyEnabled,
-      // currencyOptionsActive,
       handleChangeMyCurrencyOptionsState,
       handleChangeMyBagState,
     } = this.props;
